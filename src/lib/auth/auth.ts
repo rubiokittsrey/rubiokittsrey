@@ -19,11 +19,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }),
     ],
     callbacks: {
-        async session({ session, user }) {
-            const db = getFirestore();
-            const userDoc = await db.collection('users').doc(user.id).get();
-            session.user.role = userDoc.data()?.role || 'user';
-            session.user.id = user.id;
+        async jwt({ token, user, trigger }) {
+            if (user) {
+                token.role = user.role || 'user';
+                token.id = user.id;
+            }
+
+            if (trigger === 'update') {
+                const db = getFirestore();
+                const userDoc = await db
+                    .collection('users')
+                    .doc(token.id as string)
+                    .get();
+                token.role = userDoc.data()?.role || 'user';
+            }
+
+            return token;
+        },
+        async session({ session, token }) {
+            session.user.role = token.role as 'admin' | 'user';
+            session.user.id = token.id as string;
             return session;
         },
     },
