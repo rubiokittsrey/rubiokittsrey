@@ -5,6 +5,7 @@ import { cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+    secret: process.env.NEXTAUTH_SECRET, // openssl rand -base64 32
     adapter: FirestoreAdapter({
         credential: cert({
             projectId: process.env.FIREBASE_PROJECT_ID,

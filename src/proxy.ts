@@ -1,7 +1,7 @@
 import { auth } from '@/lib/auth/auth';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export default auth((req) => {
+export default auth((req: NextRequest & { auth: any }) => {
     const { pathname } = req.nextUrl;
 
     if (pathname === '/admin/login' && req.auth) {
