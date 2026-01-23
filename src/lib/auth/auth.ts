@@ -47,3 +47,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         signIn: '/login',
     },
 });
+
+// import { useSession } from 'next-auth/react';
+
+// function AdminPanel() {
+//   const { data: session, status } = useSession();
+
+//   if (status === 'loading') return <Loading />;
+//   if (!session || session.user.role !== 'admin') return <Unauthorized />;
+
+//   return <AdminDashboard />;
+// }
