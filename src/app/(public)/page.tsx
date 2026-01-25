@@ -10,7 +10,7 @@ export default function Home() {
     ];
 
     return (
-        <div className="h-full w-full flex flex-col items-center justify-center space-y-5">
+        <div className="h-full w-full flex flex-col space-y-5">
             <SiteBanner />
             {/* <div className="flex flex-row justify-center font-sans">
                 {links.map((l) => (

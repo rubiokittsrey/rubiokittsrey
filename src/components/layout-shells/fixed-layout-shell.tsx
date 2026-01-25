@@ -1,3 +1,9 @@
+import { PublicLayoutShell } from './public-layout-shell';
+
 export function FixedLayoutShell({ children }: { children: React.ReactNode }) {
-    return <main className="h-screen overflow-hidden w-full py-10 px-12">{children}</main>;
+    return (
+        <PublicLayoutShell>
+            <main className="h-screen overflow-hidden">{children}</main>
+        </PublicLayoutShell>
+    );
 }
