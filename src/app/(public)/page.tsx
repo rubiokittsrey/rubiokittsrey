@@ -3,8 +3,10 @@
 import SiteBanner from '@/components/ui/resources/banner';
 import { BoxesIcon, MailIcon, PencilLine, User2Icon } from 'lucide-react';
 import { NavItem, NavItemIcon, NavItemProps } from '@/components/navigation/nav-item';
+import { PageTransition } from '@/components/animation/page-transitions';
+import { FixedLayoutShell } from '@/components/layout-shells/fixed-layout-shell';
 
-export default function Home() {
+export default function LandingPage() {
     const links: NavItemProps[] = [
         { name: 'PROJECTS', path: '/projects', icon: BoxesIcon },
         { name: 'BLOG', path: '/blog', icon: PencilLine },
@@ -13,13 +15,15 @@ export default function Home() {
     ];
 
     return (
-        <div className="h-full w-full flex flex-col space-y-5 justify-between">
-            <SiteBanner />
-            <div className="flex flex-col items-start font-sans space-y-3">
-                {links.map((l) => (
-                    <NavItem key={l.path} {...l} />
-                ))}
-            </div>
-        </div>
+        <FixedLayoutShell>
+            <PageTransition className="h-full w-full flex flex-col space-y-5 justify-between">
+                <SiteBanner />
+                <div className="flex flex-col items-start font-sans space-y-3">
+                    {links.map((l) => (
+                        <NavItem key={l.path} {...l} />
+                    ))}
+                </div>
+            </PageTransition>
+        </FixedLayoutShell>
     );
 }

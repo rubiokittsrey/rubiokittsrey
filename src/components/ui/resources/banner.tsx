@@ -16,7 +16,8 @@ export default function SiteBanner() {
                     'text-9xl tracking-tight font-semibold select-none'
                 )}
             >
-                N8E5
+                KITTS REY <br />
+                RUBIO
             </h1>
         </div>
     );
