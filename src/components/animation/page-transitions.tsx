@@ -10,7 +10,7 @@ const variants = {
     exit: { opacity: 0, y: -20, filter: 'blur(8px)' },
 };
 
-export function PageTransition({ children, ...props }: React.HTMLProps<'div'>) {
+export function SlideInFadeTransition({ children, ...props }: React.HTMLProps<'div'>) {
     const pathName = usePathname();
 
     return (

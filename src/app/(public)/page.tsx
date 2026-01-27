@@ -1,29 +1,24 @@
 'use client';
 
-import SiteBanner from '@/components/ui/resources/banner';
-import { BoxesIcon, MailIcon, PencilLine, User2Icon } from 'lucide-react';
-import { NavItem, NavItemIcon, NavItemProps } from '@/components/navigation/nav-item';
-import { PageTransition } from '@/components/animation/page-transitions';
+import { epilogue } from '@/components/ui/resources/banner';
+import { SlideInFadeTransition } from '@/components/animation/page-transitions';
 import { FixedLayoutShell } from '@/components/layout-shells/fixed-layout-shell';
+import { cn } from '@/lib/utils';
 
 export default function LandingPage() {
-    const links: NavItemProps[] = [
-        { name: 'PROJECTS', path: '/projects', icon: BoxesIcon },
-        { name: 'BLOG', path: '/blog', icon: PencilLine },
-        { name: 'ABOUT', path: '/about', icon: User2Icon },
-        { name: 'CONTACT', path: '/contact', icon: MailIcon },
-    ];
-
     return (
         <FixedLayoutShell>
-            <PageTransition className="h-full w-full flex flex-col space-y-5 justify-between">
-                <SiteBanner />
-                <div className="flex flex-col items-start font-sans space-y-3">
-                    {links.map((l) => (
-                        <NavItem key={l.path} {...l} />
-                    ))}
-                </div>
-            </PageTransition>
+            <SlideInFadeTransition className="h-full w-full flex flex-col space-y-5 justify-between">
+                <h1
+                    className={cn(
+                        epilogue.className,
+                        'text-9xl tracking-tight font-semibold select-none'
+                    )}
+                >
+                    KITTS REY <br />
+                    RUBIO
+                </h1>
+            </SlideInFadeTransition>
         </FixedLayoutShell>
     );
 }

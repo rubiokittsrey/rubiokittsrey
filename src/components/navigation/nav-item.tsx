@@ -1,8 +1,10 @@
+'use client';
+
 import { LucideProps } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes, useState } from 'react';
 import { Button } from '../ui/button';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export type NavItemIcon = ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
@@ -17,16 +19,20 @@ export interface NavItemProps {
 export function NavItem({ name, path, ...item }: NavItemProps) {
     const [hovered, setHover] = useState(false);
     const router = useRouter();
+    const pathName = usePathname();
+
+    const handleClick = () => {
+        if (path === pathName) return;
+        router.push(path);
+    };
 
     return (
         <Button
             variant={'outline'}
-            className="relative text-2xl font-normal tracking-tight cursor-pointer p-3 py-5 rounded-full"
+            className="relative text-lg font-normal tracking-tight cursor-pointer p-3 py-5 rounded-full"
             onPointerEnter={() => setHover(true)}
             onPointerLeave={() => setHover(false)}
-            onClick={() => {
-                router.push(path);
-            }}
+            onClick={handleClick}
         >
             <div className="relative flex items-center">
                 <motion.div
