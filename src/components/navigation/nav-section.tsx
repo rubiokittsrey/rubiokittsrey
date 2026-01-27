@@ -13,9 +13,9 @@ export default function NavSection() {
     ];
 
     return (
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center fixed z-50 w-full px-15 pt-10">
             <SiteBanner />
-            <div className="flex flex-row justify-end items-center font-sans">
+            <div className="flex flex-row justify-end items-center font-sans space-x-2">
                 {links.map((l) => (
                     <NavItem key={l.path} {...l} />
                 ))}

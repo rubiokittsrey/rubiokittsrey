@@ -5,6 +5,7 @@ import { ForwardRefExoticComponent, RefAttributes, useState } from 'react';
 import { Button } from '../ui/button';
 import { motion } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export type NavItemIcon = ForwardRefExoticComponent<
     Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
@@ -20,16 +21,21 @@ export function NavItem({ name, path, ...item }: NavItemProps) {
     const [hovered, setHover] = useState(false);
     const router = useRouter();
     const pathName = usePathname();
+    const isOnPath = path === pathName;
 
     const handleClick = () => {
         if (path === pathName) return;
         router.push(path);
+        setHover(false);
     };
 
     return (
         <Button
-            variant={'outline'}
-            className="relative text-lg font-normal tracking-tight cursor-pointer p-3 py-5 rounded-full"
+            variant={isOnPath ? 'default' : 'outline'}
+            className={cn(
+                'text-base relative font-normal tracking-tight cursor-pointer p-3 py-5 rounded-full',
+                isOnPath && ''
+            )}
             onPointerEnter={() => setHover(true)}
             onPointerLeave={() => setHover(false)}
             onClick={handleClick}
@@ -39,20 +45,20 @@ export function NavItem({ name, path, ...item }: NavItemProps) {
                     className="flex items-center justify-center"
                     initial={false}
                     animate={{
-                        width: hovered ? 24 : 0,
-                        marginRight: hovered ? 6 : 0,
+                        width: hovered || isOnPath ? 24 : 0,
+                        marginRight: hovered || isOnPath ? 5 : 0,
                     }}
                     transition={{ duration: 0.3, ease: 'anticipate' }}
                 >
                     <motion.span
                         initial={false}
                         animate={{
-                            opacity: hovered ? 1 : 0,
-                            scale: hovered ? 1 : 0.7,
+                            opacity: hovered || isOnPath ? 1 : 0,
+                            scale: hovered || isOnPath ? 1 : 0.7,
                         }}
                         transition={{ duration: 0.3, ease: 'anticipate' }}
                     >
-                        <item.icon className="size-5" />
+                        <item.icon className="size-4" />
                     </motion.span>
                 </motion.div>
 

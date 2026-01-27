@@ -1,7 +1,10 @@
+import NavSection from '../navigation/nav-section';
+import { PublicLayoutShell } from './public-layout-shell';
+
 export function FLowingLayoutShell({ children }: { children: React.ReactNode }) {
     return (
-        <main className="min-h-screen max-h-screen w-full px-12 overflow-hidden">
-            <div className="h-full overflow-auto pt-10 no-scrollbar">{children}</div>
-        </main>
+        <PublicLayoutShell>
+            <main className="min-h-screen max-h-screen w-full overflow-hidden">{children}</main>
+        </PublicLayoutShell>
     );
 }

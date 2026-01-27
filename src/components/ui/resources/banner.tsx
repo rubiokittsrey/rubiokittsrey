@@ -21,15 +21,11 @@ export default function SiteBanner() {
     };
 
     return (
-        <Button
-            onClick={handleClick}
-            variant={'ghost'}
-            className="cursor-pointer rounded-full px-0"
-        >
+        <Button onClick={handleClick} variant={'ghost'} className="cursor-pointer rounded-full">
             <h1
                 className={cn(
                     epilogue.className,
-                    'text-4xl pt-1 tracking-tight font-semibold select-none'
+                    'text-3xl pt-1 tracking-tight font-semibold select-none'
                 )}
             >
                 N8E5

@@ -8,17 +8,7 @@ import { cn } from '@/lib/utils';
 export default function LandingPage() {
     return (
         <FixedLayoutShell>
-            <SlideInFadeTransition className="h-full w-full flex flex-col space-y-5 justify-between">
-                <h1
-                    className={cn(
-                        epilogue.className,
-                        'text-9xl tracking-tight font-semibold select-none'
-                    )}
-                >
-                    KITTS REY <br />
-                    RUBIO
-                </h1>
-            </SlideInFadeTransition>
+            <SlideInFadeTransition className="h-full w-full flex flex-col space-y-5 justify-between"></SlideInFadeTransition>
         </FixedLayoutShell>
     );
 }
