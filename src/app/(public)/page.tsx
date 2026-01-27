@@ -17,7 +17,7 @@ export default function Home() {
             <SiteBanner />
             <div className="flex flex-col items-start font-sans space-y-3">
                 {links.map((l) => (
-                    <NavItem {...l} />
+                    <NavItem key={l.path} {...l} />
                 ))}
             </div>
         </div>
