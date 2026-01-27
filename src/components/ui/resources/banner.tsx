@@ -9,14 +9,14 @@ export const epilogue = Epilogue({
 
 export default function SiteBanner() {
     return (
-        <div className="w-full flex flex-col justify-center p-6">
+        <div className="flex">
             <h1
                 className={cn(
                     epilogue.className,
-                    'text-2xl tracking-tight font-medium select-none'
+                    'text-9xl tracking-tight font-semibold select-none'
                 )}
             >
-                <span className="text-secondary">https://</span>rubio.kittsrey/
+                N8E5
             </h1>
         </div>
     );
