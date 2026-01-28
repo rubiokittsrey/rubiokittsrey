@@ -33,7 +33,7 @@ export function NavItem({ name, path, ...item }: NavItemProps) {
         <Button
             variant={isOnPath ? 'default' : 'outline'}
             className={cn(
-                'text-base relative font-normal tracking-tight cursor-pointer p-3 py-5 rounded-full',
+                'relative font-normal tracking-tight cursor-pointer p-3 py-4 rounded-full',
                 isOnPath && ''
             )}
             onPointerEnter={() => setHover(true)}
@@ -45,7 +45,7 @@ export function NavItem({ name, path, ...item }: NavItemProps) {
                     className="flex items-center justify-center"
                     initial={false}
                     animate={{
-                        width: hovered || isOnPath ? 24 : 0,
+                        width: hovered || isOnPath ? 18 : 0,
                         marginRight: hovered || isOnPath ? 5 : 0,
                     }}
                     transition={{ duration: 0.3, ease: 'anticipate' }}
@@ -58,7 +58,7 @@ export function NavItem({ name, path, ...item }: NavItemProps) {
                         }}
                         transition={{ duration: 0.3, ease: 'anticipate' }}
                     >
-                        <item.icon className="size-4" />
+                        <item.icon className="size-3" />
                     </motion.span>
                 </motion.div>
 

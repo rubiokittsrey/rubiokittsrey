@@ -26,7 +26,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: 'rubiokittsrey',
+    title: 'Rubio, Kitts Rey',
     description: '',
 };
 

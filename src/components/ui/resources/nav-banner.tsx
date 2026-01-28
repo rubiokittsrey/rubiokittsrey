@@ -11,7 +11,7 @@ export const epilogue = Epilogue({
     weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 });
 
-export default function SiteBanner() {
+export default function NavBanner() {
     const router = useRouter();
     const pathName = usePathname();
 
@@ -21,11 +21,11 @@ export default function SiteBanner() {
     };
 
     return (
-        <Button onClick={handleClick} variant={'ghost'} className="cursor-pointer rounded-full">
+        <Button onClick={handleClick} variant={'ghost'} className="cursor-pointer rounded-f ull">
             <h1
                 className={cn(
                     epilogue.className,
-                    'text-3xl pt-1 tracking-tight font-semibold select-none'
+                    'text-2xl pt-1 tracking-tight font-semibold select-none'
                 )}
             >
                 N8E5

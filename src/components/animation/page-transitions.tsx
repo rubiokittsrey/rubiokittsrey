@@ -1,23 +1,42 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 
-const variants = {
-    hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
-    enter: { opacity: 1, y: 0, filter: 'blur(0px)' },
-    exit: { opacity: 0, y: -20, filter: 'blur(8px)' },
-};
+export const transitionVariants = {
+    slideUp: {
+        hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+        enter: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        exit: { opacity: 0, y: -20, filter: 'blur(8px)' },
+    },
+    slideDown: {
+        hidden: { opacity: 0, y: -20, filter: 'blur(8px)' },
+        enter: { opacity: 1, y: 0, filter: 'blur(0px)' },
+        exit: { opacity: 0, y: 20, filter: 'blur(8px)' },
+    },
+} as const;
 
-export function SlideInFadeTransition({ children, ...props }: React.HTMLProps<'div'>) {
+type TransitionVariant = keyof typeof transitionVariants;
+
+interface SlideInFadeTransitionProps extends React.HTMLProps<HTMLDivElement> {
+    children: React.ReactNode;
+    variant?: TransitionVariant;
+}
+
+export function SlideInFadeTransition({
+    children,
+    variant = 'slideUp',
+    ...props
+}: SlideInFadeTransitionProps) {
     const pathName = usePathname();
 
     return (
         <AnimatePresence mode="wait">
             <motion.div
+                key={pathName}
                 className={props.className}
-                variants={variants}
+                variants={transitionVariants[variant]}
                 initial="hidden"
                 animate="enter"
                 exit="exit"

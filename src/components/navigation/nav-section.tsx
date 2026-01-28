@@ -2,7 +2,7 @@
 
 import { BoxesIcon, MailIcon, PencilLine, User2Icon } from 'lucide-react';
 import { NavItem, NavItemProps } from '@/components/navigation/nav-item';
-import SiteBanner from '../ui/resources/banner';
+import NavBanner from '../ui/resources/nav-banner';
 
 export default function NavSection() {
     const links: NavItemProps[] = [
@@ -13,8 +13,8 @@ export default function NavSection() {
     ];
 
     return (
-        <div className="flex flex-row justify-between items-center fixed z-50 w-full px-15 pt-10">
-            <SiteBanner />
+        <div className="flex flex-row justify-between items-center fixed z-50 w-full px-10 pt-10">
+            <NavBanner />
             <div className="flex flex-row justify-end items-center font-sans space-x-2">
                 {links.map((l) => (
                     <NavItem key={l.path} {...l} />
