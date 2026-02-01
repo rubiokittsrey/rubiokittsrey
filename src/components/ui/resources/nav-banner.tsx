@@ -1,15 +1,9 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Epilogue } from 'next/font/google';
 import { Button } from '../button';
 import { usePathname, useRouter } from 'next/navigation';
-
-export const epilogue = Epilogue({
-    variable: '--font-epilogue',
-    subsets: ['latin'],
-    weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-});
+import { epilogue } from './fonts';
 
 export default function NavBanner() {
     const router = useRouter();
