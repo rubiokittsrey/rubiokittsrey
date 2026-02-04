@@ -1,4 +1,4 @@
-<h1 style="border: none; margin-bottom:5px;">@rubio kittsrey</h1>
+<h1 style="border: none; margin-bottom:5px;">@rubiokittsrey</h1>
 
 <p style="margin-top:0x; margin-left:0px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 Full-stack developer in love with simulations, graphics, and system design.
