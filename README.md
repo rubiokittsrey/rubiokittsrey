@@ -6,7 +6,7 @@ Full-stack developer in love with simulations, graphics, and system design.
 
 <div style="border: none; border-top: 1px solid #666; margin: 30px 0;" />
 
-<h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 28px; margin-bottom: 25px;">
+<h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 38px; margin-bottom: 25px;">
   Skills and Experiences
 </h3>
 
@@ -115,7 +115,7 @@ Full-stack developer in love with simulations, graphics, and system design.
 
 <div style="border: none; border-top: 1px solid #666; margin: 30px 0;" />
 
-<h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 28px; margin-bottom: 15px;">
+<h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 38px; margin-bottom: 15px;">
   About Me
 </h3>
 <p style="margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 0px; margin-bottom: 30px;">
@@ -128,26 +128,30 @@ Outside of development, I practice photography—composing quiet images of natur
 
 <div style="margin:0; margin-top:30px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
   
-<div style="display:flex; gap:12px; margin-top:30px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+<div style="display:flex; gap:6px; margin-top:0px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
 
   <!-- Email -->
   <a href="mailto:contact@rubiokittsrey.dev" title="Email" style="text-decoration:none; color: inherit;">
-    <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" style="width:40px; height:40px;" />
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" style="width:35px; height:35px;" />
   </a>
 
   <!-- Facebook -->
   <a href="https://www.facebook.com/rubio.kittsrey" title="Facebook" style="text-decoration:none; color: inherit;">
-    <img src="https://go-skill-icons.vercel.app/api/icons?i=facebook" style="width:40px; height:40px;" />
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=facebook" style="width:35px; height:35px;" />
   </a>
 
   <!-- Instagram -->
-  <a href="https://instagram.com/yourhandle" title="Instagram" style="text-decoration:none; color: inherit;">
-    <img src="https://go-skill-icons.vercel.app/api/icons?i=instagram" style="width:40px; height:40px;" />
+  <a href="https://instagram.com/rubio.kittsrey" title="Instagram" style="text-decoration:none; color: inherit;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=instagram" style="width:35px; height:35px;" />
   </a>
 
   <!-- Discord -->
-  <a href="https://discord.com/users/yourhandle" title="Discord" style="text-decoration:none; color: inherit;">
-    <img src="https://go-skill-icons.vercel.app/api/icons?i=discord" style="width:40px; height:40px;" />
+  <a href="https://discord.com/users/mcn.topher" title="Discord" style="text-decoration:none; color: inherit;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=discord" style="width:35px; height:35px;" />
+  </a>
+
+  <a href="https://x.com/mcn.topher" title="X / Twitter" style="text-decoration:none; color: inherit;">
+    <img src="https://go-skill-icons.vercel.app/api/icons?i=x" style="width:35px; height:35px;" />
   </a>
 
 </div>
