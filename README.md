@@ -1,19 +1,13 @@
 <h1 style="border: none; margin-bottom:5px;">@rubiokittsrey</h1>
 
-<p style="margin-top:0x; margin-left:0px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+<p style="margin-top:0x; margin-left:0px; margin-bottom:20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
   Full-stack developer in love with simulations, graphics, and system design.
 </p>
 
-<div style="border: none; border-top: 1px solid #666; margin: 30px 0;" />
-
-<h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 38px; margin-bottom: 25px;">
-  Skills and Experiences
-</h3>
-
 <!-- Dev Tools / IDEs -->
-<h4 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 0px; margin-bottom: 5px; opacity: 0.3;">
+<!-- <h4 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 0px; margin-bottom: 5px; opacity: 0.3;">
   Dev Tools / IDEs
-</h4>
+</h4> -->
 <div style="display:flex; flex-wrap: wrap; gap:5px; margin-bottom:20px;">
   <img src="https://img.shields.io/badge/Android_Studio-white?style=for-the-badge&logo=android&logoColor=green"/>
   <img src="https://img.shields.io/badge/VSCODE-skyblue?style=for-the-badge&logo=vscode&logoColor=blue"/>
@@ -22,7 +16,6 @@
   <img src="https://img.shields.io/badge/Postman-orange?style=for-the-badge&logo=postman&logoColor=white"/>
   <img src="https://img.shields.io/badge/Obsidian-%237C3AED?style=for-the-badge&logo=obsidian&logoColor=white"/>
   <img src="https://img.shields.io/badge/Bash-black?style=for-the-badge&logo=gnubash&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Virtualbox-blue?style=for-the-badge&logo=virtualbox&logoColor=white"/>
 </div>
 
 <!-- Languages & Frameworks -->
@@ -78,7 +71,7 @@
   <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white"/>
 </div>
 
-<!-- Multimedia -->
+<!-- Multimedia
 <h4 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 15px; margin-bottom: 5px; opacity: 0.3;">
   Multimedia
 </h4>
@@ -87,9 +80,9 @@
   <img src="https://img.shields.io/badge/After_Effects-9999FF?style=for-the-badge&logo=adobeaftereffects&logoColor=white"/>
   <img src="https://img.shields.io/badge/Premiere_Pro-9999FF?style=for-the-badge&logo=adobepremierepro&logoColor=white"/>
   <img src="https://img.shields.io/badge/Lightroom-31A8FF?style=for-the-badge&logo=adobelightroom&logoColor=white"/>
-</div>
+</div> -->
 
-<!-- Design & UI/UX -->
+<!-- Design & UI/UX
 <h4 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 15px; margin-bottom: 5px; opacity: 0.3;">
   Design & UI/UX
 </h4>
@@ -97,9 +90,9 @@
   <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"/>
   <img src="https://img.shields.io/badge/Illustrator-FF9A00?style=for-the-badge&logo=adobeillustrator&logoColor=white"/>
   <img src="https://img.shields.io/badge/Canva-00C4CC?style=for-the-badge&logo=canva&logoColor=white"/>
-</div>
+</div> -->
 
-<!-- Operating Systems & Dev Environments -->
+<!-- Operating Systems & Dev Environments
 <h4 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 15px; margin-bottom: 5px; opacity: 0.3;">
   Operating Systems & Dev Environments
 </h4>
@@ -109,7 +102,7 @@
   <img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white"/>
   <img src="https://img.shields.io/badge/Kali_Linux-557C94?style=for-the-badge&logo=kalilinux&logoColor=white"/>
   <img src="https://img.shields.io/badge/WSL-0a97f5?style=for-the-badge&logo=linux&logoColor=white"/>
-</div>
+</div> -->
 
 <div style="border: none; border-top: 1px solid #666; margin: 30px 0;" />
 
