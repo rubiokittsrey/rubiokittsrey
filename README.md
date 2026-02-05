@@ -112,25 +112,25 @@
 <div style="border: none; border-top: 1px solid #666; margin: 30px 0;" />
 
 <div style="margin:0; margin-top:30px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-  <div style="display:flex; margin-top:35px; flex-direction: column; gap:6px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+  <div style="display:flex; margin-top:35px; flex-direction: row; gap:8px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
     <a href="mailto:contact@rubiokittsrey.dev" title="Email" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" title="Email" style="width:15px; height:15px"/>
       <span>contact@rubiokittsrey.dev</span>
-    </a><br></br>
+    </a>
     <a href="https://www.facebook.com/rubio.kittsrey" title="Facebook" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=facebook" title="Facebook" style="width:15px; height:15px"/>
       <span>Kitts Rey Rubio</span>
-    </a><br></br>
+    </a>
     <!-- Instagram -->
     <a href="https://instagram.com/rubio.kittsrey" title="Instagram" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=instagram" title="Instagram" style="width:15px; height:15px"/>
       <span>@rubio.kittsrey</span>
-    </a><br></br>
+    </a>
     <!-- Discord -->
     <a href="https://discord.com/users/mcn.topher" title="Discord" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=discord" title="Discord" style="width:15px; height:15px"/>
       <span>mcn.topher</span>
-    </a><br></br>
+    </a>
     <!-- X / Twitter -->
     <a href="https://x.com/mcn.topher" title="X / Twitter" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=x" title="X / Twitter" style="width:15px; height:15px"/>
