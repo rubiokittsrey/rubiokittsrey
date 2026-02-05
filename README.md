@@ -1,12 +1,8 @@
 <h1 style="border: none; margin-bottom:5px;">@rubiokittsrey</h1>
 
-<p style="margin-top:0x; margin-left:0px; margin-bottom:20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-  Full-stack developer in love with simulations, graphics, and system design.
-</p>
-
 <!-- Dev Tools / IDEs -->
 <!-- <h4 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 0px; margin-bottom: 5px; opacity: 0.3;">
-  Dev Tools / IDEs
+  Tools / Languages
 </h4> -->
 <div style="display:flex; flex-wrap: wrap; gap:5px; margin-bottom:20px;">
   <img src="https://img.shields.io/badge/Android_Studio-white?style=for-the-badge&logo=android&logoColor=green"/>
@@ -14,8 +10,6 @@
   <img src="https://img.shields.io/badge/NPM-red?style=for-the-badge&logo=npm&logoColor=white"/>
   <img src="https://img.shields.io/badge/Docker-blue?style=for-the-badge&logo=docker&logoColor=white"/>
   <img src="https://img.shields.io/badge/Postman-orange?style=for-the-badge&logo=postman&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Obsidian-%237C3AED?style=for-the-badge&logo=obsidian&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Bash-black?style=for-the-badge&logo=gnubash&logoColor=white"/>
 </div>
 
 <!-- Languages & Frameworks -->
@@ -54,6 +48,8 @@
 <div style="display:flex; flex-wrap: wrap; gap:5px; margin-bottom:20px;">
   <img src="https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=arduino&logoColor=white"/>
   <img src="https://img.shields.io/badge/Raspberry_Pi-A22846?style=for-the-badge&logo=raspberrypi&logoColor=white"/>
+  <img src="https://img.shields.io/badge/MQTT-660066?style=for-the-badge&logo=mqtt&logoColor=white"/>
+  
 </div>
 
 <!-- Databases & Data -->
@@ -110,9 +106,7 @@
   About Me
 </h3>
 <p style="margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 0px; margin-bottom: 30px;">
-  I work with interactive web applications, 3D visualizations, and embedded systems using frameworks like React, Next.js, Flutter, Python, and Arduino. My interests span mathematical visualizations, real-time graphics, and IoT systems.<br/><br/>
-  I enjoy projects that require thoughtful system design, where I can balance solid architecture with clean user experiences. This involves working with data structures for real-time rendering, designing sensor networks, and building intuitive interfaces. I try to write code that's well-organized and efficient, with attention to both technical quality and user experience.<br/><br/>
-  Outside of development, I practice photography—composing quiet images of natural and urban landscapes. It's a complementary discipline that helps me think about clarity and balance, both in visual composition and in code.
+  I build interactive web and mobile apps, 3D visualizations, and embedded systems with React, Next.js, Flutter, Python, and Arduino. I’m interested in real-time graphics, mathematical visuals, and IoT projects that blend solid architecture with intuitive interfaces, and I like learning new things. Outside of development, I practice photography, capturing natural and street landscapes.
 </p>
 
 <div style="border: none; border-top: 1px solid #666; margin: 30px 0;" />
@@ -122,21 +116,21 @@
     <a href="mailto:contact@rubiokittsrey.dev" title="Email" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" title="Email" style="width:15px; height:15px"/>
       <span>contact@rubiokittsrey.dev</span>
-    </a>
+    </a><br></br>
     <a href="https://www.facebook.com/rubio.kittsrey" title="Facebook" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=facebook" title="Facebook" style="width:15px; height:15px"/>
       <span>Kitts Rey Rubio</span>
-    </a>
+    </a><br></br>
     <!-- Instagram -->
     <a href="https://instagram.com/rubio.kittsrey" title="Instagram" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=instagram" title="Instagram" style="width:15px; height:15px"/>
       <span>@rubio.kittsrey</span>
-    </a>
+    </a><br></br>
     <!-- Discord -->
     <a href="https://discord.com/users/mcn.topher" title="Discord" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=discord" title="Discord" style="width:15px; height:15px"/>
       <span>mcn.topher</span>
-    </a>
+    </a><br></br>
     <!-- X / Twitter -->
     <a href="https://x.com/mcn.topher" title="X / Twitter" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=x" title="X / Twitter" style="width:15px; height:15px"/>
