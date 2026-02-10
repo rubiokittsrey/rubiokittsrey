@@ -6,6 +6,7 @@ import { FixedLayoutShell } from '@/components/layout-shells/fixed-layout-shell'
 import { cn } from '@/lib/utils';
 import { FLowingLayoutShell } from '@/components/layout-shells/flowing-content-layout';
 import React from 'react';
+import EffectScene from '@/components/threejs/ascii-effect/effect-scene';
 
 function LandingPageLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -19,16 +20,17 @@ export default function LandingPage() {
     return (
         <LandingPageLayout>
             <div className="w-full h-[200vh]">
-                <div className="h-[calc(100vh-7.5rem)] flex flex-col items-center justify-center">
+                <EffectScene />
+                {/* <div className="h-[calc(100vh-7.5rem)] flex flex-col items-center justify-center">
                     <div className="flex flex-col space-y-2">
-                        <h1 className={(epilogue.className, 'font-sans text-7xl font-medium')}>
+                        <h1 className={'font-sans text-7xl font-medium'}>
                             Hello, I'm Kitts Rey Rubio.
                         </h1>
                         <h2 className="font-sans text-3xl font-extralight">
                             Welcome to my corner of the internet.
                         </h2>
                     </div>
-                </div>
+                </div> */}
             </div>
         </LandingPageLayout>
     );

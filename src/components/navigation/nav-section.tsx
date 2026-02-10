@@ -2,7 +2,9 @@
 
 import { BoxesIcon, MailIcon, PencilLine, User2Icon } from 'lucide-react';
 import { NavItem, NavItemProps } from '@/components/navigation/nav-item';
-import NavBanner from '../ui/resources/nav-banner';
+import NavBanner from './nav-banner';
+import { Button } from '../ui/button';
+import ThemeToggle from '../theme-toggle';
 
 export default function NavSection() {
     const links: NavItemProps[] = [
@@ -19,6 +21,7 @@ export default function NavSection() {
                 {links.map((l) => (
                     <NavItem key={l.path} {...l} />
                 ))}
+                <ThemeToggle />
             </div>
         </div>
     );
