@@ -23,6 +23,9 @@ float minimalGlyph(float lum, vec2 p) {
 
   float blockMask = 1.0;
 
+  if (level < 0.5) return 0.0;
+  if (level < 1.5) return dotMask;
+  if (level < 2.5) return plusMask;
   return blockMask;
 }
 
