@@ -127,28 +127,24 @@
       <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" style="width:15px; height:15px" />
       <span>contact@rubiokittsrey.dev</span>
     </a>
-
     <a href="https://www.facebook.com/rubio.kittsrey"
        title="Facebook"
        style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=facebook" style="width:15px; height:15px" />
       <span>Kitts Rey Rubio</span>
     </a>
-
     <a href="https://instagram.com/rubio.kittsrey"
        title="Instagram"
        style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=instagram" style="width:15px; height:15px" />
       <span>@rubio.kittsrey</span>
     </a>
-
     <a href="https://discord.com/users/mcn.topher"
        title="Discord"
        style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=discord" style="width:15px; height:15px" />
       <span>mcn.topher</span>
     </a>
-
     <a href="https://x.com/mcn.topher"
        title="X / Twitter"
        style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
