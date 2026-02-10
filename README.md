@@ -111,31 +111,50 @@
 
 <div style="border: none; border-top: 1px solid #666; margin: 30px 0;" />
 
-<div style="margin:0; margin-top:30px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-  <div style="display:flex; margin-top:35px; flex-direction: row; gap:8px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-    <a href="mailto:contact@rubiokittsrey.dev" title="Email" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
-      <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" title="Email" style="width:15px; height:15px"/>
+<div style="margin:0; margin-top:30px; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;">
+  <div
+    style="
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 16px 20px;
+      align-items: center;
+    "
+  >
+    <a href="mailto:contact@rubiokittsrey.dev"
+       title="Email"
+       style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" style="width:15px; height:15px" />
       <span>contact@rubiokittsrey.dev</span>
     </a>
-    <a href="https://www.facebook.com/rubio.kittsrey" title="Facebook" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
-      <img src="https://go-skill-icons.vercel.app/api/icons?i=facebook" title="Facebook" style="width:15px; height:15px"/>
+
+    <a href="https://www.facebook.com/rubio.kittsrey"
+       title="Facebook"
+       style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=facebook" style="width:15px; height:15px" />
       <span>Kitts Rey Rubio</span>
     </a>
-    <!-- Instagram -->
-    <a href="https://instagram.com/rubio.kittsrey" title="Instagram" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
-      <img src="https://go-skill-icons.vercel.app/api/icons?i=instagram" title="Instagram" style="width:15px; height:15px"/>
+
+    <a href="https://instagram.com/rubio.kittsrey"
+       title="Instagram"
+       style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=instagram" style="width:15px; height:15px" />
       <span>@rubio.kittsrey</span>
     </a>
-    <!-- Discord -->
-    <a href="https://discord.com/users/mcn.topher" title="Discord" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
-      <img src="https://go-skill-icons.vercel.app/api/icons?i=discord" title="Discord" style="width:15px; height:15px"/>
+
+    <a href="https://discord.com/users/mcn.topher"
+       title="Discord"
+       style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=discord" style="width:15px; height:15px" />
       <span>mcn.topher</span>
     </a>
-    <!-- X / Twitter -->
-    <a href="https://x.com/mcn.topher" title="X / Twitter" style="display:flex; align-items:center; gap:6px; text-decoration:none; color: inherit;">
-      <img src="https://go-skill-icons.vercel.app/api/icons?i=x" title="X / Twitter" style="width:15px; height:15px"/>
+
+    <a href="https://x.com/mcn.topher"
+       title="X / Twitter"
+       style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=x" style="width:15px; height:15px" />
       <span>@mcn.topher</span>
     </a>
-
   </div>
 </div>
+
