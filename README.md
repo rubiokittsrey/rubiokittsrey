@@ -121,11 +121,17 @@
       align-items: center;
     "
   >
-    <a href="mailto:contact@rubiokittsrey.dev"
+    <!-- <a href="mailto:contact@rubiokittsrey.dev"
        title="Email"
        style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
       <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" style="width:15px; height:15px" />
       <span>contact@rubiokittsrey.dev</span>
+    </a> -->
+    <a href="mailto:kittsreyrubio@gmail.com"
+       title="Email"
+       style="display:flex; align-items:center; gap:6px; text-decoration:none; color:inherit; white-space:nowrap;">
+      <img src="https://go-skill-icons.vercel.app/api/icons?i=gmail" style="width:15px; height:15px" />
+      <span>kittsreyrubio@gmail.com</span>
     </a>
     <a href="https://www.facebook.com/rubio.kittsrey"
        title="Facebook"
