@@ -5,8 +5,10 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { EffectComposer } from '@react-three/postprocessing';
 import { Mesh } from 'three';
 import { OrbitControls } from '@react-three/drei';
+import { useTheme } from 'next-themes';
 
-import { AsciiEffect } from './ascii-effect';
+import { AsciiCompWrapper } from './ascii-postproc';
+import { cn } from '@/lib/utils';
 
 function RotatingKnot() {
     const meshRef = useRef<Mesh>(null);
@@ -26,7 +28,12 @@ function RotatingKnot() {
     );
 }
 
-export default function EffectScene() {
+export default function Ascii3dScene({
+    className,
+    ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
+    const { theme } = useTheme();
+
     const containerStyle = useMemo(
         () => ({
             width: '100%',
@@ -38,13 +45,9 @@ export default function EffectScene() {
     );
 
     return (
-        <div style={containerStyle}>
-            <Canvas
-                style={{ width: '100%', height: '100%' }}
-                camera={{ position: [0, 0, 5], fov: 50 }}
-                dpr={[1, 2]}
-            >
-                <ambientLight intensity={2.23} />
+        <div {...props} className={cn('w-full aspect-square m-auto', className)}>
+            <Canvas camera={{ position: [0, 0, 5], fov: 50 }} dpr={[1, 2]}>
+                <ambientLight intensity={theme == 'dark' ? 2.23 : 2.5} />
                 <directionalLight position={[3, 4, 2]} intensity={0.75} />
 
                 <RotatingKnot />
@@ -59,9 +62,9 @@ export default function EffectScene() {
                 />
 
                 <EffectComposer autoClear={false}>
-                    <AsciiEffect
-                        ramp={'  `^vwo8M$#{}&'}
-                        cellSize={9}
+                    <AsciiCompWrapper
+                        ramp={theme == 'dark' ? '  `^vwo8M$#{}&' : '  .*%08M$#{}&'}
+                        cellSize={8}
                         glyphCellPx={75}
                         glyphContrast={50}
                         lumCutoff={0.178}

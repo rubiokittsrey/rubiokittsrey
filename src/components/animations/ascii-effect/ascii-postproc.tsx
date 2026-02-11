@@ -66,8 +66,13 @@ function createAsciiAtlasTexture(options?: {
 
     const tex = new CanvasTexture(canvas);
 
+    tex.generateMipmaps = false;
+
     tex.wrapS = ClampToEdgeWrapping;
     tex.wrapT = ClampToEdgeWrapping;
+
+    tex.minFilter = NearestFilter;
+    tex.magFilter = NearestFilter;
 
     tex.needsUpdate = true;
     tex.flipY = false;
@@ -142,7 +147,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 }
 `;
 
-export type AsciiEffectOptions = {
+export type AsciiPostProcOptions = {
     cellSize?: number;
     resolution?: Vector2;
     atlasTexture?: CanvasTexture;
@@ -153,7 +158,7 @@ export type AsciiEffectOptions = {
 };
 
 // post proc impl, owns uniforms and synchs them every frame with the update() method
-class AsciiEffectImpl extends Effect {
+class AsciiPostProcImpl extends Effect {
     private _cellSize: number;
     private _resolution: Vector2;
     private _inkColor: Color;
@@ -164,7 +169,7 @@ class AsciiEffectImpl extends Effect {
     private _glyphContrast: number;
     private _lumCutoff: number;
 
-    constructor(options: AsciiEffectOptions = {}) {
+    constructor(options: AsciiPostProcOptions = {}) {
         const {
             cellSize = 9,
             resolution = new Vector2(1, 1),
@@ -254,7 +259,7 @@ class AsciiEffectImpl extends Effect {
     }
 }
 
-export type AsciiEffectProps = {
+export type AsciiCompWrapperProps = {
     cellSize?: number;
     glyphCellPx?: number;
     ramp?: string;
@@ -274,7 +279,7 @@ function stringToAsciiCodes(s: string): number[] {
 // creates and memoizes atlas tex & postproc effect instance
 // effect instance is created once with useMemo with an empty dep array
 // and only mutated using setter methods in useEffect hooks
-export const AsciiEffect = forwardRef<AsciiEffectImpl, AsciiEffectProps>(
+export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperProps>(
     (
         {
             cellSize = 9,
@@ -289,16 +294,12 @@ export const AsciiEffect = forwardRef<AsciiEffectImpl, AsciiEffectProps>(
 
         const atlasTexture = useMemo(() => {
             const tex = createAsciiAtlasTexture({ cellPx: glyphCellPx });
-
-            tex.minFilter = NearestFilter;
-            tex.magFilter = NearestFilter;
-
             return tex;
         }, [glyphCellPx]);
 
         const effect = useMemo(
             () =>
-                new AsciiEffectImpl({
+                new AsciiPostProcImpl({
                     cellSize,
                     resolution: new Vector2(size.width, size.height),
                     atlasTexture,
@@ -353,4 +354,4 @@ export const AsciiEffect = forwardRef<AsciiEffectImpl, AsciiEffectProps>(
     }
 );
 
-AsciiEffect.displayName = 'AsciiEffect';
+AsciiCompWrapper.displayName = 'AsciiEffect';

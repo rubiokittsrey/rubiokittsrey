@@ -4,7 +4,7 @@ import { BoxesIcon, MailIcon, PencilLine, User2Icon } from 'lucide-react';
 import { NavItem, NavItemProps } from '@/components/navigation/nav-item';
 import NavBanner from './nav-banner';
 import { Button } from '../ui/button';
-import ThemeToggle from '../theme-toggle';
+import ThemeToggle from './theme-toggle';
 
 export default function NavSection() {
     const links: NavItemProps[] = [
