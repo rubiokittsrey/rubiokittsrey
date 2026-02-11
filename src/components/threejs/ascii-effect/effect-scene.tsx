@@ -14,15 +14,14 @@ function RotatingKnot() {
     useFrame((_state, dt) => {
         const m = meshRef.current;
         if (!m) return;
-
         m.rotation.y += dt * 0.7;
         m.rotation.x += dt * 0.25;
     });
 
     return (
         <mesh ref={meshRef}>
-            <torusKnotGeometry args={[1, 0.35, 180, 24]} />
-            <meshStandardMaterial color="white" metalness={0.2} roughness={0.6} />
+            <torusKnotGeometry args={[1, 0.25, 160, 20, 2, 5]} />
+            <meshStandardMaterial color="white" metalness={0.75} roughness={0.6} />
         </mesh>
     );
 }
@@ -32,7 +31,7 @@ export default function EffectScene() {
         () => ({
             width: '100%',
             aspectRatio: '1 / 1',
-            maxWidth: 560,
+            maxWidth: 650,
             margin: '0 auto',
         }),
         []
@@ -45,8 +44,8 @@ export default function EffectScene() {
                 camera={{ position: [0, 0, 5], fov: 50 }}
                 dpr={[1, 2]}
             >
-                <ambientLight intensity={1} />
-                <directionalLight position={[3, 4, 2]} intensity={1.1} />
+                <ambientLight intensity={2.23} />
+                <directionalLight position={[3, 4, 2]} intensity={0.75} />
 
                 <RotatingKnot />
                 <OrbitControls
@@ -54,13 +53,19 @@ export default function EffectScene() {
                     enableZoom={false}
                     enableRotate={true}
                     enableDamping
-                    dampingFactor={0.08}
+                    dampingFactor={0.05}
                     minPolarAngle={Math.PI * 0.15}
                     maxPolarAngle={Math.PI * 0.85}
                 />
 
-                <EffectComposer>
-                    <AsciiEffect cellSize={9} />
+                <EffectComposer autoClear={false}>
+                    <AsciiEffect
+                        ramp={'  `^vwo8M$#{}&'}
+                        cellSize={9}
+                        glyphCellPx={75}
+                        glyphContrast={50}
+                        lumCutoff={0.178}
+                    />
                 </EffectComposer>
             </Canvas>
         </div>
