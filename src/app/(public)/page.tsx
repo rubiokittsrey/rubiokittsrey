@@ -7,6 +7,8 @@ import { cn } from '@/lib/utils';
 import { FLowingLayoutShell } from '@/components/layout-shells/flowing-content-layout';
 import React from 'react';
 import Ascii3dScene from '@/components/animations/ascii-effect/ascii-scene-comp';
+import { ParallaxLayer } from '@/components/animations/parallax-effect/parallax-layer';
+import NavBanner from '@/components/navigation/nav-banner';
 
 function LandingPageLayout({ children }: { children: React.ReactNode }) {
     return (
@@ -19,38 +21,44 @@ function LandingPageLayout({ children }: { children: React.ReactNode }) {
 export default function LandingPage() {
     return (
         <LandingPageLayout>
-            <div className="w-full h-[200vh] ">
-                <SectionOne />
-            </div>
+            <SectionOne />
+            <SectionTwo />
         </LandingPageLayout>
     );
 }
 
-export function SectionOne({
-    className,
-    children,
-    ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+export function SectionOne({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+    const sectionRef = React.useRef<HTMLElement | null>(null);
+
     return (
-        <div
+        <section
+            ref={sectionRef}
             {...props}
-            className={cn('h-screen flex overflow-hidden items-end relative p-15', className)}
+            className={cn('relative w-full h-screen overflow-hidden', className)}
         >
-            <Ascii3dScene className="max-w-8/12 absolute top-0 bottom-0 left-0 right-0 z-50" />
-            <div className="col-span-7 z-40">
-                <h1 className={'font-sans text-5xl font-medium'}></h1>{' '}
+            <div className="sticky top-0 h-screen w-full">
+                <ParallaxLayer
+                    target={sectionRef as unknown as React.RefObject<HTMLElement>}
+                    y={[300, -300]}
+                    className="absolute inset-0 z-50 flex items-end p-10 pointer-events-none"
+                >
+                    <NavBanner />
+                </ParallaxLayer>
+
+                <ParallaxLayer
+                    target={sectionRef as unknown as React.RefObject<HTMLElement>}
+                    y={[-500, 500]}
+                    className="absolute inset-0 z-0"
+                >
+                    <Ascii3dScene className="max-w-6/12 absolute inset-0" />
+                </ParallaxLayer>
             </div>
-        </div>
+        </section>
     );
-    // return (
-    //     <div
-    //         {...props}
-    //         className="h-[calc(100vh-7.5rem)] grid grid-cols-12 items-center justify-center"
-    //     >
-    //         <div className="col-span-7">
-    //             <h1 className={'font-sans text-8xl font-medium'}>Hello there</h1>
-    //         </div>
-    //         <Ascii3dScene className="col-span-5" />
-    //     </div>
-    // );
+}
+
+export function SectionTwo({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+    return (
+        <section {...props} className={cn('w-full h-screen bg-neutral-200', className)}></section>
+    );
 }

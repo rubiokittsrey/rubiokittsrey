@@ -16,8 +16,8 @@ function RotatingKnot() {
     useFrame((_state, dt) => {
         const m = meshRef.current;
         if (!m) return;
-        m.rotation.y += dt * 0.7;
-        m.rotation.x += dt * 0.25;
+        m.rotation.y += dt * 0.5;
+        m.rotation.x += dt * 0.15;
     });
 
     return (
