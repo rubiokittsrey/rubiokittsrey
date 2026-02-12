@@ -43,7 +43,7 @@ export default function LandingPageAnchorNav({
     );
 
     return (
-        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit top-14 right-14">
+        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit top-14 right-12">
             <div className="relative flex flex-col items-end space-y-3">
                 {sections.map((sec) => (
                     <AnchorNavItem

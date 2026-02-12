@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils';
 import { AnimatePresence, Variants, motion } from 'framer-motion';
 import { MoveRightIcon } from 'lucide-react';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 type AnimatedSectionLabelProps = {
     activeSection: string;
@@ -13,11 +14,19 @@ const slideVariants: Variants = {
     animate: (isVisible: boolean) => ({ y: 0, opacity: isVisible ? 1 : 0 }),
     exit: (d: 1 | -1) => ({ y: -d * 20, opacity: 0 }),
 };
-
 export function AnimatedSectionLabel({ activeSection, className }: AnimatedSectionLabelProps) {
     const order = ['main', 'about', 'contact'] as const;
     const [hovered, setHovered] = useState(false);
+    const router = useRouter();
+    const pathname = usePathname();
+    const isHome = pathname === '/';
 
+    // Derive the display label
+    const pathnameLabel = pathname.replace(/^\//, ''); // strip leading slash
+    const homeSectionLabel = activeSection === 'main' ? '' : activeSection;
+    const label = isHome ? homeSectionLabel : pathnameLabel;
+
+    // Direction tracking still based on activeSection for home, fixed for non-home
     const prevRef = useRef<(typeof order)[number] | null>(null);
     const prev = prevRef.current;
     const currentIndex = order.indexOf(activeSection as any);
@@ -34,19 +43,22 @@ export function AnimatedSectionLabel({ activeSection, className }: AnimatedSecti
         prevRef.current = activeSection as any;
     }, [activeSection]);
 
-    const label = activeSection === 'main' ? '' : activeSection;
-
     return (
         <div className="flex items-center">
-            <div className="h-0.5 w-40 bg-primary/25" />
+            <Line />
 
-            <h1 className={cn('ml-4 text-lg font-medium select-none flex items-center', className)}>
+            <h1
+                className={cn(
+                    'ml-4 mt-1 text-lg font-medium select-none flex items-center',
+                    className
+                )}
+            >
                 <span>/&nbsp;</span>
 
                 <div className="relative h-6 w-max flex flex-row space-x-2">
                     <AnimatePresence mode="wait" custom={direction}>
                         <motion.button
-                            key={activeSection}
+                            key={isHome ? activeSection : pathname}
                             custom={direction}
                             initial="initial"
                             animate="animate"
@@ -58,12 +70,18 @@ export function AnimatedSectionLabel({ activeSection, className }: AnimatedSecti
                                 stiffness: 25,
                                 damping: 25,
                             }}
-                            className="absolute left-0 -top-0.5 whitespace-nowrap cursor-pointer"
-                            disabled={!label}
+                            className={cn(
+                                'absolute left-0 -top-0.5 whitespace-nowrap',
+                                label && isHome && 'cursor-pointer'
+                            )}
+                            disabled={!label || !isHome}
+                            tabIndex={label && isHome ? 0 : -1}
                             aria-hidden={!label}
-                            tabIndex={label ? 0 : -1}
-                            onPointerEnter={() => setHovered(true)}
-                            onPointerLeave={() => setHovered(false)}
+                            onPointerEnter={!label || !isHome ? () => {} : () => setHovered(true)}
+                            onPointerLeave={() => (isHome ? setHovered(false) : undefined)}
+                            onClick={() => {
+                                if (isHome) router.push(activeSection);
+                            }}
                         >
                             <span className="relative inline-flex items-center">
                                 {label || '\u00A0'}
@@ -71,12 +89,14 @@ export function AnimatedSectionLabel({ activeSection, className }: AnimatedSecti
                                     aria-hidden
                                     initial={false}
                                     animate={
-                                        hovered ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }
+                                        hovered && isHome
+                                            ? { x: 0, opacity: 1 }
+                                            : { x: -20, opacity: 0 }
                                     }
                                     transition={{ duration: 0.2, ease: 'anticipate' }}
-                                    className="ml-3.5 inline-flex items-center"
+                                    className="ml-3 inline-flex items-center"
                                 >
-                                    <MoveRightIcon className="size-6" />
+                                    <MoveRightIcon className="size-6 text-primary/50" />
                                 </motion.span>
                             </span>
                         </motion.button>
@@ -84,5 +104,18 @@ export function AnimatedSectionLabel({ activeSection, className }: AnimatedSecti
                 </div>
             </h1>
         </div>
+    );
+}
+
+function Line() {
+    const pathname = usePathname();
+
+    return (
+        <motion.div
+            className="h-0.5 bg-primary/25"
+            initial={false}
+            animate={{ width: pathname !== '/' ? '1rem' : '10rem' }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+        />
     );
 }

@@ -21,7 +21,8 @@ export default function NavSection() {
 
     return (
         <div className="flex flex-row justify-between items-start fixed z-50 w-full px-10 pt-10">
-            <NavBanner />
+            {/* <NavBanner /> */}
+            <span>&nbsp;</span>
             <div className="flex flex-row justify-end items-center font-sans space-x-2">
                 {links.map((l) => (
                     <NavItem key={l.path} {...l} />

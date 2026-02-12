@@ -25,15 +25,12 @@ export default function LandingPage() {
 
     return (
         <FLowingLayoutShell>
-            <LandingPageActiveSecProvider>
-                <LandingPageAnchorNav sections={sections} />
-                <ScrollAwareNavBanner />
-                <SlideInFadeTransition>
-                    <MainSection ref={mainSectionRef} />
-                    <AboutSection ref={aboutSectionRef} />
-                    <ContactSection ref={contactSectionRef} />
-                </SlideInFadeTransition>
-            </LandingPageActiveSecProvider>
+            <LandingPageAnchorNav sections={sections} />
+            <SlideInFadeTransition>
+                <MainSection ref={mainSectionRef} />
+                <AboutSection ref={aboutSectionRef} />
+                <ContactSection ref={contactSectionRef} />
+            </SlideInFadeTransition>
         </FLowingLayoutShell>
     );
 }
