@@ -25,6 +25,17 @@ export default function ThemeToggle() {
         setTheme(theme === 'dark' ? 'light' : 'dark');
     };
 
+    if (!mounted)
+        return (
+            <Button
+                variant="outline"
+                className="rounded-full overflow-clip relative px-4.5 cursor-pointer"
+                disabled
+            >
+                <div className="size-4.5 absolute" />
+            </Button>
+        );
+
     return (
         <Button
             disabled={!mounted}
