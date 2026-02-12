@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnchorNavItem, AnchorNavItemProps } from './anchor-nav-item';
+import { useActiveSection } from './active-section-provider';
 
 export default function LandingPageAnchorNav({
     sections,
@@ -9,7 +10,7 @@ export default function LandingPageAnchorNav({
     sections: Omit<AnchorNavItemProps, 'isActive' | 'onInViewChange' | 'onClick'>[];
 }) {
     const initial = useMemo(() => sections[0]?.section ?? '', [sections]);
-    const [activeSection, setActiveSection] = useState(initial);
+    const { activeSection, setActiveSection } = useActiveSection();
     const [lockedSection, setLockedSection] = useState<string | null>(null);
 
     useEffect(() => {
@@ -42,7 +43,7 @@ export default function LandingPageAnchorNav({
     );
 
     return (
-        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit px-10 pt-12 right-0">
+        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit top-14 right-14">
             <div className="relative flex flex-col items-end space-y-3">
                 {sections.map((sec) => (
                     <AnchorNavItem

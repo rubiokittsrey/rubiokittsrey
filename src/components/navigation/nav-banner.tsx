@@ -24,9 +24,9 @@ export default function NavBanner({
             ref={ref}
             onClick={handleClick}
             variant={'ghost'}
-            className={cn('cursor-pointer rounded-f ull', className)}
+            className={cn('cursor-pointer', className)}
         >
-            <h1 className={cn(epilogue.className, 'text-2xl pt-1 select-none')}>
+            <h1 className={cn(epilogue.className, 'text-lg pt-1 select-none')}>
                 rubiokittsrey.dev
             </h1>
         </Button>
