@@ -4,10 +4,13 @@ import { BoxesIcon, MailIcon, PencilLine, User2Icon } from 'lucide-react';
 import { NavItem, NavItemProps } from '@/components/navigation/nav-item';
 import NavBanner from './nav-banner';
 import { Button } from '../ui/button';
-import ThemeToggle from './theme-toggle';
+import ThemeToggle from '../ui/theme-toggle';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { usePathname } from 'next/navigation';
 
 export default function NavSection() {
+    const pathName = usePathname();
+
     const links: NavItemProps[] = [
         { name: 'PROJECTS', path: '/projects', icon: BoxesIcon },
         { name: 'BLOG', path: '/blog', icon: PencilLine },
@@ -16,19 +19,21 @@ export default function NavSection() {
     ];
 
     const { scrollY } = useScroll();
-    const bottomDistance = typeof window !== 'undefined' ? window.innerHeight - 60 - 75 : 0;
-    const y = useTransform(scrollY, [0, 800], [bottomDistance, 0], {
+    const bottomDistance = typeof window !== 'undefined' ? window.innerHeight - 120 : 0;
+    const y = useTransform(scrollY, [0, 1000], [bottomDistance, 0], {
         clamp: true,
         ease: (t) => {
             return 1 - Math.pow(1 - t, 2.5);
         },
     });
 
+    if (pathName === '/') return null;
+
     return (
         <div className="flex flex-row justify-between items-start fixed z-50 w-full px-10 pt-10">
             <motion.div
                 style={{ y }}
-                className="pb-15"
+                className=""
                 transition={{
                     type: 'spring',
                     stiffness: 100,

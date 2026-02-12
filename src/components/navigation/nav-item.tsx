@@ -26,7 +26,6 @@ export function NavItem({ name, path, ...item }: NavItemProps) {
     const handleClick = () => {
         if (path === pathName) return;
         router.push(path);
-        setHover(false);
     };
 
     return (

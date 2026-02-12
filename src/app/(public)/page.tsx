@@ -10,85 +10,28 @@ import Ascii3dScene from '@/components/animations/ascii-effect/ascii-scene-comp'
 import { ParallaxLayer } from '@/components/animations/parallax-effect/parallax-layer';
 import NavBanner from '@/components/navigation/nav-banner';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, MoveDown } from 'lucide-react';
+import { ChevronDown, HomeIcon, MoveDown, User2Icon } from 'lucide-react';
+import LandingPageAnchorNav from '@/components/navigation/landing-page-anchor-nav/anchor-nav-section';
+import MainSection from '@/components/landing-page/main-section';
+import { AnchorNavItemProps } from '@/components/navigation/landing-page-anchor-nav/anchor-nav-item';
+import AboutSection from '@/components/landing-page/about-section';
 
-function LandingPageLayout({ children }: { children: React.ReactNode }) {
+export default function LandingPage() {
+    const mainSectionRef = useRef<HTMLElement>(null);
+    const aboutSectionRef = useRef<HTMLElement>(null);
+
+    const sections: AnchorNavItemProps[] = [
+        { section: 'main', icon: HomeIcon, ref: mainSectionRef },
+        { section: 'about', icon: User2Icon, ref: aboutSectionRef },
+    ];
+
     return (
         <FLowingLayoutShell>
-            <SlideInFadeTransition>{children}</SlideInFadeTransition>
+            <LandingPageAnchorNav sections={sections} />
+            <SlideInFadeTransition>
+                <MainSection ref={mainSectionRef} />
+                <AboutSection ref={aboutSectionRef} />
+            </SlideInFadeTransition>
         </FLowingLayoutShell>
     );
 }
-
-export default function LandingPage() {
-    const sectionTwoRef = useRef<HTMLElement>(null);
-
-    const scrollToSectionTwo = () => {
-        sectionTwoRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-        });
-    };
-
-    return (
-        <LandingPageLayout>
-            <SectionOne onScrollToNext={scrollToSectionTwo} />
-            <SectionTwo ref={sectionTwoRef} />
-        </LandingPageLayout>
-    );
-}
-
-interface SectionOneProps extends React.HTMLAttributes<HTMLDivElement> {
-    onScrollToNext?: () => void;
-}
-
-export const SectionOne = React.forwardRef<HTMLElement, SectionOneProps>(
-    ({ className, onScrollToNext, ...props }, ref) => {
-        const sectionRef = React.useRef<HTMLElement | null>(null);
-
-        return (
-            <section
-                ref={sectionRef}
-                {...props}
-                className={cn('relative w-full h-screen overflow-hidden', className)}
-            >
-                <div className="sticky top-0 h-screen w-full">
-                    <ParallaxLayer
-                        target={sectionRef as unknown as React.RefObject<HTMLElement>}
-                        y={[-500, 500]}
-                        className="absolute inset-0 z-0"
-                    >
-                        <Ascii3dScene className="max-w-6/12 absolute inset-0" />
-                    </ParallaxLayer>
-
-                    <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10">
-                        <Button
-                            onClick={onScrollToNext}
-                            variant="ghost"
-                            size="icon"
-                            className="rounded-full mb-8"
-                        >
-                            <MoveDown className="size-9 stroke-1" />
-                        </Button>
-                    </div>
-                </div>
-            </section>
-        );
-    }
-);
-
-SectionOne.displayName = 'SectionOne';
-
-export const SectionTwo = React.forwardRef<HTMLElement, React.HTMLAttributes<HTMLDivElement>>(
-    ({ className, ...props }, ref) => {
-        return (
-            <section
-                ref={ref}
-                {...props}
-                className={cn('w-full h-screen bg-neutral-400', className)}
-            ></section>
-        );
-    }
-);
-
-SectionTwo.displayName = 'SectionTwo';
