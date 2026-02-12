@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
-import { Be_Vietnam_Pro, Epilogue, Inter, JetBrains_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
-import localFont from 'next/font/local';
 
 const jetbrainsMono = JetBrains_Mono({
     variable: '--font-jetbrains-mono',

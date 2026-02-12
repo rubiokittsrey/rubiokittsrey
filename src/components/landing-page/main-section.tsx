@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import React, { useRef } from 'react';
-import Ascii3dScene from '../animations/ascii-effect/ascii-scene-comp';
+import Ascii3dScene from '../animations/ascii-shader-postproc/ascii-scene-comp';
 import { ParallaxLayer } from '../animations/parallax-effect/parallax-layer';
 
 export default function MainSection({

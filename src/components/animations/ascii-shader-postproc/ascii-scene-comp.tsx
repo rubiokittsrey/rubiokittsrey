@@ -65,7 +65,7 @@ export default function Ascii3dScene({
                     <AsciiCompWrapper
                         ramp={theme == 'dark' ? '  `^vwo8M$#{}&' : '  .*%08M$#{}&'}
                         cellSize={10}
-                        glyphCellPx={75}
+                        glyphCellPx={24}
                         glyphContrast={50}
                         lumCutoff={0.178}
                     />
