@@ -13,7 +13,7 @@ export default function AboutSection({
         <section
             {...props}
             ref={ref}
-            className={cn('relative w-full h-[200vh] overflow-hidden bg-neutral-900', className)}
+            className={cn('relative w-full h-[200vh] overflow-hidden', className)}
         >
             <div className="w-full h-[200vh]">
                 <div className="h-[calc(100vh-7.5rem)] flex flex-col items-center justify-center">

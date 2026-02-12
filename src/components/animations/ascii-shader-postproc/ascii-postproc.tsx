@@ -98,52 +98,51 @@ uniform float rampLen;
 uniform float glyphContrast;
 
 float sampleGlyph(float charIndex, vec2 p) {
-  float cols = atlasGrid.x;
-  float rows = atlasGrid.y;
+    float cols = atlasGrid.x;
+    float rows = atlasGrid.y;
 
-  float x = mod(charIndex, cols);
-  float y = floor(charIndex / cols);
+    float x = mod(charIndex, cols);
+    float y = floor(charIndex / cols);
 
-  vec2 cellUV = (vec2(x, y) + p) / vec2(cols, rows);
+    vec2 cellUV = (vec2(x, y) + p) / vec2(cols, rows);
 
-  return texture2D(glyphAtlas, cellUV).r;
+    return texture2D(glyphAtlas, cellUV).r;
 }
 
 // picks an ASCII code from the ramp based on luminance.
 // lum is in [0,1], bucket it into rampLen discrete steps.
 float pickCharCode(float lum) {
-  float n = max(rampLen, 1.0);
+    float n = max(rampLen, 1.0);
 
-  float idx = floor(clamp(lum, 0.0, 0.9999) * n);
+    float idx = floor(clamp(lum, 0.0, 0.9999) * n);
 
-  idx = clamp(idx, 0.0, n - 1.0);
+    idx = clamp(idx, 0.0, n - 1.0);
 
-  // ramp stores ASCII codes as floats; cast idx to int to index the uniform array.
-  return ramp[int(idx)];
+    // ramp stores ASCII codes as floats; cast idx to int to index the uniform array.
+    return ramp[int(idx)];
 }
 
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-  vec2 cellCount = max(vec2(1.0), resolution / max(cellSize, 1.0));
-  vec2 cellCoord = floor(uv * cellCount);
+    vec2 cellCount = max(vec2(1.0), resolution / max(cellSize, 1.0));
+    vec2 cellCoord = floor(uv * cellCount);
 
-  // sample source scene at the center of the cell so each cell shares one color sample
-  vec2 cellUV = (cellCoord + 0.5) / cellCount;
-  vec3 col = texture2D(inputBuffer, cellUV).rgb;
+    vec2 cellUV = (cellCoord + 0.5) / cellCount;
+    vec3 col = texture2D(inputBuffer, cellUV).rgb;
 
-  float lum = dot(col, vec3(0.299, 0.587, 0.114));
+    float lum = dot(col, vec3(0.299, 0.587, 0.114));
 
-  // choose glyph based on lum and sample intensity at local pixel
-  vec2 localUV = fract(uv * cellCount);
-  float code = pickCharCode(lum);
-  float ink = sampleGlyph(code, localUV);
+    vec2 localUV = fract(uv * cellCount);
+    float code = pickCharCode(lum);
+    float ink = sampleGlyph(code, localUV); 
+    ink = smoothstep(0.2, 0.8, ink);
 
-  if (lum < lumCutoff) {
-    outputColor = vec4(0.0, 0.0, 0.0, 0.0);
-    return;
-  }
+    if (lum < lumCutoff) {
+        outputColor = vec4(0.0);
+        return;
+    }
 
-  outputColor = vec4(inkColor, ink);
+    outputColor = vec4(inkColor * ink, ink);
 }
 `;
 

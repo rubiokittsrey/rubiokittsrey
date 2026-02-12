@@ -11,7 +11,7 @@ export default function ScrollAwareNavBanner() {
     const [bottomDistance, setBottomDistance] = useState(0);
 
     useEffect(() => {
-        setBottomDistance(window.innerHeight - 130);
+        setBottomDistance(window.innerHeight - 125);
     }, []);
 
     const y = useTransform(scrollY, [0, 1000], [bottomDistance, 0], {
@@ -21,7 +21,7 @@ export default function ScrollAwareNavBanner() {
         },
     });
 
-    const scale = useTransform(scrollY, [0, 1000], [1.5, 1], {
+    const scale = useTransform(scrollY, [0, 1000], [1, 1], {
         clamp: true,
     });
 

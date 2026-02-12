@@ -22,7 +22,7 @@ function RotatingKnot() {
 
     return (
         <mesh ref={meshRef}>
-            <torusKnotGeometry args={[1, 0.25, 160, 20, 2, 5]} />
+            <torusKnotGeometry args={[1, 0.3, 160, 20, 2, 5]} />
             <meshStandardMaterial color="white" metalness={0.75} roughness={0.6} />
         </mesh>
     );
@@ -34,19 +34,16 @@ export default function Ascii3dScene({
 }: React.HTMLAttributes<HTMLDivElement>) {
     const { theme } = useTheme();
 
-    const containerStyle = useMemo(
-        () => ({
-            width: '100%',
-            aspectRatio: '1 / 1',
-            maxWidth: 650,
-            margin: '0 auto',
-        }),
-        []
-    );
-
     return (
         <div {...props} className={cn('w-full aspect-square m-auto', className)}>
-            <Canvas camera={{ position: [0, 0, 5], fov: 50 }} dpr={[1, 2]}>
+            <Canvas
+                camera={{ position: [0, 0, 5], fov: 50 }}
+                dpr={[1, 2]}
+                gl={{ alpha: true }}
+                onCreated={({ gl }) => {
+                    gl.setClearColor(0x000000, 0);
+                }}
+            >
                 <ambientLight intensity={theme == 'dark' ? 2.23 : 2.5} />
                 <directionalLight position={[3, 4, 2]} intensity={0.75} />
 
@@ -61,11 +58,11 @@ export default function Ascii3dScene({
                     maxPolarAngle={Math.PI * 0.85}
                 />
 
-                <EffectComposer autoClear={false}>
+                <EffectComposer>
                     <AsciiCompWrapper
-                        ramp={theme == 'dark' ? '  `^vwo8M$#{}&' : '  .*%08M$#{}&'}
-                        cellSize={10}
-                        glyphCellPx={24}
+                        ramp={'  .*###8@&&$@@'}
+                        cellSize={12}
+                        glyphCellPx={60}
                         glyphContrast={50}
                         lumCutoff={0.178}
                     />
