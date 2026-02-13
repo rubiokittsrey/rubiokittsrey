@@ -1,21 +1,20 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import {
     motion,
     useScroll,
     useTransform,
     useMotionValue,
-    useMotionValueEvent,
+    type MotionValue,
     type MotionStyle,
     type UseScrollOptions,
-    MotionValue,
 } from 'motion/react';
 
 type Range2 = [number, number];
 type Offset = NonNullable<UseScrollOptions['offset']>;
 
-type ParallaxLayerProps = {
+export type ParallaxLayerProps = {
     target: React.RefObject<HTMLElement>;
     children: React.ReactNode;
     className?: string;
@@ -25,45 +24,23 @@ type ParallaxLayerProps = {
     x?: Range2;
     scale?: Range2;
     opacity?: Range2;
-
-    // smoothing in ms; lower = snappier, higher = smoother
     smoothMs?: number;
 };
 
 const DEFAULT_OFFSET = ['start end', 'end start'] as const satisfies Offset;
+const IDENTITY_RANGE: Range2 = [0, 0];
 
-function lerp(a: number, b: number, t: number) {
-    return a + (b - a) * t;
-}
+// returns a MotionValue that mirrors `source` only while `active` is true,
+// and freezes at its last value when inactive — zero extra allocations per render.
+function useFrozenMotionValue(source: MotionValue<number>, active: boolean): MotionValue<number> {
+    const frozen = useMotionValue<number>(source.get());
 
-// Exponential moving average smoother for MotionValue<number>
-function useSmooth(source: MotionValue<number>, smoothMs: number): MotionValue<number> {
-    const out = useMotionValue<number>(source.get());
-    const targetRef = React.useRef(source.get());
+    useEffect(() => {
+        if (!active) return;
+        return source.on('change', (v) => frozen.set(v));
+    }, [source, active, frozen]);
 
-    useMotionValueEvent(source, 'change', (v) => {
-        targetRef.current = v;
-    });
-
-    React.useEffect(() => {
-        let raf = 0;
-        let last = performance.now();
-
-        const tick = (now: number) => {
-            const dt = Math.max(0, now - last);
-            last = now;
-
-            const alpha = 1 - Math.exp(-dt / Math.max(1, smoothMs));
-            out.set(lerp(out.get(), targetRef.current, alpha));
-
-            raf = requestAnimationFrame(tick);
-        };
-
-        raf = requestAnimationFrame(tick);
-        return () => cancelAnimationFrame(raf);
-    }, [out, smoothMs]);
-
-    return out;
+    return frozen;
 }
 
 export function ParallaxLayer({
@@ -72,41 +49,63 @@ export function ParallaxLayer({
     className,
     style,
     offset = DEFAULT_OFFSET,
-    y = [0, 0],
+    y = IDENTITY_RANGE,
     x,
     scale,
     opacity,
-    smoothMs = 80,
+    smoothMs = 0,
 }: ParallaxLayerProps) {
+    const layerRef = useRef<HTMLDivElement>(null);
+    const [inView, setInView] = useState(true); // optimistic state (assume visible on mount)
+
+    useEffect(() => {
+        const el = layerRef.current;
+        if (!el || typeof IntersectionObserver === 'undefined') return;
+
+        const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+            rootMargin: '200px',
+        });
+        observer.observe(el);
+        return () => observer.disconnect();
+    }, []);
+
     const { scrollYProgress } = useScroll({ target, offset });
 
     const rawY = useTransform(scrollYProgress, [0, 1], y, { clamp: true });
-    const rawX = x ? useTransform(scrollYProgress, [0, 1], x, { clamp: true }) : undefined;
-    const rawScale = scale
-        ? useTransform(scrollYProgress, [0, 1], scale, { clamp: true })
-        : undefined;
-    const rawOpacity = opacity
-        ? useTransform(scrollYProgress, [0, 1], opacity, { clamp: true })
-        : undefined;
+    const rawX = useTransform(scrollYProgress, [0, 1], x ?? [0, 0], { clamp: true });
+    const rawScale = useTransform(scrollYProgress, [0, 1], scale ?? [1, 1], { clamp: true });
+    const rawOpacity = useTransform(scrollYProgress, [0, 1], opacity ?? [1, 1], { clamp: true });
 
-    const mvY = useSmooth(rawY, smoothMs);
-    const mvX = rawX ? useSmooth(rawX, smoothMs) : undefined;
-    const mvScale = rawScale ? useSmooth(rawScale, smoothMs) : undefined;
-    const mvOpacity = rawOpacity ? useSmooth(rawOpacity, smoothMs) : undefined;
+    // stop propagating changes while off-screen
+    const mvY = useFrozenMotionValue(rawY, inView);
+    const mvX = useFrozenMotionValue(rawX, inView && !!x);
+    const mvScale = useFrozenMotionValue(rawScale, inView && !!scale);
+    const mvOpacity = useFrozenMotionValue(rawOpacity, inView && !!opacity);
+
+    const smoothTransition = useMemo(
+        () =>
+            smoothMs > 0
+                ? `transform ${smoothMs}ms linear, opacity ${smoothMs}ms linear`
+                : undefined,
+        [smoothMs]
+    );
 
     const motionStyle = useMemo<MotionStyle>(
         () => ({
             y: mvY,
-            ...(mvX ? { x: mvX } : null),
-            ...(mvScale ? { scale: mvScale } : null),
-            ...(mvOpacity ? { opacity: mvOpacity } : null),
-            ...(style ?? {}),
+            ...(x ? { x: mvX } : null),
+            ...(scale ? { scale: mvScale } : null),
+            ...(opacity ? { opacity: mvOpacity } : null),
+            ...(smoothTransition
+                ? { transition: smoothTransition, willChange: 'transform, opacity' }
+                : null),
+            ...style,
         }),
-        [mvY, mvX, mvScale, mvOpacity, style]
+        [mvY, mvX, mvScale, mvOpacity, !!x, !!scale, !!opacity, smoothTransition, style]
     );
 
     return (
-        <motion.div className={className} style={motionStyle}>
+        <motion.div ref={layerRef} className={className} style={motionStyle}>
             {children}
         </motion.div>
     );

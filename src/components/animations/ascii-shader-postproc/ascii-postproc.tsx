@@ -3,19 +3,8 @@
 import { forwardRef, useEffect, useMemo } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Effect, BlendFunction } from 'postprocessing';
-import {
-    CanvasTexture,
-    Color,
-    NearestFilter,
-    Uniform,
-    Vector2,
-    WebGLRenderTarget,
-    WebGLRenderer,
-    ClampToEdgeWrapping,
-} from 'three';
+import { CanvasTexture, Color, NearestFilter, Uniform, Vector2, ClampToEdgeWrapping } from 'three';
 
-// builds glyph atlas texture (16x16 grid, ASCII -> 0..255)
-// uses an offscreen canvas and then uploads to gpu as THREE.js canvas tex
 function createAsciiAtlasTexture(options?: {
     cellPx?: number;
     fontFamily?: string;
@@ -27,120 +16,77 @@ function createAsciiAtlasTexture(options?: {
     const fontWeight = options?.fontWeight ?? '700';
     const paddingPx = options?.paddingPx ?? 2;
 
-    const cols = 16;
-    const rows = 16;
+    const COLS = 16;
+    const ROWS = 16;
 
-    // create offscreen canvas large enough to hold the full atlas then get
-    // 2D context used to draw glyphs into the atlas.
     const canvas = document.createElement('canvas');
-    canvas.width = cols * cellPx;
-    canvas.height = rows * cellPx;
+    canvas.width = COLS * cellPx;
+    canvas.height = ROWS * cellPx;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('Failed to get 2D canvas context for ASCII atlas.');
 
-    // bg
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = 'white';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+    ctx.font = `${fontWeight} ${Math.floor(cellPx - paddingPx * 2)}px ${fontFamily}`;
 
-    const fontSize = Math.floor(cellPx - paddingPx * 2);
-    ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
-
-    // fill atlas slots with ASCII (0..255)
     for (let code = 0; code < 256; code++) {
-        const x = code % cols;
-        const y = Math.floor(code / cols);
-
         const ch = code < 32 ? ' ' : String.fromCharCode(code);
-
-        const cx = x * cellPx + cellPx * 0.5;
-        const cy = y * cellPx + cellPx * 0.5;
-
+        const cx = (code % COLS) * cellPx + cellPx * 0.5;
+        const cy = Math.floor(code / COLS) * cellPx + cellPx * 0.5;
         ctx.fillText(ch, cx, cy);
     }
 
     const tex = new CanvasTexture(canvas);
-
     tex.generateMipmaps = false;
-
     tex.wrapS = ClampToEdgeWrapping;
     tex.wrapT = ClampToEdgeWrapping;
-
     tex.minFilter = NearestFilter;
     tex.magFilter = NearestFilter;
-
-    tex.needsUpdate = true;
     tex.flipY = false;
-
+    tex.needsUpdate = true;
     return tex;
 }
 
-// fragmetn shader for postproc ASCII effect
-// subdivide screen into cells, for each pixel sampe source scene color at center of cell (cellUV)
-// conert sampled c to luminance, map luminance into ASCII charracters (ramp)
-// then samples the corresponding glyph from the atlas using per-pixel localUV within the cell
-// and finally output ink color with glyph intensity as alpha
 const fragmentShader = `
 uniform float cellSize;
 uniform vec2 resolution;
 uniform vec3 inkColor;
 uniform float lumCutoff;
-
 uniform sampler2D glyphAtlas;
-uniform vec2 atlasGrid; 
+uniform vec2 atlasGrid;
 uniform float ramp[16];
 uniform float rampLen;
 uniform float glyphContrast;
 
 float sampleGlyph(float charIndex, vec2 p) {
-    float cols = atlasGrid.x;
-    float rows = atlasGrid.y;
-
-    float x = mod(charIndex, cols);
-    float y = floor(charIndex / cols);
-
-    vec2 cellUV = (vec2(x, y) + p) / vec2(cols, rows);
-
-    return texture2D(glyphAtlas, cellUV).r;
+    vec2 atlasUV = (vec2(mod(charIndex, atlasGrid.x), floor(charIndex / atlasGrid.x)) + p) / atlasGrid;
+    return texture2D(glyphAtlas, atlasUV).r;
 }
 
-// picks an ASCII code from the ramp based on luminance.
-// lum is in [0,1], bucket it into rampLen discrete steps.
 float pickCharCode(float lum) {
-    float n = max(rampLen, 1.0);
-
-    float idx = floor(clamp(lum, 0.0, 0.9999) * n);
-
-    idx = clamp(idx, 0.0, n - 1.0);
-
-    // ramp stores ASCII codes as floats; cast idx to int to index the uniform array.
+    float idx = clamp(floor(lum * rampLen), 0.0, rampLen - 1.0);
     return ramp[int(idx)];
 }
-
 
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
     vec2 cellCount = max(vec2(1.0), resolution / max(cellSize, 1.0));
     vec2 cellCoord = floor(uv * cellCount);
 
-    vec2 cellUV = (cellCoord + 0.5) / cellCount;
-    vec3 col = texture2D(inputBuffer, cellUV).rgb;
-
+    vec3 col = texture2D(inputBuffer, (cellCoord + 0.5) / cellCount).rgb;
     float lum = dot(col, vec3(0.299, 0.587, 0.114));
-
-    vec2 localUV = fract(uv * cellCount);
-    float code = pickCharCode(lum);
-    float ink = sampleGlyph(code, localUV); 
-    ink = smoothstep(0.2, 0.8, ink);
 
     if (lum < lumCutoff) {
         outputColor = vec4(0.0);
         return;
     }
+
+    float ink = sampleGlyph(pickCharCode(lum), fract(uv * cellCount));
+    ink = smoothstep(0.2, 0.8, ink * glyphContrast);
 
     outputColor = vec4(inkColor * ink, ink);
 }
@@ -156,26 +102,13 @@ export type AsciiPostProcOptions = {
     lumCutoff?: number;
 };
 
-// post proc impl, owns uniforms and synchs them every frame with the update() method
 class AsciiPostProcImpl extends Effect {
-    private _cellSize: number;
-    private _resolution: Vector2;
-    private _inkColor: Color;
-    private _atlasTexture: CanvasTexture;
-    private _atlasGrid: Vector2;
-    private _ramp: Float32Array;
-    private _rampLen: number;
-    private _glyphContrast: number;
-    private _lumCutoff: number;
-
     constructor(options: AsciiPostProcOptions = {}) {
         const {
             cellSize = 9,
             resolution = new Vector2(1, 1),
-
             atlasTexture = createAsciiAtlasTexture(),
             atlasGrid = new Vector2(16, 16),
-
             rampCodes = [32, 46, 58, 45, 61, 43, 42, 35, 37, 64],
             glyphContrast = 1.6,
             lumCutoff = 0.05,
@@ -189,72 +122,48 @@ class AsciiPostProcImpl extends Effect {
             blendFunction: BlendFunction.SRC,
             uniforms: new Map<string, Uniform>([
                 ['cellSize', new Uniform(cellSize)],
-                ['resolution', new Uniform(resolution)],
+                ['resolution', new Uniform(resolution.clone())],
                 ['inkColor', new Uniform(new Color(1, 1, 1))],
-
                 ['glyphAtlas', new Uniform(atlasTexture)],
-                ['atlasGrid', new Uniform(atlasGrid)],
+                ['atlasGrid', new Uniform(atlasGrid.clone())],
                 ['ramp', new Uniform(ramp)],
                 ['rampLen', new Uniform(len)],
                 ['glyphContrast', new Uniform(glyphContrast)],
                 ['lumCutoff', new Uniform(lumCutoff)],
             ]),
         });
-
-        this._cellSize = cellSize;
-        this._resolution = resolution;
-        this._inkColor = new Color(1, 1, 1);
-
-        this._atlasTexture = atlasTexture;
-        this._atlasGrid = atlasGrid;
-
-        this._ramp = ramp;
-        this._rampLen = len;
-        this._glyphContrast = glyphContrast;
-        this._lumCutoff = lumCutoff;
     }
 
-    setCellSize(cellSize: number): void {
-        this._cellSize = cellSize;
+    set cellSize(v: number) {
+        this.uniforms.get('cellSize')!.value = v;
     }
 
-    setLumCutoff(v: number): void {
-        this._lumCutoff = v;
+    set lumCutoff(v: number) {
+        this.uniforms.get('lumCutoff')!.value = v;
     }
 
-    setResolution(resolution: Vector2): void {
-        this._resolution = resolution;
+    set glyphContrast(v: number) {
+        this.uniforms.get('glyphContrast')!.value = v;
+    }
+
+    setResolution(w: number, h: number): void {
+        this.uniforms.get('resolution')!.value.set(w, h);
     }
 
     setInkColor(color: Color): void {
-        this._inkColor.copy(color);
+        this.uniforms.get('inkColor')!.value.copy(color);
     }
 
     setAtlasTexture(tex: CanvasTexture): void {
-        this._atlasTexture = tex;
+        this.uniforms.get('glyphAtlas')!.value = tex;
     }
 
     setRampCodes(codes: number[]): void {
+        const ramp: Float32Array = this.uniforms.get('ramp')!.value;
         const len = Math.min(16, Math.max(1, codes.length));
-        this._ramp.fill(0);
-        for (let i = 0; i < len; i++) this._ramp[i] = codes[i];
-        this._rampLen = len;
-    }
-
-    setGlyphContrast(v: number): void {
-        this._glyphContrast = v;
-    }
-
-    update(_renderer: WebGLRenderer, _inputBuffer: WebGLRenderTarget, _deltaTime: number): void {
-        this.uniforms.get('cellSize')!.value = this._cellSize;
-        this.uniforms.get('resolution')!.value = this._resolution;
-        this.uniforms.get('inkColor')!.value = this._inkColor;
-        this.uniforms.get('glyphAtlas')!.value = this._atlasTexture;
-        this.uniforms.get('atlasGrid')!.value = this._atlasGrid;
-        this.uniforms.get('ramp')!.value = this._ramp;
-        this.uniforms.get('rampLen')!.value = this._rampLen;
-        this.uniforms.get('glyphContrast')!.value = this._glyphContrast;
-        this.uniforms.get('lumCutoff')!.value = this._lumCutoff;
+        ramp.fill(0);
+        for (let i = 0; i < len; i++) ramp[i] = codes[i];
+        this.uniforms.get('rampLen')!.value = len;
     }
 }
 
@@ -267,17 +176,15 @@ export type AsciiCompWrapperProps = {
 };
 
 function stringToAsciiCodes(s: string): number[] {
-    const codes: number[] = [];
-    for (let i = 0; i < s.length; i++) {
-        codes.push(s.charCodeAt(i));
-    }
-    return codes;
+    return Array.from(s, (ch) => ch.charCodeAt(0));
 }
 
-// react comp wrapper for the ascii effect
-// creates and memoizes atlas tex & postproc effect instance
-// effect instance is created once with useMemo with an empty dep array
-// and only mutated using setter methods in useEffect hooks
+const DARK_INK = new Color(1, 1, 1);
+const LIGHT_INK = new Color(0, 0, 0);
+
+// react wrapper for AsciiPostProcImpl.
+// effect is created once and mutated via setters; atlas texture is
+// re-created only when glyphCellPx changes.
 export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperProps>(
     (
         {
@@ -291,10 +198,10 @@ export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperPr
     ) => {
         const { size } = useThree();
 
-        const atlasTexture = useMemo(() => {
-            const tex = createAsciiAtlasTexture({ cellPx: glyphCellPx });
-            return tex;
-        }, [glyphCellPx]);
+        const atlasTexture = useMemo(
+            () => createAsciiAtlasTexture({ cellPx: glyphCellPx }),
+            [glyphCellPx]
+        );
 
         const effect = useMemo(
             () =>
@@ -305,16 +212,23 @@ export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperPr
                     atlasGrid: new Vector2(16, 16),
                     rampCodes: stringToAsciiCodes(ramp).slice(0, 16),
                     glyphContrast,
+                    lumCutoff,
                 }),
             []
         );
 
         useEffect(() => {
-            effect.setCellSize(cellSize);
+            effect.cellSize = cellSize;
         }, [cellSize, effect]);
+        useEffect(() => {
+            effect.glyphContrast = glyphContrast;
+        }, [glyphContrast, effect]);
+        useEffect(() => {
+            effect.lumCutoff = lumCutoff;
+        }, [lumCutoff, effect]);
 
         useEffect(() => {
-            effect.setResolution(new Vector2(size.width, size.height));
+            effect.setResolution(size.width, size.height);
         }, [size.width, size.height, effect]);
 
         useEffect(() => {
@@ -325,32 +239,18 @@ export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperPr
             effect.setRampCodes(stringToAsciiCodes(ramp).slice(0, 16));
         }, [ramp, effect]);
 
-        useEffect(() => {
-            effect.setGlyphContrast(glyphContrast);
-        }, [glyphContrast, effect]);
-
-        useEffect(() => {
-            effect.setLumCutoff(lumCutoff);
-        }, [lumCutoff, effect]);
-
-        // observe doc root class list for theme change
-        // calls on setInkColor of effect to sync to current theme
+        // sync ink color with document theme (light / dark class on <html>).
         useEffect(() => {
             const root = document.documentElement;
-            const apply = () => {
-                const isDark = root.classList.contains('dark');
-                effect.setInkColor(isDark ? new Color(1, 1, 1) : new Color(0, 0, 0));
-            };
-            apply();
+            const apply = () =>
+                effect.setInkColor(root.classList.contains('dark') ? DARK_INK : LIGHT_INK);
 
+            apply();
             const observer = new MutationObserver(apply);
             observer.observe(root, { attributes: true, attributeFilter: ['class'] });
-
             return () => observer.disconnect();
         }, [effect]);
 
         return <primitive ref={ref} object={effect} dispose={null} />;
     }
 );
-
-AsciiCompWrapper.displayName = 'AsciiEffect';
