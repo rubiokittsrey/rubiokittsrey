@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import ContextLabelButton from './context-label-button';
 import { motion } from 'framer-motion';
+import { useActiveSection } from '../anchor-nav/active-section-provider';
 
 export function NavContextLabel() {
     return (
@@ -22,12 +23,18 @@ function ContextLabel() {
 
 function ContextLabelLine() {
     const pathname = usePathname();
+    const { activeSection } = useActiveSection();
+    const active = activeSection != 'main';
+
     return (
         <motion.div
-            className="h-0.5 bg-primary/25"
+            className={cn(
+                'h-0.5 bg-primary opacity-15 transition-opacity rounded-full',
+                active && 'opacity-70'
+            )}
             initial={false}
-            animate={{ width: pathname !== '/' ? '0.5rem' : '10rem' }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            animate={{ width: pathname !== '/' ? '0.3rem' : '10rem' }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
         />
     );
 }

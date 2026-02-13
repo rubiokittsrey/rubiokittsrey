@@ -63,9 +63,10 @@ export default function ContextLabelButton() {
                     }}
                     className={cn(
                         'absolute left-3 top-0 whitespace-nowrap',
-                        label && isHome && 'cursor-pointer left-0'
+                        isHome && 'left-0',
+                        label && isHome && activeSection != 'main' && 'cursor-pointer'
                     )}
-                    disabled={!label || !isHome}
+                    disabled={!label || !isHome || activeSection == 'main'}
                     tabIndex={label && isHome ? 0 : -1}
                     aria-hidden={!label}
                     onPointerEnter={!label || !isHome ? () => {} : () => setHovered(true)}
@@ -95,7 +96,7 @@ function ContextLabelArrow({ animateOn }: { animateOn: boolean }) {
             transition={{ duration: 0.2, ease: 'anticipate' }}
             className="ml-3 inline-flex items-center"
         >
-            <MoveRightIcon className="size-6 text-primary/50" />
+            <MoveRightIcon className="size-7 text-primary/80 stroke-[1.7]" />
         </motion.span>
     );
 }

@@ -56,14 +56,14 @@ export function AnchorNavItem({
             </Button>
 
             <motion.div
-                className="relative w-0.5 self-end mr-5"
+                className="relative w-0.5 self-end mr-5 rounded-full overflow-clip"
                 animate={{
-                    height: isActive ? 56 : 0,
+                    height: isActive ? 80 : 0,
                     marginTop: isActive ? 12 : 0,
                 }}
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
             >
-                <div className="absolute inset-0 bg-muted" />
+                <div className="absolute inset-0 bg-primary/15" />
                 <motion.div
                     className="absolute top-0 left-0 right-0 bg-primary"
                     style={{ height: isActive ? lineHeight : '0%' }}
