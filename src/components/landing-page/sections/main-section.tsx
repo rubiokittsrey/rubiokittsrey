@@ -17,7 +17,7 @@ export default function MainSection({
         >
             <div className="sticky top-0 h-screen w-full">
                 <ParallaxLayer
-                    target={ref as unknown as React.RefObject<HTMLElement>}
+                    target={ref as React.RefObject<HTMLElement>}
                     y={[-500, 500]}
                     className="absolute inset-0 z-0"
                 >

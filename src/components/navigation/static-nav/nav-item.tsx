@@ -2,7 +2,7 @@
 
 import { LucideProps } from 'lucide-react';
 import { ForwardRefExoticComponent, RefAttributes, useState } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { motion } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';

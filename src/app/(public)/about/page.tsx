@@ -1,4 +1,4 @@
-import NavSection from '@/components/navigation/nav-section';
+import NavSection from '@/components/navigation/static-nav/nav-section';
 
 export default function AboutPage() {
     return (

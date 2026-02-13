@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { NavItemIcon } from '../nav-item';
+import { NavItemIcon } from '../static-nav/nav-item';
 
 export interface AnchorNavItemProps {
     section: string;
@@ -52,7 +52,7 @@ export function AnchorNavItem({
                 )}
                 onClick={() => onClick(section)}
             >
-                <Icon className="size-3.5 shrink-0" />
+                <Icon className="size-4 shrink-0" />
             </Button>
 
             <motion.div

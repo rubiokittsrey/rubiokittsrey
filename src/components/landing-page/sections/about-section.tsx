@@ -13,9 +13,9 @@ export default function AboutSection({
         <section
             {...props}
             ref={ref}
-            className={cn('relative w-full h-[200vh] overflow-hidden', className)}
+            className={cn('relative w-full overflow-hidden h-[200vh]', className)}
         >
-            <div className="w-full h-[200vh]">
+            <div className="w-full">
                 <div className="h-[calc(100vh-7.5rem)] flex flex-col items-center justify-center">
                     <div className="flex flex-col space-y-2">
                         <h1 className={'font-sans text-7xl font-medium'}>About Page</h1>

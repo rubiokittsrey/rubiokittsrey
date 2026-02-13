@@ -1,11 +1,8 @@
 'use client';
 
 import { BoxesIcon, MailIcon, PencilLine, User2Icon } from 'lucide-react';
-import { NavItem, NavItemProps } from '@/components/navigation/nav-item';
-import NavBanner from './nav-banner';
-import { Button } from '../ui/button';
-import ThemeToggle from '../ui/theme-toggle';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { NavItem, NavItemProps } from '@/components/navigation/static-nav/nav-item';
+import ThemeToggle from '../../ui/theme-toggle';
 import { usePathname } from 'next/navigation';
 
 export default function NavSection() {
@@ -21,7 +18,6 @@ export default function NavSection() {
 
     return (
         <div className="flex flex-row justify-between items-start fixed z-50 w-full px-10 pt-10">
-            {/* <NavBanner /> */}
             <span>&nbsp;</span>
             <div className="flex flex-row justify-end items-center font-sans space-x-2">
                 {links.map((l) => (

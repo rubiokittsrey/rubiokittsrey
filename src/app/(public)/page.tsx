@@ -2,17 +2,18 @@
 
 import { SlideInFadeTransition } from '@/components/animations/page-transitions';
 import { FLowingLayoutShell } from '@/components/layout-shells/flowing-content-layout';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { HomeIcon, MailIcon, User2Icon } from 'lucide-react';
 import LandingPageAnchorNav from '@/components/navigation/anchor-nav/anchor-nav-section';
 import MainSection from '@/components/landing-page/sections/main-section';
 import { AnchorNavItemProps } from '@/components/navigation/anchor-nav/anchor-nav-item';
 import AboutSection from '@/components/landing-page/sections/about-section';
-import ScrollAwareNavBanner from '@/components/landing-page/scroll-aware-nav-banner';
 import ContactSection from '@/components/landing-page/sections/contact-section';
-import { LandingPageActiveSecProvider } from '@/components/navigation/anchor-nav/active-section-provider';
+import { useActiveSection } from '@/components/navigation/anchor-nav/active-section-provider';
 
 export default function LandingPage() {
+    const { setSections } = useActiveSection();
+
     const mainSectionRef = useRef<HTMLElement>(null);
     const aboutSectionRef = useRef<HTMLElement>(null);
     const contactSectionRef = useRef<HTMLElement>(null);
@@ -22,6 +23,10 @@ export default function LandingPage() {
         { section: 'about', icon: User2Icon, targetRef: aboutSectionRef },
         { section: 'contact', icon: MailIcon, targetRef: contactSectionRef },
     ];
+
+    useEffect(() => {
+        setSections([...sections.map((s) => s.section)]);
+    }, []);
 
     return (
         <FLowingLayoutShell>

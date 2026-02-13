@@ -1,9 +1,9 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import { usePathname, useRouter } from 'next/navigation';
-import { epilogue } from '../ui/resources/fonts';
+import { epilogue } from '../../ui/resources/fonts';
 import React from 'react';
 
 export default function NavBanner({
@@ -21,14 +21,13 @@ export default function NavBanner({
 
     return (
         <Button
+            {...props}
             ref={ref}
             onClick={handleClick}
             variant={'ghost'}
             className={cn('cursor-pointer', className)}
         >
-            <h1 className={cn(epilogue.className, 'text-lg pt-1 select-none')}>
-                rubiokittsrey.dev
-            </h1>
+            <h1 className={cn(epilogue.className, 'text-lg select-none')}>rubiokittsrey.dev</h1>
         </Button>
     );
 }
