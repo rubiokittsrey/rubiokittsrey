@@ -3,8 +3,6 @@ import React, { useMemo, useRef } from 'react';
 import { motion, useScroll, useTransform, type UseScrollOptions } from 'motion/react';
 
 type Range2 = [number, number];
-type Range3 = [number, number, number];
-
 type Offset = NonNullable<UseScrollOptions['offset']>;
 
 export type ParallaxProps = {
@@ -17,10 +15,6 @@ export type ParallaxProps = {
     stickyTop?: number;
     render?: (progress: MotionValue<number>) => React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>;
-
-function mergeStyle(base: React.CSSProperties | undefined, extra: React.CSSProperties | undefined) {
-    return { ...(base ?? {}), ...(extra ?? {}) };
-}
 
 export function ParallaxSection({
     children,
