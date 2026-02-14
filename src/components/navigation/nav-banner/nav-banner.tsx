@@ -5,17 +5,20 @@ import { Button } from '../../ui/button';
 import { usePathname, useRouter } from 'next/navigation';
 import { epilogue } from '../../ui/resources/fonts';
 import React from 'react';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 
 export default function NavBanner({
     ref,
     className,
     ...props
 }: React.ClassAttributes<HTMLButtonElement> & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    const { activeSectionId } = useScrollSystem();
     const router = useRouter();
     const pathName = usePathname();
 
     const handleClick = () => {
         if (pathName === '/') return;
+        activeSectionId.set('main');
         router.push('/');
     };
 

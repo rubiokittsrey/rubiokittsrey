@@ -3,7 +3,6 @@
 import NavBanner from './nav-banner';
 import {
     motion,
-    useScroll,
     useMotionValueEvent,
     animate,
     useMotionValue,
@@ -12,9 +11,10 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { NavContextLabel } from '../nav-context-label/nav-context-label';
 import { usePathname } from 'next/navigation';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 
 export default function ScrollAwareNavBanner() {
-    const { scrollY } = useScroll();
+    const { y: scrollY } = useScrollSystem();
     const pathname = usePathname();
     const isHome = pathname === '/';
 
