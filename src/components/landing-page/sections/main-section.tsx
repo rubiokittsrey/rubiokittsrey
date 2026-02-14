@@ -16,13 +16,19 @@ export default function MainSection({
             className={cn('relative w-full h-screen overflow-hidden', className)}
         >
             <div className="sticky top-0 h-screen w-full">
-                <ParallaxLayer
+                <Ascii3dScene className="max-w-6/12 absolute inset-0" />
+                {/* <ParallaxLayer
                     target={ref as React.RefObject<HTMLElement>}
-                    y={[-500, 500]}
+                    y={[-400, 400]}
                     className="absolute inset-0 z-0"
+                    smoothing={{
+                        mass: 2,
+                        damping: 35,
+                        stiffness: 140,
+                    }}
                 >
                     <Ascii3dScene className="max-w-6/12 absolute inset-0" />
-                </ParallaxLayer>
+                </ParallaxLayer> */}
             </div>
         </section>
     );

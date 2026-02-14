@@ -1,15 +1,20 @@
 'use client';
 
 import NavBanner from './nav-banner';
-import { motion, useScroll, useTransform, useSpring } from 'motion/react';
-import { useEffect, useState } from 'react';
-import { useActiveSection } from '../anchor-nav/active-section-provider';
+import {
+    motion,
+    useScroll,
+    useMotionValueEvent,
+    animate,
+    useMotionValue,
+    type AnimationPlaybackControls,
+} from 'motion/react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { NavContextLabel } from '../nav-context-label/nav-context-label';
 import { usePathname } from 'next/navigation';
 
 export default function ScrollAwareNavBanner() {
     const { scrollY } = useScroll();
-    const { activeSection } = useActiveSection();
     const pathname = usePathname();
     const isHome = pathname === '/';
 
@@ -30,18 +35,44 @@ export default function ScrollAwareNavBanner() {
         return () => window.removeEventListener('resize', update);
     }, [isHome]);
 
-    const yTarget = useTransform(scrollY, (latestScroll) => {
-        if (!isHome) return 0;
+    const triggerY = useMemo(() => dimensions.height * 0.5, [dimensions.height]);
+    const pinAt = triggerY;
+    const unpinAt = triggerY * 0.85;
 
-        const t = Math.min(latestScroll / dimensions.height, 1);
-        const eased = 1 - Math.pow(1 - t, 2.5);
-        return dimensions.bottom * (1 - eased);
-    });
+    const y = useMotionValue(0);
 
-    const y = useSpring(yTarget, {
-        stiffness: 10000,
-        damping: 1000,
-        mass: 1,
+    const pinnedRef = useRef(false);
+    const controlsRef = useRef<AnimationPlaybackControls | null>(null);
+
+    const animateTo = (to: number, duration: number) => {
+        controlsRef.current?.stop();
+        controlsRef.current = animate(y, to, {
+            type: 'tween',
+            duration,
+            ease: [0.16, 1, 0.3, 1],
+        });
+    };
+
+    useEffect(() => {
+        if (!isHome) {
+            pinnedRef.current = true;
+            animateTo(0, 0.28);
+            return;
+        }
+
+        pinnedRef.current = false;
+        animateTo(dimensions.bottom, 0.42);
+    }, [isHome, dimensions.bottom]);
+
+    useMotionValueEvent(scrollY, 'change', (latest) => {
+        if (!isHome) return;
+
+        const shouldPin = pinnedRef.current ? latest >= unpinAt : latest >= pinAt;
+
+        if (shouldPin === pinnedRef.current) return;
+
+        pinnedRef.current = shouldPin;
+        animateTo(shouldPin ? 0 : dimensions.bottom, shouldPin ? 0.42 : 0.28);
     });
 
     return (
