@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
     motion,
     useScroll,
     useTransform,
     useMotionValue,
+    useSpring,
     type MotionValue,
     type MotionStyle,
     type UseScrollOptions,
@@ -24,14 +25,21 @@ export type ParallaxLayerProps = {
     x?: Range2;
     scale?: Range2;
     opacity?: Range2;
-    smoothMs?: number;
+
+    smoothing?: {
+        stiffness?: number;
+        damping?: number;
+        mass?: number;
+    };
+
+    // set to true to stop updating while off-screen
+    freezeWhenOffscreen?: boolean;
+    rootMargin?: string; // margin that updates "wake up" before entering view
 };
 
 const DEFAULT_OFFSET = ['start end', 'end start'] as const satisfies Offset;
 const IDENTITY_RANGE: Range2 = [0, 0];
 
-// returns a MotionValue that mirrors `source` only while `active` is true,
-// and freezes at its last value when inactive — zero extra allocations per render.
 function useFrozenMotionValue(source: MotionValue<number>, active: boolean): MotionValue<number> {
     const frozen = useMotionValue<number>(source.get());
 
@@ -53,42 +61,51 @@ export function ParallaxLayer({
     x,
     scale,
     opacity,
-    smoothMs = 0,
+    smoothing,
+    freezeWhenOffscreen = true,
+    rootMargin = '300px',
 }: ParallaxLayerProps) {
     const layerRef = useRef<HTMLDivElement>(null);
-    const [inView, setInView] = useState(true); // optimistic state (assume visible on mount)
+    const [inView, setInView] = useState(true); // optimistic
 
     useEffect(() => {
         const el = layerRef.current;
         if (!el || typeof IntersectionObserver === 'undefined') return;
 
         const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
-            rootMargin: '200px',
+            rootMargin,
         });
+
         observer.observe(el);
         return () => observer.disconnect();
-    }, []);
+    }, [rootMargin]);
 
     const { scrollYProgress } = useScroll({ target, offset });
 
-    const rawY = useTransform(scrollYProgress, [0, 1], y, { clamp: true });
-    const rawX = useTransform(scrollYProgress, [0, 1], x ?? [0, 0], { clamp: true });
-    const rawScale = useTransform(scrollYProgress, [0, 1], scale ?? [1, 1], { clamp: true });
-    const rawOpacity = useTransform(scrollYProgress, [0, 1], opacity ?? [1, 1], { clamp: true });
+    // freeze *progress* (single MV) instead of freezing each derived transform.
+    const active = !freezeWhenOffscreen || inView;
+    const progress = useFrozenMotionValue(scrollYProgress, active);
 
-    // stop propagating changes while off-screen
-    const mvY = useFrozenMotionValue(rawY, inView);
-    const mvX = useFrozenMotionValue(rawX, inView && !!x);
-    const mvScale = useFrozenMotionValue(rawScale, inView && !!scale);
-    const mvOpacity = useFrozenMotionValue(rawOpacity, inView && !!opacity);
+    // derive raw values from progress
+    const rawY = useTransform(progress, [0, 1], y, { clamp: true });
+    const rawX = useTransform(progress, [0, 1], x ?? [0, 0], { clamp: true });
+    const rawScale = useTransform(progress, [0, 1], scale ?? [1, 1], { clamp: true });
+    const rawOpacity = useTransform(progress, [0, 1], opacity ?? [1, 1], { clamp: true });
 
-    const smoothTransition = useMemo(
-        () =>
-            smoothMs > 0
-                ? `transform ${smoothMs}ms linear, opacity ${smoothMs}ms linear`
-                : undefined,
-        [smoothMs]
+    // smooth using springs
+    const springCfg = useMemo(
+        () => ({
+            stiffness: smoothing?.stiffness ?? 180,
+            damping: smoothing?.damping ?? 26,
+            mass: smoothing?.mass ?? 0.9,
+        }),
+        [smoothing?.stiffness, smoothing?.damping, smoothing?.mass]
     );
+
+    const mvY = useSpring(rawY, springCfg);
+    const mvX = useSpring(rawX, springCfg);
+    const mvScale = useSpring(rawScale, springCfg);
+    const mvOpacity = useSpring(rawOpacity, springCfg);
 
     const motionStyle = useMemo<MotionStyle>(
         () => ({
@@ -96,12 +113,10 @@ export function ParallaxLayer({
             ...(x ? { x: mvX } : null),
             ...(scale ? { scale: mvScale } : null),
             ...(opacity ? { opacity: mvOpacity } : null),
-            ...(smoothTransition
-                ? { transition: smoothTransition, willChange: 'transform, opacity' }
-                : null),
             ...style,
+            willChange: 'transform, opacity',
         }),
-        [mvY, mvX, mvScale, mvOpacity, !!x, !!scale, !!opacity, smoothTransition, style]
+        [mvY, mvX, mvScale, mvOpacity, !!x, !!scale, !!opacity, style]
     );
 
     return (
