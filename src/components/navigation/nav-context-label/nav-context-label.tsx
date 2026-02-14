@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export function NavContextLabel() {
     return (
-        <div className="flex items-center h-8 space-x-4">
+        <div className={cn('flex items-center h-8 ')}>
             <ContextLabelLine />
             <ContextLabel />
         </div>
@@ -25,6 +25,7 @@ function ContextLabel() {
 function ContextLabelLine() {
     const pathname = usePathname();
     const { activeSectionId } = useScrollSystem();
+    const isHome = pathname === '/';
 
     const [active, setActive] = useState(() => {
         const id = activeSectionId.get();
@@ -43,9 +44,11 @@ function ContextLabelLine() {
             )}
             initial={false}
             animate={{
-                width: pathname !== '/' ? '0.3rem' : '10rem',
+                width: isHome ? '10rem' : '0rem',
+                marginLeft: isHome ? '1rem' : '0',
+                marginRight: isHome ? '1rem' : '0.375rem',
             }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            transition={{ duration: 0.3, ease: 'anticipate' }}
         />
     );
 }
