@@ -1,45 +1,48 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { AnchorNavItem, AnchorNavItemProps } from './anchor-nav-item';
-import { useActiveSection } from './active-section-provider';
+import { useCallback, useEffect, useState } from 'react';
+import { useMotionValueEvent } from 'framer-motion';
+import { AnchorNavItem } from './anchor-nav-item';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 
-export default function LandingPageAnchorNav({
-    sections,
-}: {
-    sections: Omit<AnchorNavItemProps, 'isActive' | 'onInViewChange' | 'onClick'>[];
-}) {
-    const initial = useMemo(() => sections[0]?.section ?? '', [sections]);
-    const { activeSection, setActiveSection } = useActiveSection();
+export default function AnchorNavigation() {
+    const { activeSectionId, getSections, scrollToSection, sectionsVersion } = useScrollSystem();
+
+    // snapshot list (set once, and refresh on mount + when route mounts sections)
+    const [sections, setSections] = useState(() => getSections());
+
+    useMotionValueEvent(sectionsVersion, 'change', () => {
+        setSections(getSections());
+    });
+
+    const initial = sections[0]?.id ?? '';
+
+    const [activeSection, setActiveSection] = useState(() => activeSectionId.get() || initial);
     const [lockedSection, setLockedSection] = useState<string | null>(null);
 
+    // initialize active if empty
     useEffect(() => {
+        const cur = activeSectionId.get();
+        if (!cur && initial) activeSectionId.set(initial);
         if (!activeSection && initial) setActiveSection(initial);
-    }, [activeSection, initial]);
+    }, [initial]);
+
+    useMotionValueEvent(activeSectionId, 'change', (id) => {
+        if (lockedSection) {
+            if (id === lockedSection) setLockedSection(null);
+            else return;
+        }
+        setActiveSection(id);
+    });
 
     const handleClick = useCallback(
-        (section: string) => {
-            const target = sections.find((s) => s.section === section)?.targetRef?.current;
-            if (!target) return;
-
-            setLockedSection(section);
-            setActiveSection(section);
-
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        (id: string) => {
+            setLockedSection(id);
+            activeSectionId.set(id);
+            setActiveSection(id);
+            scrollToSection(id);
         },
-        [sections]
-    );
-
-    const handleInViewChange = useCallback(
-        (section: string, inView: boolean) => {
-            if (!inView) return;
-            if (lockedSection) {
-                if (section === lockedSection) setLockedSection(null);
-                else return;
-            }
-            setActiveSection(section);
-        },
-        [lockedSection]
+        [activeSectionId, scrollToSection]
     );
 
     return (
@@ -47,12 +50,10 @@ export default function LandingPageAnchorNav({
             <div className="relative flex flex-col items-end space-y-3">
                 {sections.map((sec) => (
                     <AnchorNavItem
-                        key={sec.section}
-                        section={sec.section}
-                        icon={sec.icon}
-                        targetRef={sec.targetRef}
-                        isActive={activeSection === sec.section}
-                        onInViewChange={handleInViewChange}
+                        key={sec.id}
+                        section={sec.id}
+                        icon={sec.meta?.icon}
+                        isActive={activeSection === sec.id}
                         onClick={handleClick}
                     />
                 ))}

@@ -1,85 +1,87 @@
-import { useLayoutEffect, useRef, useState } from 'react';
-import { useActiveSection } from '../anchor-nav/active-section-provider';
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
-import { AnimatePresence, Variants, motion } from 'framer-motion';
+'use client';
+
+import { useRef, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { AnimatePresence, Variants, motion, useMotionValueEvent } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { MoveRightIcon } from 'lucide-react';
 import { epilogue } from '@/components/ui/resources/fonts';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 
 const slideVariants: Variants = {
     initial: (d: 1 | -1) => ({ y: d * 20, opacity: 0 }),
-    animate: (isVisible: boolean) => ({ y: 0, opacity: isVisible ? 1 : 0 }),
+    animate: () => ({ y: 0, opacity: 1 }),
     exit: (d: 1 | -1) => ({ y: -d * 20, opacity: 0 }),
 };
 
 export default function ContextLabelButton() {
-    const { sections: order, activeSection } = useActiveSection();
+    const { activeSectionId, getSectionIds } = useScrollSystem();
     const [hovered, setHovered] = useState(false);
 
     const router = useRouter();
     const pathname = usePathname();
 
-    // get label
     const isHome = pathname === '/';
     const pathnameLabel = pathname.replace(/^\//, '');
-    const homeSectionLabel = activeSection === 'main' ? 'welcome!' : activeSection;
-    const label = isHome ? homeSectionLabel : pathnameLabel;
 
-    // direction logic
-    const prevRef = useRef<(typeof order)[number] | null>(null);
-    const prev = prevRef.current;
+    const [activeId, setActiveId] = useState(() => activeSectionId.get() || 'main');
 
-    const currentIndex = order.indexOf(activeSection as any);
-    const prevIndex = prev == null ? -1 : order.indexOf(prev);
+    const directionRef = useRef<1 | -1>(1);
+    const prevIdRef = useRef<string>(activeId);
 
-    const direction: 1 | -1 =
-        prev == null || currentIndex === -1 || prevIndex === -1
-            ? 1
-            : currentIndex > prevIndex
-              ? 1
-              : -1;
+    useMotionValueEvent(activeSectionId, 'change', (id) => {
+        const next = id || 'main';
+        const prev = prevIdRef.current;
 
-    useLayoutEffect(() => {
-        prevRef.current = activeSection as any;
-    }, [activeSection]);
+        if (prev !== next) {
+            const order = getSectionIds();
+            const prevIndex = order.indexOf(prev);
+            const nextIndex = order.indexOf(next);
+
+            if (prevIndex !== -1 && nextIndex !== -1) {
+                directionRef.current = nextIndex > prevIndex ? 1 : -1;
+            }
+
+            prevIdRef.current = next;
+        }
+
+        setActiveId(next);
+    });
+
+    const label = isHome ? (activeId === 'main' ? 'welcome!' : activeId) : pathnameLabel;
+    const canNavigate = isHome && activeId !== 'main';
 
     return (
         <div className="relative h-full items-center w-50 inline-flex justify-start space-x-2">
             {!isHome && <span className="absolute -top-[0.5px]">/&nbsp;</span>}
-            <AnimatePresence mode="wait" custom={direction}>
+
+            <AnimatePresence mode="wait" custom={directionRef.current}>
                 <motion.button
-                    key={isHome ? activeSection || 'main' : pathname}
-                    custom={direction}
+                    key={isHome ? activeId || 'main' : pathname}
+                    custom={directionRef.current}
                     initial="initial"
                     animate="animate"
                     exit="exit"
                     variants={slideVariants}
-                    transition={{
-                        duration: 0.225,
-                        ease: 'easeOut',
-                        stiffness: 25,
-                        damping: 25,
-                    }}
+                    transition={{ duration: 0.225, ease: 'easeOut' }}
                     className={cn(
                         'absolute left-3 top-0 whitespace-nowrap',
                         isHome && 'left-0',
-                        label && isHome && activeSection != 'main' && 'cursor-pointer'
+                        canNavigate && 'cursor-pointer'
                     )}
-                    disabled={!label || !isHome || activeSection == 'main'}
-                    tabIndex={label && isHome ? 0 : -1}
+                    disabled={!canNavigate}
+                    tabIndex={canNavigate ? 0 : -1}
                     aria-hidden={!label}
-                    onPointerEnter={!label || !isHome ? () => {} : () => setHovered(true)}
-                    onPointerLeave={() => (isHome ? setHovered(false) : undefined)}
+                    onPointerEnter={canNavigate ? () => setHovered(true) : undefined}
+                    onPointerLeave={canNavigate ? () => setHovered(false) : undefined}
                     onClick={() => {
-                        if (isHome) router.push(activeSection);
+                        if (!canNavigate) return;
+                        router.push(activeId);
                     }}
                 >
                     <span className={cn('relative inline-flex items-center', epilogue.className)}>
                         {label}
-                        <ContextLabelArrow
-                            animateOn={hovered && isHome && activeSection != 'main'}
-                        />
+                        <ContextLabelArrow animateOn={hovered && canNavigate} />
                     </span>
                 </motion.button>
             </AnimatePresence>

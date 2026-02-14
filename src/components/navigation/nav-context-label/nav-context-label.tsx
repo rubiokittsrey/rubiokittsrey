@@ -1,8 +1,9 @@
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import ContextLabelButton from './context-label-button';
-import { motion } from 'framer-motion';
-import { useActiveSection } from '../anchor-nav/active-section-provider';
+import { motion, useMotionValueEvent } from 'framer-motion';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
+import { useState } from 'react';
 
 export function NavContextLabel() {
     return (
@@ -23,17 +24,27 @@ function ContextLabel() {
 
 function ContextLabelLine() {
     const pathname = usePathname();
-    const { activeSection } = useActiveSection();
-    const active = activeSection != 'main';
+    const { activeSectionId } = useScrollSystem();
+
+    const [active, setActive] = useState(() => {
+        const id = activeSectionId.get();
+        return id !== 'main';
+    });
+
+    useMotionValueEvent(activeSectionId, 'change', (id) => {
+        setActive(id !== 'main');
+    });
 
     return (
         <motion.div
             className={cn(
-                'h-0.5 bg-primary opacity-15 transition-opacity rounded-full',
-                active && 'opacity-70'
+                'h-0.5 bg-primary rounded-full transition-opacity',
+                active ? 'opacity-70' : 'opacity-15'
             )}
             initial={false}
-            animate={{ width: pathname !== '/' ? '0.3rem' : '10rem' }}
+            animate={{
+                width: pathname !== '/' ? '0.3rem' : '10rem',
+            }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
         />
     );

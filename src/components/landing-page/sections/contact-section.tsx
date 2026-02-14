@@ -1,16 +1,28 @@
 import { cn } from '@/lib/utils';
-import React, { useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import Ascii3dScene from '../../animations/ascii-shader-postproc/ascii-scene-comp';
 import { ParallaxLayer } from '../../animations/parallax-effect/parallax-layer';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
+import { MailIcon } from 'lucide-react';
 
 export default function ContactSection({
     className,
     children,
-    ref,
+
     ...props
-}: React.ComponentPropsWithRef<'section'>) {
+}: React.HTMLAttributes<HTMLElement>) {
+    const { registerSection } = useScrollSystem();
+    const ref = useRef<HTMLElement | null>(null);
+
+    useLayoutEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        return registerSection('contact', el, { icon: MailIcon });
+    }, [registerSection]);
+
     return (
         <section
+            id="contact"
             {...props}
             ref={ref}
             className={cn('relative w-full h-[200vh] overflow-hidden', className)}

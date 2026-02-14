@@ -1,17 +1,28 @@
 import { cn } from '@/lib/utils';
-import React, { RefObject } from 'react';
+import React, { RefObject, useEffect, useLayoutEffect, useRef } from 'react';
 import Ascii3dScene from '../../animations/ascii-shader-postproc/ascii-scene-comp';
 import { ParallaxLayer } from '../../animations/parallax-effect/parallax-layer';
 import { RevealOnParentScroll } from '@/components/animations/reveal-on-parent-scroll/reveal-on-parent-scroll';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
+import { UserRoundIcon } from 'lucide-react';
 
 export default function AboutSection({
     className,
     children,
-    ref,
     ...props
-}: React.ComponentPropsWithRef<'section'>) {
+}: React.HTMLAttributes<HTMLElement>) {
+    const { registerSection } = useScrollSystem();
+    const ref = useRef<HTMLElement | null>(null);
+
+    useLayoutEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        return registerSection('about', el, { icon: UserRoundIcon });
+    }, [registerSection]);
+
     return (
         <section
+            id="about"
             {...props}
             ref={ref}
             className={cn(

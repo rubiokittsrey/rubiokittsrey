@@ -1,47 +1,29 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { NavItemIcon } from '../static-nav/nav-item';
+import { motion, useTransform } from 'framer-motion';
+import type { NavItemIcon } from '../static-nav/nav-item';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
+import { CircleQuestionMarkIcon } from 'lucide-react';
 
 export interface AnchorNavItemProps {
     section: string;
-    icon: NavItemIcon;
-    targetRef: React.RefObject<HTMLElement | null>;
+    icon?: NavItemIcon;
     isActive: boolean;
-    onInViewChange: (section: string, inView: boolean) => void;
     onClick: (section: string) => void;
 }
 
 export function AnchorNavItem({
     section,
-    icon: Icon,
-    targetRef,
+    icon: Icon = CircleQuestionMarkIcon,
     isActive,
-    onInViewChange,
     onClick,
 }: AnchorNavItemProps) {
-    const { scrollYProgress } = useScroll({
-        target: targetRef,
-        offset: section === 'main' ? ['start start', 'end start'] : ['start start', 'end end'],
-    });
-
-    const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-
-    useEffect(() => {
-        const el = targetRef.current;
-        if (!el) return;
-
-        const observer = new IntersectionObserver(
-            ([entry]) => onInViewChange(section, entry.isIntersecting),
-            { threshold: 0.335 }
-        );
-
-        observer.observe(el);
-        return () => observer.disconnect();
-    }, [section, targetRef, onInViewChange]);
+    const { getSectionProgress } = useScrollSystem();
+    const progress = useMemo(() => getSectionProgress(section), [getSectionProgress, section]);
+    const lineHeight = useTransform(progress, [0, 1], ['0%', '100%']);
 
     return (
         <div className="flex flex-col items-end z-10">
