@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useMotionValueEvent } from 'framer-motion';
 import { AnchorNavItem } from './anchor-nav-item';
 import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
+import ThemeToggle from '@/components/ui/theme-toggle';
 
 export default function AnchorNavigation() {
     const { activeSectionId, getSections, scrollToSection, sectionsVersion } = useScrollSystem();
@@ -46,7 +47,7 @@ export default function AnchorNavigation() {
     );
 
     return (
-        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit top-14 right-12">
+        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit py-13 right-12">
             <div className="relative flex flex-col items-end space-y-3">
                 {sections.map((sec) => (
                     <AnchorNavItem
@@ -57,6 +58,9 @@ export default function AnchorNavigation() {
                         onClick={handleClick}
                     />
                 ))}
+            </div>
+            <div>
+                <ThemeToggle />
             </div>
         </div>
     );

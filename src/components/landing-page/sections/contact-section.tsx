@@ -1,7 +1,5 @@
 import { cn } from '@/lib/utils';
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
-import Ascii3dScene from '../../animations/ascii-shader-postproc/ascii-scene-comp';
-import { ParallaxLayer } from '../../animations/parallax-effect/parallax-layer';
 import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 import { MailIcon } from 'lucide-react';
 

@@ -29,10 +29,10 @@ export default function ThemeToggle() {
         return (
             <Button
                 variant="outline"
-                className="rounded-full overflow-clip relative px-4.5 cursor-pointer"
+                className="rounded-full overflow-clip relative p-5 cursor-pointer"
                 disabled
             >
-                <div className="size-4.5 absolute" />
+                <div className="size-4.5 shrink-0" />
             </Button>
         );
 
@@ -41,7 +41,7 @@ export default function ThemeToggle() {
             disabled={!mounted}
             variant="outline"
             onClick={handleThemeToggle}
-            className="rounded-full overflow-clip relative px-4.5 cursor-pointer"
+            className="rounded-full overflow-clip relative p-5 cursor-pointer"
         >
             <AnimatePresence initial={false} mode="wait">
                 {theme === 'light' && (
@@ -53,7 +53,7 @@ export default function ThemeToggle() {
                         exit={{ y: 25, opacity: 1, filter: 'blur(3px)' }}
                         transition={themeToggleTransition}
                     >
-                        <Sun className="size-4.5" />
+                        <Sun className="size-4.5 shrink-0" />
                     </motion.div>
                 )}
 
@@ -66,7 +66,7 @@ export default function ThemeToggle() {
                         exit={{ y: -25, opacity: 1, filter: 'blur(3px)' }}
                         transition={themeToggleTransition}
                     >
-                        <MoonStar className="size-4.5" />
+                        <MoonStar className="size-4.5 shrink-0" />
                     </motion.div>
                 )}
             </AnimatePresence>

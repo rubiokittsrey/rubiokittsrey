@@ -220,9 +220,11 @@ export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperPr
         useEffect(() => {
             effect.cellSize = cellSize;
         }, [cellSize, effect]);
+
         useEffect(() => {
             effect.glyphContrast = glyphContrast;
         }, [glyphContrast, effect]);
+
         useEffect(() => {
             effect.lumCutoff = lumCutoff;
         }, [lumCutoff, effect]);

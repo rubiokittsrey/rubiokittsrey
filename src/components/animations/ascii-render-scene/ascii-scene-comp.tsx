@@ -28,9 +28,9 @@ const ORBIT_CONFIG = {
 
 const ASCII_CONFIG = {
     ramp: '  .*###8@&&$@@',
-    cellSize: 12,
-    glyphCellPx: 35,
-    glyphContrast: 5,
+    cellSize: 10,
+    glyphCellPx: 50,
+    glyphContrast: 30,
     lumCutoff: 0.178,
 } as const;
 
@@ -40,7 +40,7 @@ function RotatingKnot() {
     useFrame((_state, dt) => {
         const m = meshRef.current;
         if (!m) return;
-        m.rotation.y += dt * 0.5;
+        m.rotation.y += dt * 0.35;
         m.rotation.x += dt * 0.15;
     });
 
@@ -60,7 +60,7 @@ export default function Ascii3dScene({
     const ambientIntensity = resolvedTheme === 'light' ? 2.5 : 2.23;
 
     return (
-        <div {...props} className={cn('aspect-square m-auto w-full', className)}>
+        <div {...props} className={cn('aspect-square', className)}>
             <Canvas
                 camera={CAMERA}
                 dpr={DPR}
