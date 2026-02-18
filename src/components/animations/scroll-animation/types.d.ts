@@ -1,5 +1,5 @@
 export type ScrollProgressSource = 'page' | 'section';
-export type AnimatableProperty = 'x' | 'y' | 'opacity' | 'scale' | 'rotation';
+export type AnimatableProperty = 'x' | 'y' | 'opacity' | 'scale' | 'rotation' | 'blur';
 
 export type PropertyRange = {
     from: number;
@@ -19,8 +19,9 @@ export interface ScrollAnimationBase {
     opacity?: PropertyRange;
     scale?: PropertyRange;
     rotation?: PropertyRange;
+    blur?: PropertyRange;
     transformOrigin?: string;
-    ease?: Easing;
+    ease?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'smooth';
 }
 
 export interface RangeScrollAnimation extends ScrollAnimationBase {

@@ -2,7 +2,14 @@
 
 import { useEffect, useMemo, useRef } from 'react';
 import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
-import { animate, type Easing, motion, motionValue, type MotionValue } from 'framer-motion';
+import {
+    animate,
+    motion,
+    motionValue,
+    type MotionValue,
+    useMotionTemplate,
+    useTransform,
+} from 'framer-motion';
 import {
     PropertyRange,
     ProgressWindow,
@@ -22,9 +29,18 @@ const PROPERTY_DEFAULTS: Record<AnimatableProperty, number> = {
     opacity: 1,
     scale: 1,
     rotation: 0,
+    blur: 0,
 };
 
 const INVISIBLE_OPACITY_THRESHOLD = 0.02;
+
+export const EASE = {
+    linear: [0, 0, 1, 1] as const,
+    easeIn: [0.42, 0, 1, 1] as const,
+    easeOut: [0, 0, 0.58, 1] as const,
+    easeInOut: [0.42, 0, 0.58, 1] as const,
+    smooth: [0.22, 1, 0.36, 1] as const,
+};
 
 function easeInOutCubic(t: number): number {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -130,7 +146,7 @@ function resolvePropertyChain(
                         cacheKey: `${property}:snap:${animation.key}:pre`,
                     };
                 } else {
-                    const ease: Easing = animation.ease ?? [0.22, 1, 0.36, 1];
+                    const ease = EASE[animation.ease ?? 'smooth'];
                     result = {
                         value: range.from,
                         transition: animation.snap
@@ -143,7 +159,7 @@ function resolvePropertyChain(
                 break;
             }
 
-            const ease: Easing = animation.ease ?? [0.22, 1, 0.36, 1];
+            const ease = EASE[animation.ease ?? 'smooth'];
             result = {
                 value: range.to,
                 transition: animation.snap
@@ -172,6 +188,7 @@ function resolveAnimationState(
         opacity: { value: PROPERTY_DEFAULTS.opacity, cacheKey: 'opacity:default' },
         scale: { value: PROPERTY_DEFAULTS.scale, cacheKey: 'scale:default' },
         rotation: { value: PROPERTY_DEFAULTS.rotation, cacheKey: 'rotation:default' },
+        blur: { value: PROPERTY_DEFAULTS.blur, cacheKey: 'blur:default' },
         transformOrigin: undefined,
     };
 
@@ -182,7 +199,7 @@ function resolveAnimationState(
         }
     }
 
-    const properties: AnimatableProperty[] = ['x', 'y', 'opacity', 'scale', 'rotation'];
+    const properties: AnimatableProperty[] = ['x', 'y', 'opacity', 'scale', 'rotation', 'blur'];
     for (const property of properties) {
         state[property] = resolvePropertyChain(p, property, animations);
     }
@@ -197,6 +214,7 @@ function useAnimatableMotionValues() {
         opacity: useRef<MotionValue<number>>(motionValue(PROPERTY_DEFAULTS.opacity)).current,
         scale: useRef<MotionValue<number>>(motionValue(PROPERTY_DEFAULTS.scale)).current,
         rotation: useRef<MotionValue<number>>(motionValue(PROPERTY_DEFAULTS.rotation)).current,
+        blur: useRef<MotionValue<number>>(motionValue(PROPERTY_DEFAULTS.blur)).current,
     };
 }
 
@@ -232,6 +250,7 @@ export function ScrollAnimate({
         opacity: '',
         scale: '',
         rotation: '',
+        blur: '',
     });
 
     const wrapperRef = useRef<HTMLDivElement | null>(null);
@@ -248,7 +267,14 @@ export function ScrollAnimate({
         };
 
         const applyAnimationState = (state: ResolvedAnimationState) => {
-            const properties: AnimatableProperty[] = ['x', 'y', 'opacity', 'scale', 'rotation'];
+            const properties: AnimatableProperty[] = [
+                'x',
+                'y',
+                'opacity',
+                'scale',
+                'rotation',
+                'blur',
+            ];
 
             for (const property of properties) {
                 const next = state[property];
@@ -287,6 +313,10 @@ export function ScrollAnimate({
         return undefined;
     }, [animations]);
 
+    // blur values normalize from [0..1] to between 0px - 64px
+    const blurValue = useTransform(motionValues.blur, (v) => lerp(0, 64, v));
+    const blurFilter = useMotionTemplate`blur(${blurValue}px)`;
+
     return (
         <motion.div
             ref={wrapperRef}
@@ -298,6 +328,7 @@ export function ScrollAnimate({
                 opacity: motionValues.opacity,
                 scale: motionValues.scale,
                 rotate: motionValues.rotation,
+                filter: blurFilter,
                 transformOrigin: resolvedTransformOrigin,
             }}
         >

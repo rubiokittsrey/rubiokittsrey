@@ -8,17 +8,17 @@ export function Ascii3dSceneContainer({ className }: { className?: string }) {
             className={cn('fixed z-0 h-screen w-full flex items-center', className)}
             animations={[
                 {
-                    key: 'opacity',
+                    key: 'opacity-initial',
                     mode: 'threshold',
-                    at: 0.2,
+                    at: 0.125,
                     transitionDuration: 0.5,
-                    opacity: { from: 1, to: 0.2 },
+                    opacity: { from: 1, to: 0.1 },
                 },
                 {
                     key: 'opacity-second',
                     mode: 'range',
                     window: { from: 0.6, to: 0.8 },
-                    opacity: { from: 0.2, to: 1 },
+                    opacity: { from: 0.1, to: 1 },
                 },
             ]}
         >
