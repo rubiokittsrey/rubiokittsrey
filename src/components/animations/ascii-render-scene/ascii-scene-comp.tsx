@@ -27,10 +27,10 @@ const ORBIT_CONFIG = {
 } as const;
 
 const ASCII_CONFIG = {
-    ramp: '  .*###8@&&$@@',
-    cellSize: 10,
+    ramp: '  .*##8@&&$@',
+    cellSize: 11,
     glyphCellPx: 50,
-    glyphContrast: 30,
+    glyphContrast: 35,
     lumCutoff: 0.178,
 } as const;
 
