@@ -26,7 +26,15 @@ const ORBIT_CONFIG = {
     maxPolarAngle: Math.PI * 0.85,
 } as const;
 
-const ASCII_CONFIG = {
+export type AsciiConfig = {
+    ramp: string;
+    cellSize: number;
+    glyphCellPx: number;
+    glyphContrast: number;
+    lumCutoff: number;
+};
+
+const ASCII_CONFIG: AsciiConfig = {
     ramp: '  .*###8@&&$@@',
     cellSize: 10,
     glyphCellPx: 50,
@@ -40,8 +48,8 @@ function RotatingKnot() {
     useFrame((_state, dt) => {
         const m = meshRef.current;
         if (!m) return;
-        m.rotation.y += dt * 0.35;
-        m.rotation.x += dt * 0.15;
+        m.rotation.y += dt * 0.7;
+        m.rotation.x += dt * 0.25;
     });
 
     return (
@@ -54,8 +62,10 @@ function RotatingKnot() {
 
 export default function Ascii3dScene({
     className,
+    asciiConfig = ASCII_CONFIG,
+    allowControls = true,
     ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+}: React.HTMLAttributes<HTMLDivElement> & { asciiConfig?: AsciiConfig; allowControls?: boolean }) {
     const { resolvedTheme } = useTheme();
     const ambientIntensity = resolvedTheme === 'light' ? 2.5 : 2.23;
 
@@ -71,10 +81,10 @@ export default function Ascii3dScene({
                 <directionalLight position={[3, 4, 2]} intensity={0.75} />
 
                 <RotatingKnot />
-                <OrbitControls {...ORBIT_CONFIG} />
+                {allowControls && <OrbitControls {...ORBIT_CONFIG} />}
 
                 <EffectComposer>
-                    <AsciiCompWrapper {...ASCII_CONFIG} />
+                    <AsciiCompWrapper {...asciiConfig} />
                 </EffectComposer>
             </Canvas>
         </div>
