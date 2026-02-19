@@ -28,7 +28,7 @@ export default function ScrollAwareNavBanner() {
     // derived thresholds
     const { pinAt, unpinAt } = useMemo(() => {
         const triggerY = dimensions.height * 0.5;
-        return { pinAt: triggerY, unpinAt: triggerY * 0.85 };
+        return { pinAt: triggerY, unpinAt: triggerY };
     }, [dimensions.height]);
 
     const animateTo = useCallback(
