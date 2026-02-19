@@ -1,16 +1,15 @@
 import type { Metadata } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
+import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
 
-const jetbrainsMono = JetBrains_Mono({
-    variable: '--font-jetbrains-mono',
+const geist = Geist({
+    variable: '--font-geist-sans',
     subsets: ['latin'],
-    weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
 });
 
-const inter = Inter({
-    variable: '--font-inter',
+const geist_mono = Geist_Mono({
+    variable: '--font-geist-mono',
     subsets: ['latin'],
 });
 
@@ -26,7 +25,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
+            <body className={`${geist.variable} ${geist_mono.variable} antialiased`}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
                     {children}
                 </ThemeProvider>

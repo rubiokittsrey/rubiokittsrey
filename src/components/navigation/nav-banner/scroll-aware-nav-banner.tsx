@@ -143,8 +143,11 @@ export default function ScrollAwareNavBanner() {
 
     return (
         <div className="fixed z-50 w-fit left-14 top-10">
-            <motion.div style={{ y }} className="flex flex-row items-center">
-                <NavBanner />
+            <motion.div
+                style={{ y }}
+                className="flex flex-row items-center font-sans font-medium text-lg"
+            >
+                <NavBanner className="text-lg" />
                 <NavContextLabel />
             </motion.div>
         </div>

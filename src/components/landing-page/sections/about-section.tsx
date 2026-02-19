@@ -46,7 +46,7 @@ export default function AboutSection({
             ref={ref}
             className={cn('relative w-full overflow-clip h-[250vh]', className)}
         >
-            <div className="sticky top-0 w-full h-screen flex items-center justify-center p-14 font-sans">
+            <div className="sticky top-0 w-full h-screen flex items-end p-14 font-sans">
                 <ScrollAnimate
                     source="section"
                     sectionId="about"
@@ -56,7 +56,7 @@ export default function AboutSection({
                     displayNoneOnInvisible
                 >
                     <div className="flex flex-col space-y-5">
-                        <p className="text-xl text-center select-none">
+                        <p className="text-xl  select-none">
                             My name is <b>Kitts Rey Rubio</b>, full-stack developer based in the
                             Philippines. I build interactive applications and software across
                             mobile, web, and IoT platforms.

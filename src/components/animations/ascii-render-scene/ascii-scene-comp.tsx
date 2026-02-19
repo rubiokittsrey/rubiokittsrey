@@ -28,7 +28,7 @@ const ORBIT_CONFIG = {
 
 const ASCII_CONFIG = {
     ramp: '  .*###8@&&$@@',
-    cellSize: 11,
+    cellSize: 10,
     glyphCellPx: 50,
     glyphContrast: 35,
     lumCutoff: 0.178,

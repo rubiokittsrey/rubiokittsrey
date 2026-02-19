@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useRef } from 'react';
 import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 import { HomeIcon } from 'lucide-react';
 import { ScrollAnimate } from '@/components/animations/scroll-animation/scroll-animation';
-import BodyPortal from '@/components/ui/fixed-overay';
+import BodyPortal from '@/components/ui/body-portal';
 
 export default function MainSection({
     className,
@@ -25,7 +25,7 @@ export default function MainSection({
         <section id="main" {...props} ref={ref} className={cn('w-full h-screen', className)}>
             <BodyPortal>
                 <ScrollAnimate
-                    className="fixed left-0 top-0 flex flex-col space-y-2 font-sans p-14 z-50"
+                    className="fixed left-0 top-0 flex flex-col space-y-1 font-sans p-14 z-50"
                     animations={[
                         {
                             key: 'opacity-hide',
@@ -37,11 +37,12 @@ export default function MainSection({
                             blur: { from: 0, to: 0.1 },
                         },
                     ]}
+                    displayNoneOnInvisible
                 >
-                    <h4 className="text-3xl font-medium select-none">Kitts Rey Rubio</h4>
-                    <div className="space-y-0.5">
-                        <h4 className="text-xs text-primary/50">Full Stack Software Developer</h4>
-                        <h4 className="text-xs text-primary/50">{`${age}, PH (GMT+8)`}</h4>
+                    <h4 className={cn('text-3xl font-medium select-none')}>Kitts Rey Rubio</h4>
+                    <div className="text-xs space-y-0.5">
+                        <h4 className="text-primary/50">Full Stack Software Developer</h4>
+                        <h4 className="text-primary/50">{`${age}, PH (GMT+8)`}</h4>
                     </div>
                 </ScrollAnimate>
             </BodyPortal>

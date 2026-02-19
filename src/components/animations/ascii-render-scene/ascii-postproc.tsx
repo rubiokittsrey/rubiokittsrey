@@ -62,6 +62,7 @@ uniform vec2 atlasGrid;
 uniform float ramp[16];
 uniform float rampLen;
 uniform float glyphContrast;
+uniform vec2 sampleOffsetPx;
 
 float sampleGlyph(float charIndex, vec2 p) {
     vec2 atlasUV = (vec2(mod(charIndex, atlasGrid.x), floor(charIndex / atlasGrid.x)) + p) / atlasGrid;
@@ -77,7 +78,11 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     vec2 cellCount = max(vec2(1.0), resolution / max(cellSize, 1.0));
     vec2 cellCoord = floor(uv * cellCount);
 
-    vec3 col = texture2D(inputBuffer, (cellCoord + 0.5) / cellCount).rgb;
+    vec2 uvOffset = sampleOffsetPx / max(resolution, vec2(1.0));
+    vec2 sampleUV = (cellCoord + 0.5) / cellCount + uvOffset;
+    sampleUV = clamp(sampleUV, vec2(0.0), vec2(1.0));
+
+    vec3 col = texture2D(inputBuffer, sampleUV).rgb;
     float lum = dot(col, vec3(0.299, 0.587, 0.114));
 
     if (lum < lumCutoff) {
@@ -130,6 +135,7 @@ class AsciiPostProcImpl extends Effect {
                 ['rampLen', new Uniform(len)],
                 ['glyphContrast', new Uniform(glyphContrast)],
                 ['lumCutoff', new Uniform(lumCutoff)],
+                ['sampleOffsetPx', new Uniform(new Vector2(0, 0))],
             ]),
         });
     }
@@ -158,6 +164,10 @@ class AsciiPostProcImpl extends Effect {
         this.uniforms.get('glyphAtlas')!.value = tex;
     }
 
+    setSampleOffsetPx(x: number, y: number): void {
+        this.uniforms.get('sampleOffsetPx')!.value.set(x, y);
+    }
+
     setRampCodes(codes: number[]): void {
         const ramp: Float32Array = this.uniforms.get('ramp')!.value;
         const len = Math.min(16, Math.max(1, codes.length));
@@ -173,6 +183,7 @@ export type AsciiCompWrapperProps = {
     ramp?: string;
     glyphContrast?: number;
     lumCutoff?: number;
+    sampleOffsetPx?: { x: number; y: number };
 };
 
 function stringToAsciiCodes(s: string): number[] {
@@ -193,6 +204,7 @@ export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperPr
             ramp = ' .:-=+*#%@',
             glyphContrast = 1.6,
             lumCutoff = 0.05,
+            sampleOffsetPx = { x: 0, y: 0 },
         },
         ref
     ) => {
@@ -240,6 +252,10 @@ export const AsciiCompWrapper = forwardRef<AsciiPostProcImpl, AsciiCompWrapperPr
         useEffect(() => {
             effect.setRampCodes(stringToAsciiCodes(ramp).slice(0, 16));
         }, [ramp, effect]);
+
+        useEffect(() => {
+            effect.setSampleOffsetPx(sampleOffsetPx.x, sampleOffsetPx.y);
+        }, [sampleOffsetPx.x, sampleOffsetPx.y, effect]);
 
         // sync ink color with document theme (light / dark class on <html>).
         useEffect(() => {

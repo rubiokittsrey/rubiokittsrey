@@ -7,18 +7,10 @@ import { useState } from 'react';
 
 export function NavContextLabel() {
     return (
-        <div className={cn('flex items-center h-8 ')}>
+        <div className={cn('flex items-center h-8')}>
             <ContextLabelLine />
-            <ContextLabel />
-        </div>
-    );
-}
-
-function ContextLabel() {
-    return (
-        <h1 className={cn('h-full text-lg font-medium select-none flex items-center')}>
             <ContextLabelButton />
-        </h1>
+        </div>
     );
 }
 

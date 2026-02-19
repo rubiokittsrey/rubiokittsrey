@@ -5,7 +5,6 @@ import { useRouter, usePathname } from 'next/navigation';
 import { AnimatePresence, Variants, motion, useMotionValueEvent } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { MoveRightIcon } from 'lucide-react';
-import { epilogue } from '@/components/ui/resources/fonts';
 import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 
 const slideVariants: Variants = {
@@ -79,7 +78,7 @@ export default function ContextLabelButton() {
                         router.push(activeId);
                     }}
                 >
-                    <span className={cn('relative inline-flex items-center', epilogue.className)}>
+                    <span className={cn('relative inline-flex items-center')}>
                         {label}
                         <ContextLabelArrow animateOn={hovered && canNavigate} />
                     </span>
