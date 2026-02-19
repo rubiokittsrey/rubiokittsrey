@@ -47,51 +47,53 @@ export default function AboutSection({
             className={cn('relative w-full overflow-clip h-[250vh]', className)}
         >
             <div className="sticky top-0 w-full h-screen flex items-center justify-center p-14 font-sans">
-                <div className="absolute font-sans max-w-2xl w-full">
-                    <ScrollAnimate
-                        source="section"
-                        sectionId="about"
-                        animations={[{ ...(exit as ThresholdScrollAnimation), at: 0.2 }]}
-                    >
-                        <p className="text-lg text-center">
-                            Full-stack developer building interactive apps, 3D visualizations, and
-                            IoT systems with React, Next.js, Flutter, Python, and Arduino.
-                            Passionate about real-time graphics, mathematical visuals, and clean
-                            architecture. Photographer on the side.
+                <ScrollAnimate
+                    source="section"
+                    sectionId="about"
+                    animations={[{ ...(exit as ThresholdScrollAnimation), at: 0.2 }]}
+                    // className="flex flex-col space-y-5"
+                    className="absolute font-sans max-w-2xl w-full"
+                    displayNoneOnInvisible
+                >
+                    <div className="flex flex-col space-y-5">
+                        <p className="text-xl text-center select-none">
+                            My name is <b>Kitts Rey Rubio</b>, full-stack developer based in the
+                            Philippines. I build interactive applications and software across
+                            mobile, web, and IoT platforms.
                         </p>
-                    </ScrollAnimate>
-                </div>
-                <div className="absolute font-sans max-w-2xl w-full text-center">
-                    <ScrollAnimate
-                        source="section"
-                        sectionId="about"
-                        animations={[
-                            { ...(enter as ThresholdScrollAnimation), at: 0.2 },
-                            { ...(exit as ThresholdScrollAnimation), at: 0.4 },
-                        ]}
-                    >
-                        <p className="text-lg text-center">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                            commodo consequat.
+                    </div>
+                </ScrollAnimate>
+                <ScrollAnimate
+                    className="absolute font-sans max-w-2xl w-full text-center"
+                    source="section"
+                    sectionId="about"
+                    animations={[
+                        { ...(enter as ThresholdScrollAnimation), at: 0.2 },
+                        { ...(exit as ThresholdScrollAnimation), at: 0.4 },
+                    ]}
+                    displayNoneOnInvisible
+                >
+                    <div className="flex flex-col space-y-5 items-center">
+                        <p className="text-xl text-center select-none">
+                            I have experience building web and mobile applications using WordPress,
+                            React, Next.js, Flutter (Dart), Laravel, Django, and Firebase, as well
+                            as developing IoT projects with Python on Linux systems, Arduino, and
+                            MQTT.
                         </p>
-                    </ScrollAnimate>
-                </div>
-                <div className="absolute font-sans max-w-2xl w-full text-center">
-                    <ScrollAnimate
-                        source="section"
-                        sectionId="about"
-                        animations={[{ ...(enter as ThresholdScrollAnimation), at: 0.4 }]}
-                    >
-                        <p className="text-lg text-center">
-                            Full-stack developer building interactive apps, 3D visualizations, and
-                            IoT systems with React, Next.js, Flutter, Python, and Arduino.
-                            Passionate about real-time graphics, mathematical visuals, and clean
-                            architecture. Photographer on the side.
-                        </p>
-                    </ScrollAnimate>
-                </div>
+                    </div>
+                </ScrollAnimate>
+                <ScrollAnimate
+                    source="section"
+                    sectionId="about"
+                    animations={[{ ...(enter as ThresholdScrollAnimation), at: 0.4 }]}
+                    className="absolute font-sans max-w-2xl w-full text-center"
+                    displayNoneOnInvisible
+                >
+                    <p className="text-xl text-center select-none">
+                        In my free time, I enjoy photography, watching esports, and cooking -
+                        literally and figuratively.
+                    </p>
+                </ScrollAnimate>
             </div>
         </section>
     );

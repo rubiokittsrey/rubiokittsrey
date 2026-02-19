@@ -224,7 +224,8 @@ export function ScrollAnimate({
     className,
     style,
     children,
-    disablePointerOnInvisible: hidePointerWhenInvisible,
+    disablePointerOnInvisible,
+    displayNoneOnInvisible,
     animations,
 }: ScrollAnimateProps) {
     const scroll = useScrollSystem();
@@ -254,16 +255,45 @@ export function ScrollAnimate({
     });
 
     const wrapperRef = useRef<HTMLDivElement | null>(null);
+    const displayHiddenRef = useRef(false);
+    const pendingDisplayNoneRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
-        const updatePointerEvents = (opacity: number) => {
-            if (!hidePointerWhenInvisible) return;
+        const updateVisibility = (opacity: number, transitionDuration?: number) => {
             const el = wrapperRef.current;
             if (!el) return;
-            el.style.pointerEvents =
-                opacity <= INVISIBLE_OPACITY_THRESHOLD
+
+            const isInvisible = opacity <= INVISIBLE_OPACITY_THRESHOLD;
+
+            if (disablePointerOnInvisible) {
+                el.style.pointerEvents = isInvisible
                     ? 'none'
                     : ((style?.pointerEvents as string) ?? '');
+            }
+
+            if (displayNoneOnInvisible) {
+                if (!isInvisible) {
+                    if (pendingDisplayNoneRef.current !== null) {
+                        clearTimeout(pendingDisplayNoneRef.current);
+                        pendingDisplayNoneRef.current = null;
+                    }
+                    if (displayHiddenRef.current) {
+                        displayHiddenRef.current = false;
+                        el.style.display = '';
+                    }
+                } else {
+                    if (!displayHiddenRef.current && pendingDisplayNoneRef.current === null) {
+                        const delay = (transitionDuration ?? 0) * 1000;
+                        pendingDisplayNoneRef.current = setTimeout(() => {
+                            pendingDisplayNoneRef.current = null;
+                            if (motionValues.opacity.get() <= INVISIBLE_OPACITY_THRESHOLD) {
+                                displayHiddenRef.current = true;
+                                el.style.display = 'none';
+                            }
+                        }, delay);
+                    }
+                }
+            }
         };
 
         const applyAnimationState = (state: ResolvedAnimationState) => {
@@ -275,6 +305,10 @@ export function ScrollAnimate({
                 'rotation',
                 'blur',
             ];
+
+            if (displayNoneOnInvisible && state.opacity.value > INVISIBLE_OPACITY_THRESHOLD) {
+                updateVisibility(state.opacity.value, state.opacity.transition?.duration);
+            }
 
             for (const property of properties) {
                 const next = state[property];
@@ -291,7 +325,9 @@ export function ScrollAnimate({
                 }
             }
 
-            updatePointerEvents(state.opacity.value);
+            if (displayNoneOnInvisible && state.opacity.value <= INVISIBLE_OPACITY_THRESHOLD) {
+                updateVisibility(state.opacity.value, state.opacity.transition?.duration);
+            }
         };
 
         const onScrollProgressChange = (progress: number) => {
@@ -302,8 +338,19 @@ export function ScrollAnimate({
         onScrollProgressChange(scrollProgress.get());
         const unsubscribe = scrollProgress.on('change', onScrollProgressChange);
 
-        return () => unsubscribe();
-    }, [scrollProgress, hidePointerWhenInvisible, motionValues, style?.pointerEvents]);
+        return () => {
+            unsubscribe();
+            if (pendingDisplayNoneRef.current !== null) {
+                clearTimeout(pendingDisplayNoneRef.current);
+            }
+        };
+    }, [
+        scrollProgress,
+        disablePointerOnInvisible,
+        displayNoneOnInvisible,
+        motionValues,
+        style?.pointerEvents,
+    ]);
 
     const resolvedTransformOrigin = useMemo(() => {
         for (let i = animations.length - 1; i >= 0; i--) {

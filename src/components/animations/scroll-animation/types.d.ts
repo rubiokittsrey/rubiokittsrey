@@ -42,7 +42,6 @@ export type ScrollAnimation = RangeScrollAnimation | ThresholdScrollAnimation;
 
 type PropertyCommitState = {
     value: number;
-    /** The progress point at which this value was last committed */
     atProgress: number;
 };
 
@@ -68,5 +67,6 @@ export interface ScrollAnimateProps {
     style?: React.CSSProperties;
     children: React.ReactNode;
     disablePointerOnInvisible?: boolean;
+    displayNoneOnInvisible?: boolean;
     animations: ScrollAnimation[];
 }

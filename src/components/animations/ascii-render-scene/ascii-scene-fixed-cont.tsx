@@ -11,8 +11,9 @@ export function Ascii3dSceneContainer({ className }: { className?: string }) {
                     key: 'opacity-initial',
                     mode: 'threshold',
                     at: 0.125,
-                    transitionDuration: 0.5,
+                    transitionDuration: 0.2,
                     opacity: { from: 1, to: 0.1 },
+                    ease: 'easeOut',
                 },
                 {
                     key: 'opacity-second',
