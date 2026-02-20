@@ -79,7 +79,7 @@ export default function ContextLabelButton() {
                     }}
                 >
                     <span className={cn('relative inline-flex items-center')}>
-                        {label}
+                        {label.toUpperCase()}
                         <ContextLabelArrow animateOn={hovered && canNavigate} />
                     </span>
                 </motion.button>

@@ -10,6 +10,8 @@ export default function MainSectionTitle({ className }: { className?: string }) 
         <DOMPortal>
             <SlideInFadeTransition className="fixed left-0 top-0 ">
                 <ScrollAnimate
+                    source="section"
+                    sectionId="main"
                     className={cn(
                         'flex flex-row items-center font-sans p-14 z-50 h-48 space-x-7',
                         className
@@ -18,7 +20,7 @@ export default function MainSectionTitle({ className }: { className?: string }) 
                         {
                             key: 'opacity-hide',
                             mode: 'threshold',
-                            at: 0.11,
+                            at: 0.95,
                             transitionDuration: 0.3,
                             ease: 'easeOut',
                             opacity: { from: 1, to: 0 },

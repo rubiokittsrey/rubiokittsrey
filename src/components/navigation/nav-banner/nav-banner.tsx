@@ -29,7 +29,7 @@ export default function NavBanner({
             variant={'ghost'}
             className={cn('cursor-pointer p-0', className)}
         >
-            <h1 className={cn('select-none')}>rubiokittsrey.dev</h1>
+            <h1 className={cn('select-none')}>RUBIOKITTSREY.DEV</h1>
         </Button>
     );
 }

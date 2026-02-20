@@ -14,7 +14,7 @@ import { useScrollSystem } from '@/components/scroll-provider/scroll-system-prov
 import { usePathname } from 'next/navigation';
 
 export default function ScrollAwareNavBanner() {
-    const { y: scrollY, activeSectionId } = useScrollSystem();
+    const { activeSectionId, getSectionProgress: yProgress } = useScrollSystem();
 
     const pathname = usePathname();
     const isHome = pathname === '/';
@@ -25,11 +25,7 @@ export default function ScrollAwareNavBanner() {
     const pinnedRef = useRef(false);
     const controlsRef = useRef<AnimationPlaybackControls | null>(null);
 
-    // derived thresholds
-    const { pinAt, unpinAt } = useMemo(() => {
-        const triggerY = dimensions.height * 0.5;
-        return { pinAt: triggerY, unpinAt: triggerY };
-    }, [dimensions.height]);
+    const threshold = 0.95;
 
     const animateTo = useCallback(
         (to: number) => {
@@ -50,21 +46,11 @@ export default function ScrollAwareNavBanner() {
 
     const getSectionId = useCallback(() => activeSectionId.get(), [activeSectionId]);
 
-    // normalize "set pinned + animate" writes
-    const setPinned = useCallback(
-        (nextPinned: boolean, duration?: number) => {
-            if (pinnedRef.current === nextPinned && duration !== 0) return;
-            pinnedRef.current = nextPinned;
-            animateTo(nextPinned ? 0 : dimensions.bottom);
-        },
-        [animateTo, dimensions.bottom]
-    );
-
     useEffect(() => {
         const update = () => {
             setDimensions({
                 height: window.innerHeight,
-                bottom: window.innerHeight - 120,
+                bottom: window.innerHeight - 145,
             });
         };
 
@@ -105,7 +91,7 @@ export default function ScrollAwareNavBanner() {
             return;
         }
 
-        const shouldBePinned = scrollY.get() >= unpinAt;
+        const shouldBePinned = yProgress('main').get() >= 0.2;
         if (pinnedRef.current !== shouldBePinned) {
             pinnedRef.current = shouldBePinned;
             animateTo(shouldBePinned ? 0 : dimensions.bottom);
@@ -122,19 +108,17 @@ export default function ScrollAwareNavBanner() {
             return;
         }
 
-        const shouldBePinned = scrollY.get() >= unpinAt;
+        const shouldBePinned = yProgress('main').get() >= threshold;
         pinnedRef.current = shouldBePinned;
         animateTo(shouldBePinned ? 0 : dimensions.bottom);
-    }, [dimensions.bottom, unpinAt, scrollY, getSectionId, animateTo]);
+    }, [dimensions.bottom, threshold, getSectionId, animateTo]);
 
-    // scroll-driven pin/unpin — only on unpin sections
-    useMotionValueEvent(scrollY, 'change', (latest) => {
-        const id = getSectionId();
-        if (id != 'main' || !isHome) return;
+    useMotionValueEvent(yProgress('main'), 'change', (yProg) => {
+        if (!isHome) return;
 
+        const shouldPin = yProg >= threshold;
         const isPinned = pinnedRef.current;
 
-        const shouldPin = isPinned ? latest >= unpinAt : latest >= pinAt;
         if (shouldPin === isPinned) return;
 
         pinnedRef.current = shouldPin;
@@ -142,7 +126,7 @@ export default function ScrollAwareNavBanner() {
     });
 
     return (
-        <div className="fixed z-50 w-fit left-14 top-10">
+        <div className="fixed z-50 w-fit left-14 top-14">
             <motion.div
                 style={{ y }}
                 className="flex flex-row items-center font-sans font-medium text-xl tracking-wide"

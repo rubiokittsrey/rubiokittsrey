@@ -29,14 +29,14 @@ export function AnchorNavItem({
         <div className="flex flex-col items-end z-10">
             <Button
                 variant={isActive ? 'default' : 'outline'}
-                className={cn('tracking-tight cursor-pointer rounded-full border px-4 py-3 h-auto')}
+                className={cn('tracking-tight cursor-pointer rounded-full border size-11')}
                 onClick={() => onClick(section)}
             >
                 <Icon className="size-4 shrink-0" />
             </Button>
 
             <motion.div
-                className="relative w-0.5 self-end mr-5 rounded-full overflow-clip"
+                className="relative w-0.5 self-end mr-5.5 rounded-full overflow-clip"
                 animate={{
                     height: isActive ? 80 : 0,
                     marginTop: isActive ? 12 : 0,

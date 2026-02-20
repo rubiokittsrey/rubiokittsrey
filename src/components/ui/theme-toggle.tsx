@@ -29,7 +29,7 @@ export default function ThemeToggle() {
         return (
             <Button
                 variant="outline"
-                className="rounded-full overflow-clip relative p-5 cursor-pointer"
+                className="rounded-full overflow-clip relative size-11 cursor-pointer"
                 disabled
             >
                 <div className="size-4.5 shrink-0" />
@@ -41,7 +41,7 @@ export default function ThemeToggle() {
             disabled={!mounted}
             variant="outline"
             onClick={handleThemeToggle}
-            className="rounded-full overflow-clip relative p-5 cursor-pointer"
+            className="rounded-full overflow-clip relative p-5 cursor-pointer size-11"
         >
             <AnimatePresence initial={false} mode="wait">
                 {theme === 'light' && (
