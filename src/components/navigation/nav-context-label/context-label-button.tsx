@@ -52,7 +52,7 @@ export default function ContextLabelButton() {
 
     return (
         <div className="relative h-full items-center w-50 inline-flex justify-start space-x-2">
-            {!isHome && <span className="absolute -top-[0.5px]">/&nbsp;</span>}
+            {!isHome && <span className="absolute">/&nbsp;</span>}
 
             <AnimatePresence mode="wait" custom={directionRef.current}>
                 <motion.button
@@ -64,7 +64,7 @@ export default function ContextLabelButton() {
                     variants={slideVariants}
                     transition={{ duration: 0.225, ease: 'easeOut' }}
                     className={cn(
-                        'absolute left-3 top-0 whitespace-nowrap',
+                        'absolute left-3 top-0.5 whitespace-nowrap',
                         isHome && 'left-0',
                         canNavigate && 'cursor-pointer'
                     )}

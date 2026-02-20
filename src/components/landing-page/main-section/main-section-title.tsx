@@ -1,37 +1,40 @@
 import Ascii3dScene from '@/components/animations/ascii-render-scene/ascii-scene-comp';
+import { SlideInFadeTransition } from '@/components/animations/page-transitions';
 import { ScrollAnimate } from '@/components/animations/scroll-animation/scroll-animation';
 import { dirtyLine, ppMori } from '@/components/resources/fonts';
-import BodyPortal from '@/components/ui/body-portal';
+import DOMPortal from '@/components/ui/body-portal';
 import { cn, randomizeCase, calculateYears } from '@/lib/utils';
 
 export default function MainSectionTitle({ className }: { className?: string }) {
     return (
-        <BodyPortal>
-            <ScrollAnimate
-                className={cn(
-                    'fixed left-0 top-0 flex flex-row items-center font-sans p-14 z-50 h-48 space-x-7',
-                    className
-                )}
-                animations={[
-                    {
-                        key: 'opacity-hide',
-                        mode: 'threshold',
-                        at: 0.11,
-                        transitionDuration: 0.3,
-                        ease: 'easeOut',
-                        opacity: { from: 1, to: 0 },
-                        blur: { from: 0, to: 0.1 },
-                    },
-                ]}
-                displayNoneOnInvisible
-            >
-                <div className="flex flex-col space-y-2 font-sans justify-between">
-                    <MainSectionTitleText />
-                    <MainSectionSubtitle />
-                </div>
-                <MainSectionTitleAnimation />
-            </ScrollAnimate>
-        </BodyPortal>
+        <DOMPortal>
+            <SlideInFadeTransition className="fixed left-0 top-0 ">
+                <ScrollAnimate
+                    className={cn(
+                        'flex flex-row items-center font-sans p-14 z-50 h-48 space-x-7',
+                        className
+                    )}
+                    animations={[
+                        {
+                            key: 'opacity-hide',
+                            mode: 'threshold',
+                            at: 0.11,
+                            transitionDuration: 0.3,
+                            ease: 'easeOut',
+                            opacity: { from: 1, to: 0 },
+                            blur: { from: 0, to: 0.1 },
+                        },
+                    ]}
+                    displayNoneOnInvisible
+                >
+                    <div className="flex flex-col space-y-2 font-sans justify-between">
+                        <MainSectionTitleText />
+                        <MainSectionSubtitle />
+                    </div>
+                    <MainSectionTitleAnimation />
+                </ScrollAnimate>
+            </SlideInFadeTransition>
+        </DOMPortal>
     );
 }
 

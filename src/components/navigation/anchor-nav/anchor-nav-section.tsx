@@ -47,7 +47,7 @@ export default function AnchorNavigation() {
     );
 
     return (
-        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit py-13 right-12">
+        <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit py-14 right-14">
             <div className="relative flex flex-col items-end space-y-3">
                 {sections.map((sec) => (
                     <AnchorNavItem
