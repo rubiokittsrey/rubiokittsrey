@@ -8,7 +8,7 @@ import {
     useMotionValue,
     type AnimationPlaybackControls,
 } from 'motion/react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavContextLabel } from '../nav-context-label/nav-context-label';
 import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 import { usePathname } from 'next/navigation';
@@ -81,22 +81,22 @@ export default function ScrollAwareNavBanner() {
     }, [isHome, getSectionId, animateTo, dimensions.bottom]);
 
     // active section change → decide pin state
-    useMotionValueEvent(activeSectionId, 'change', (id) => {
-        if (id != 'main') {
-            // non-main section => pin
-            if (!pinnedRef.current) {
-                pinnedRef.current = true;
-                animateTo(0);
-            }
-            return;
-        }
+    // useMotionValueEvent(activeSectionId, 'change', (id) => {
+    //     if (id != 'main') {
+    //         // non-main section => pin
+    //         if (!pinnedRef.current) {
+    //             pinnedRef.current = true;
+    //             animateTo(0);
+    //         }
+    //         return;
+    //     }
 
-        const shouldBePinned = yProgress('main').get() >= 0.2;
-        if (pinnedRef.current !== shouldBePinned) {
-            pinnedRef.current = shouldBePinned;
-            animateTo(shouldBePinned ? 0 : dimensions.bottom);
-        }
-    });
+    //     const shouldBePinned = yProgress('main').get() >= threshold;
+    //     if (pinnedRef.current !== shouldBePinned) {
+    //         pinnedRef.current = shouldBePinned;
+    //         animateTo(shouldBePinned ? 0 : dimensions.bottom);
+    //     }
+    // });
 
     // dimensions change --> snap to correct state (no animation)
     useEffect(() => {
@@ -114,6 +114,7 @@ export default function ScrollAwareNavBanner() {
     }, [dimensions.bottom, threshold, getSectionId, animateTo]);
 
     useMotionValueEvent(yProgress('main'), 'change', (yProg) => {
+        const id = getSectionId();
         if (!isHome) return;
 
         const shouldPin = yProg >= threshold;
@@ -132,7 +133,7 @@ export default function ScrollAwareNavBanner() {
                 className="flex flex-row items-center font-sans font-medium text-xl tracking-wide"
             >
                 <NavBanner className="text-xl" />
-                <NavContextLabel />
+                {/* <NavContextLabel /> */}
             </motion.div>
         </div>
     );

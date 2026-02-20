@@ -36,7 +36,7 @@ function ContextLabelLine() {
             )}
             initial={false}
             animate={{
-                width: isHome ? '10rem' : '0rem',
+                width: isHome ? '20rem' : '0rem',
                 marginLeft: isHome ? '1rem' : '0',
                 marginRight: isHome ? '1rem' : '0.375rem',
             }}

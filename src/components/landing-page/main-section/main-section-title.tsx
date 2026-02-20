@@ -1,7 +1,7 @@
 import Ascii3dScene from '@/components/animations/ascii-render-scene/ascii-scene-comp';
 import { SlideInFadeTransition } from '@/components/animations/page-transitions';
 import { ScrollAnimate } from '@/components/animations/scroll-animation/scroll-animation';
-import { dirtyLine, ppMori } from '@/components/resources/fonts';
+import { dirtyLine } from '@/components/resources/fonts';
 import DOMPortal from '@/components/ui/body-portal';
 import { cn, randomizeCase, calculateYears } from '@/lib/utils';
 
