@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
-import { useScrollSystem } from '../scroll-provider/scroll-system-provider';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 import { useState } from 'react';
 import { useMotionValueEvent, Variants } from 'framer-motion';
 import { motion } from 'framer-motion';
@@ -43,11 +43,11 @@ function ContextLabelLine() {
             initial={false}
             animate="animate"
             transition={{
-                duration: isHome ? 0.3 : 0.25,
-                ease: isHome ? ['circOut', 'circOut', 'easeOut'] : ['easeIn', 'easeOut'],
-                // damping: 200,
-                // stiffness: 50,
-                delay: isHome ? 0.025 : 0,
+                duration: isHome ? 0.25 : 0.225,
+                ease: isHome ? ['circOut', 'circOut', 'circIn'] : ['easeIn', 'easeOut'],
+                damping: 300,
+                stiffness: 50,
+                delay: isHome ? 0.25 : 0,
             }}
         />
     );

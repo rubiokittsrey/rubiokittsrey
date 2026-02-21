@@ -12,7 +12,8 @@ import { useScrollSystem } from '../scroll-provider/scroll-system-provider';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import NavBanner from './nav-banner/nav-banner';
-import NavContextLabel from './nav-context-label';
+import NavContextLabel from './nav-context/nav-context-label';
+import { DateTimeDisplay } from '../ui/date-time-display';
 
 export default function NavigationSection({ className }: { className?: string }) {
     const { getSectionProgress } = useScrollSystem();
@@ -110,13 +111,15 @@ export default function NavigationSection({ className }: { className?: string })
             style={{ y }}
             className={cn(
                 'fixed h-30 w-full p-14 flex flex-row items-center justify-between',
-                'font-sans font-medium text-xl tracking-wide z-50'
+                'font-sans font-medium text-lg tracking-wide z-50',
+                className
             )}
         >
             <div className="flex">
                 <NavBanner />
                 <NavContextLabel />
             </div>
+            <DateTimeDisplay />
         </motion.div>
     );
 }
