@@ -7,7 +7,7 @@ import { useState } from 'react';
 
 export function NavContextLabel() {
     return (
-        <div className={cn('flex items-center h-8')}>
+        <div className={cn('flex items-center')}>
             <ContextLabelLine />
             <ContextLabelButton />
         </div>

@@ -11,7 +11,7 @@ export default function NavBanner({
     className,
     ...props
 }: React.ClassAttributes<HTMLButtonElement> & React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    const { activeSectionId } = useScrollSystem();
+    const { activeSectionId, yProgress, resetScroll } = useScrollSystem();
     const router = useRouter();
     const pathName = usePathname();
 
@@ -19,6 +19,7 @@ export default function NavBanner({
         if (pathName === '/') return;
         activeSectionId.set('main');
         router.push('/');
+        resetScroll();
     };
 
     return (

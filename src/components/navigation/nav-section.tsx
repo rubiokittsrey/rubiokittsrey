@@ -12,6 +12,7 @@ import { useScrollSystem } from '../scroll-provider/scroll-system-provider';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import NavBanner from './nav-banner/nav-banner';
+import { NavContextLabel } from './nav-context-label/nav-context-label';
 
 export default function NavigationSection({ className }: { className?: string }) {
     const { getSectionProgress } = useScrollSystem();
@@ -74,8 +75,9 @@ export default function NavigationSection({ className }: { className?: string })
 
     // when dimensions change / on resize
     useEffect(() => {
-        if (!isHome || !dimensions) return;
-        animateTo(dimensions?.bottom);
+        if (!dimensions) return;
+        const shouldPin = getSectionProgress('main').get() >= pinThreshold || !isHome;
+        animateTo(shouldPin ? 0 : dimensions?.bottom);
     }, [dimensions]);
 
     // route updates
@@ -85,7 +87,6 @@ export default function NavigationSection({ className }: { className?: string })
 
         const shouldPin = getSectionProgress('main').get() >= pinThreshold || !isHome;
         if (shouldPin === pinnedRef.current) return;
-        console.log(dimensions.height);
 
         pinnedRef.current = shouldPin;
         animateTo(shouldPin ? 0 : dimensions.bottom);
@@ -107,10 +108,13 @@ export default function NavigationSection({ className }: { className?: string })
             style={{ y }}
             className={cn(
                 'fixed h-30 w-full p-14 flex flex-row items-center justify-between',
-                'font-sans font-medium text-xl tracking-wide bg-red-200/5'
+                'font-sans font-medium text-xl tracking-wide bg-red-200/5 z-50'
             )}
         >
-            <NavBanner />
+            <div className="flex">
+                <NavBanner />
+                <NavContextLabel />
+            </div>
         </motion.div>
     );
 }

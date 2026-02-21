@@ -38,6 +38,8 @@ export type ScrollSystem = {
 
     scrollToSection: (id: string) => void;
     registerSection: (id: string, el: HTMLElement, meta?: SectionMeta) => () => void;
+
+    resetScroll: () => void;
 };
 
 // viewport fraction used as target line for active sec selection
@@ -70,6 +72,23 @@ export function ScrollSystemProvider({ children }: { children: React.ReactNode }
     const metaRef = useRef(new Map<string, SectionMeta>());
     const ioRef = useRef<IntersectionObserver | null>(null);
     const ioEntryMapRef = useRef(new Map<Element, IntersectionObserverEntry>());
+
+    // call this ONLY when route.push('/')
+    // never call this in a useEffect irresponsibly
+    const resetScroll = useCallback(() => {
+        y.set(0);
+        yProgress.set(0);
+        activeSectionId.set('main');
+        bumpVersion();
+
+        // reset tracking
+        // lastYRef.current = 0;
+        // lastTRef.current = 0;
+        // rafRef.current = 0;
+
+        // sections
+        progressRef.current.clear();
+    }, []);
 
     // internal helpers
     const bumpVersion = useCallback(() => {
@@ -274,6 +293,7 @@ export function ScrollSystemProvider({ children }: { children: React.ReactNode }
             getSections,
             scrollToSection,
             registerSection,
+            resetScroll,
         }),
         [
             y,
@@ -290,6 +310,7 @@ export function ScrollSystemProvider({ children }: { children: React.ReactNode }
             getSections,
             scrollToSection,
             registerSection,
+            resetScroll,
         ]
     );
 
