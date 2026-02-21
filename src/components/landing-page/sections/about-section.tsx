@@ -47,7 +47,7 @@ export default function AboutSection({
             className={cn('relative w-full overflow-clip h-[250vh]', className)}
         >
             <div className="sticky top-0 w-full h-screen flex items-end p-14 font-sans">
-                <ScrollAnimate
+                {/* <ScrollAnimate
                     source="section"
                     sectionId="about"
                     animations={[{ ...(exit as ThresholdScrollAnimation), at: 0.2 }]}
@@ -93,7 +93,7 @@ export default function AboutSection({
                         In my free time, I enjoy photography, watching esports, and cooking -
                         literally and figuratively.
                     </p>
-                </ScrollAnimate>
+                </ScrollAnimate> */}
             </div>
         </section>
     );

@@ -12,7 +12,7 @@ import { useScrollSystem } from '../scroll-provider/scroll-system-provider';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import NavBanner from './nav-banner/nav-banner';
-import { NavContextLabel } from './nav-context-label/nav-context-label';
+import NavContextLabel from './nav-context-label';
 
 export default function NavigationSection({ className }: { className?: string }) {
     const { getSectionProgress } = useScrollSystem();
@@ -30,13 +30,6 @@ export default function NavigationSection({ className }: { className?: string })
 
     const shouldPinFunc = (yProg?: number) =>
         (yProg ?? getSectionProgress('main').get()) >= pinThreshold || !isHome;
-
-    const applyPinState = (nextShouldPin: boolean) => {
-        if (!dimensions) return;
-        if (nextShouldPin === pinnedRef.current) return;
-        pinnedRef.current = nextShouldPin;
-        animateTo(nextShouldPin ? 0 : dimensions.bottom);
-    };
 
     const animateTo = useCallback(
         (yPos: number) => {
@@ -83,16 +76,33 @@ export default function NavigationSection({ className }: { className?: string })
         };
     }, []);
 
-    // route updates / dimensions change
+    // route updates
     useEffect(() => {
+        if (!dimensions) return;
+        if (!isHome && pinnedRef.current) return;
+
         const shouldPin = shouldPinFunc();
-        applyPinState(shouldPin);
-    }, [isHome, dimensions]);
+        if (shouldPin === pinnedRef.current) return;
+
+        pinnedRef.current = shouldPin;
+        animateTo(shouldPin ? 0 : dimensions.bottom);
+    }, [isHome]);
+
+    useEffect(() => {
+        if (!dimensions) return;
+        const shouldPin = shouldPinFunc();
+        animateTo(shouldPin ? 0 : dimensions?.bottom);
+    }, [dimensions]);
 
     // scroll updates here
     useMotionValueEvent(getSectionProgress('main'), 'change', (yProg) => {
+        if (!isHome || !dimensions) return;
+
         const shouldPin = shouldPinFunc(yProg);
-        applyPinState(shouldPin);
+        if (shouldPin === pinnedRef.current) return;
+
+        pinnedRef.current = shouldPin;
+        animateTo(shouldPin ? 0 : dimensions.bottom);
     });
 
     return (
@@ -100,7 +110,7 @@ export default function NavigationSection({ className }: { className?: string })
             style={{ y }}
             className={cn(
                 'fixed h-30 w-full p-14 flex flex-row items-center justify-between',
-                'font-sans font-medium text-xl tracking-wide bg-red-200/5 z-50'
+                'font-sans font-medium text-xl tracking-wide z-50'
             )}
         >
             <div className="flex">
