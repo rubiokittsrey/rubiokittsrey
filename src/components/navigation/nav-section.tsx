@@ -28,6 +28,16 @@ export default function NavigationSection({ className }: { className?: string })
     const pinnedRef = useRef(true); // pinned === at top, unpnned === at bottom
     const controlsRef = useRef<AnimationPlaybackControls | null>(null);
 
+    const shouldPinFunc = (yProg?: number) =>
+        (yProg ?? getSectionProgress('main').get()) >= pinThreshold || !isHome;
+
+    const applyPinState = (nextShouldPin: boolean) => {
+        if (!dimensions) return;
+        if (nextShouldPin === pinnedRef.current) return;
+        pinnedRef.current = nextShouldPin;
+        animateTo(nextShouldPin ? 0 : dimensions.bottom);
+    };
+
     const animateTo = useCallback(
         (yPos: number) => {
             controlsRef.current?.stop();
@@ -73,34 +83,16 @@ export default function NavigationSection({ className }: { className?: string })
         };
     }, []);
 
-    // when dimensions change / on resize
+    // route updates / dimensions change
     useEffect(() => {
-        if (!dimensions) return;
-        const shouldPin = getSectionProgress('main').get() >= pinThreshold || !isHome;
-        animateTo(shouldPin ? 0 : dimensions?.bottom);
-    }, [dimensions]);
-
-    // route updates
-    useEffect(() => {
-        if (!dimensions) return;
-        if (!isHome && pinnedRef.current) return;
-
-        const shouldPin = getSectionProgress('main').get() >= pinThreshold || !isHome;
-        if (shouldPin === pinnedRef.current) return;
-
-        pinnedRef.current = shouldPin;
-        animateTo(shouldPin ? 0 : dimensions.bottom);
+        const shouldPin = shouldPinFunc();
+        applyPinState(shouldPin);
     }, [isHome, dimensions]);
 
     // scroll updates here
     useMotionValueEvent(getSectionProgress('main'), 'change', (yProg) => {
-        if (!isHome || !dimensions) return;
-
-        const shouldPin = yProg >= pinThreshold;
-        if (shouldPin === pinnedRef.current) return;
-
-        pinnedRef.current = shouldPin;
-        animateTo(shouldPin ? 0 : dimensions.bottom);
+        const shouldPin = shouldPinFunc(yProg);
+        applyPinState(shouldPin);
     });
 
     return (
