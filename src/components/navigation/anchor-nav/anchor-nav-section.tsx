@@ -1,17 +1,14 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useMotionValueEvent, motion, eachAxis } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
+import { useMotionValueEvent, motion } from 'framer-motion';
 import { AnchorNavItem } from './anchor-nav-item';
 import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
-import ThemeToggle from '@/components/ui/theme-toggle';
 import { cn } from '@/lib/utils';
 import { ScrollAnimate } from '@/components/animations/scroll-animation/scroll-animation';
-import { fa } from 'zod/v4/locales';
 
 export default function AnchorNavigation({ className }: { className?: string }) {
-    const { activeSectionId, getSections, scrollToSection, sectionsVersion, getSectionProgress } =
-        useScrollSystem();
+    const { activeSectionId, getSections, scrollToSection, sectionsVersion } = useScrollSystem();
 
     // snapshot list (set once, and refresh on mount + when route mounts sections)
     const [sections, setSections] = useState(() => getSections());
@@ -50,23 +47,25 @@ export default function AnchorNavigation({ className }: { className?: string }) 
         [activeSectionId, scrollToSection]
     );
 
-    const threshold = 0.95;
-    const [show, setShow] = useState(false);
-    useMotionValueEvent(getSectionProgress('main'), 'change', (prog) => {
-        if (lockedSection) return;
-        setShow(prog >= threshold);
-    });
-
     return (
-        // <div className="flex flex-col h-full justify-between items-start fixed z-50 w-fit right-0 p-14 bg-red-500/5">
-        <motion.div
-            initial={false}
-            animate={{ y: show ? 0 : -25, opacity: show ? 1 : 0 }}
+        <ScrollAnimate
+            source="section"
+            sectionId="main"
+            animations={[
+                {
+                    key: 'hide',
+                    mode: 'threshold',
+                    at: 0.95,
+                    transitionDuration: 0.3,
+                    easing: ['circInOut', 'circIn', 'circInOut'],
+                    y: { from: -25, to: 0 },
+                    opacity: { from: 0, to: 1 },
+                },
+            ]}
             className={cn(
                 'fixed flex flex-col h-fit p-12 px-14 z-50 right-0 bottom-0 items-end space-y-4',
                 'font-sans text-lg'
             )}
-            transition={{ ease: ['circInOut', 'circIn', 'circInOut'] }}
         >
             {sections.slice(1).map((sec, idx) => (
                 <AnchorNavItem
@@ -81,6 +80,6 @@ export default function AnchorNavigation({ className }: { className?: string }) 
                     onClick={handleClick}
                 />
             ))}
-        </motion.div>
+        </ScrollAnimate>
     );
 }

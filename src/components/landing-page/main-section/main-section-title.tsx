@@ -1,9 +1,5 @@
-import Ascii3dScene from '@/components/animations/ascii-render-scene/ascii-scene-comp';
-import { SlideInFadeTransition } from '@/components/animations/page-transitions';
 import { ScrollAnimate } from '@/components/animations/scroll-animation/scroll-animation';
 import { dirtyLine } from '@/components/resources/fonts';
-import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
-import DOMPortal from '@/components/ui/body-portal';
 import { cn, randomizeCase, calculateYears } from '@/lib/utils';
 
 export default function MainSectionTitle({ className }: { className?: string }) {
@@ -33,6 +29,7 @@ export default function MainSectionTitle({ className }: { className?: string }) 
                 <MainSectionTitleText />
                 <MainSectionSubtitle />
             </div>
+            <div className="h-full w-64 overflow-clip flex items-center justify-center border rounded-md"></div>
         </ScrollAnimate>
     );
 }

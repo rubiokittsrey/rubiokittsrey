@@ -37,7 +37,7 @@ export default function NavigationSection({ className }: { className?: string })
             controlsRef.current?.stop();
 
             controlsRef.current = animate(y, yPos, {
-                duration: 0.35,
+                duration: 0.4,
                 ease: ['circInOut'],
                 damping: 500,
                 mass: 0.1,
