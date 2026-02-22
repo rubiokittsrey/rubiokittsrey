@@ -42,16 +42,18 @@ export function DateTimeDisplay({ className }: { className?: string }) {
         <ScrollAnimate
             source="section"
             sectionId="main"
-            animations={[
-                {
-                    key: 'hide',
-                    mode: 'threshold',
-                    at: 0.95,
-                    transitionDuration: 0.3,
-                    opacity: { from: 1, to: 0 },
-                    blur: { from: 0, to: 0.1 },
-                },
-            ]}
+            animations={
+                [
+                    // {
+                    //     key: 'hide',
+                    //     mode: 'threshold',
+                    //     at: 0.95,
+                    //     transitionDuration: 0.3,
+                    //     opacity: { from: 1, to: 0 },
+                    //     blur: { from: 0, to: 0.1 },
+                    // },
+                ]
+            }
             className={cn('tabular-nums flex space-x-4', className)}
         >
             <div className="opacity-50">{time}</div>
