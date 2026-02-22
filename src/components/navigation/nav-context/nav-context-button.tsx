@@ -8,9 +8,9 @@ import { cn } from '@/lib/utils';
 import { MoveRightIcon } from 'lucide-react';
 
 const slideVariants: Variants = {
-    initial: (d: 1 | -1) => ({ y: d * 20, opacity: 0 }),
+    initial: (d: 1 | -1) => ({ y: d * 15, opacity: 0.1 }),
     animate: () => ({ y: 0, opacity: 1 }),
-    exit: (d: 1 | -1) => ({ y: -d * 20, opacity: 0 }),
+    exit: (d: 1 | -1) => ({ y: -d * 15, opacity: 0.1 }),
 };
 
 export default function ContextLabelButton({ className }: { className?: string }) {
@@ -49,7 +49,7 @@ export default function ContextLabelButton({ className }: { className?: string }
     const canNavigate = isHome && activeId !== 'main';
 
     return (
-        <div className="relative h-full items-center inline-flex justify-start space-x-2">
+        <div className="relative h-full items-center inline-flex justify-start space-x-2 overflow-clips">
             <ContextLabelSlash hide={isHome} />
             <AnimatePresence mode="wait" custom={directionRef.current}>
                 <motion.button
@@ -59,7 +59,7 @@ export default function ContextLabelButton({ className }: { className?: string }
                     animate="animate"
                     // exit="exit"
                     variants={slideVariants}
-                    transition={{ duration: 0.25, ease: ['easeOut', 'easeIn', 'easeOut'] }}
+                    transition={{ duration: 0.3, ease: ['circInOut', 'easeOut'] }}
                     className={cn('whitespace-nowrap ml-1', canNavigate && 'cursor-pointer')}
                     disabled={!canNavigate}
                     tabIndex={canNavigate ? 0 : -1}
@@ -112,8 +112,8 @@ function ContextLabelArrow({ animateOn }: { animateOn: boolean }) {
         <motion.span
             aria-hidden
             initial={false}
-            animate={animateOn ? { x: 0, opacity: 1 } : { x: -20, opacity: 0 }}
-            transition={{ duration: 0.2, ease: 'anticipate' }}
+            animate={animateOn ? { x: 0, opacity: 1 } : { x: -15, opacity: 0 }}
+            transition={{ duration: 0.2, ease: ['circInOut'] }}
             className="ml-3 inline-flex items-center"
         >
             <MoveRightIcon className="size-7 text-primary/80 stroke-[1.7]" />

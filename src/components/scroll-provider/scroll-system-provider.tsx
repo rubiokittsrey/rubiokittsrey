@@ -4,8 +4,9 @@ import { motionValue, MotionValue, useMotionValueEvent } from 'motion/react';
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { NavItemIcon } from '../navigation/static-nav/nav-item';
 
-type SectionMeta = {
+export type SectionMeta = {
     icon?: NavItemIcon;
+    title: string;
 };
 
 type SectionRect = {
@@ -16,7 +17,7 @@ type SectionRect = {
 export type SectionRecord = {
     id: string;
     el: HTMLElement;
-    meta?: SectionMeta;
+    meta: SectionMeta;
 };
 
 export type ScrollSystem = {
@@ -37,7 +38,7 @@ export type ScrollSystem = {
     sectionsVersion: MotionValue<number>;
 
     scrollToSection: (id: string) => void;
-    registerSection: (id: string, el: HTMLElement, meta?: SectionMeta) => () => void;
+    registerSection: (id: string, el: HTMLElement, meta: SectionMeta) => () => void;
 
     resetScroll: () => void;
 };
@@ -127,7 +128,7 @@ export function ScrollSystemProvider({ children }: { children: React.ReactNode }
 
     const getSections = useCallback((): SectionRecord[] => {
         return Array.from(elsRef.current.entries())
-            .map(([id, el]) => ({ id, el, meta: metaRef.current.get(id) }))
+            .map(([id, el]) => ({ id, el, meta: metaRef.current.get(id)! }))
             .sort((a, b) => byTop(a.id, b.id));
     }, [byTop]);
 
@@ -152,7 +153,7 @@ export function ScrollSystemProvider({ children }: { children: React.ReactNode }
     }, []);
 
     const registerSection = useCallback(
-        (id: string, el: HTMLElement, meta: SectionMeta = {}): (() => void) => {
+        (id: string, el: HTMLElement, meta: SectionMeta): (() => void) => {
             elsRef.current.set(id, el);
             metaRef.current.set(id, meta);
             el.dataset.sectionId = id;

@@ -37,13 +37,10 @@ export default function NavigationSection({ className }: { className?: string })
             controlsRef.current?.stop();
 
             controlsRef.current = animate(y, yPos, {
-                type: 'spring',
-                stiffness: 420,
-                damping: 48,
-                mass: 0.8,
-                velocity: y.getVelocity(),
-                restDelta: 0.5,
-                restSpeed: 5,
+                duration: 0.35,
+                ease: ['circInOut'],
+                damping: 500,
+                mass: 0.1,
             });
         },
         [y]
@@ -115,7 +112,7 @@ export default function NavigationSection({ className }: { className?: string })
                 className
             )}
         >
-            <div className="flex">
+            <div className="flex items-center">
                 <NavBanner />
                 <NavContextLabel />
             </div>

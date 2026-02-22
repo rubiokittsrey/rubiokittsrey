@@ -17,8 +17,7 @@ export default function NavContextLabel({ className }: { className?: string }) {
 
 const contextLabelLineVariants: Variants = {
     animate: (isHome: boolean) => ({
-        width: isHome ? '20rem' : '5rem',
-        transitionEnd: { width: isHome ? '20rem' : '0rem' },
+        width: isHome ? '20rem' : '0rem',
     }),
 };
 
@@ -43,11 +42,10 @@ function ContextLabelLine() {
             initial={false}
             animate="animate"
             transition={{
-                duration: isHome ? 0.25 : 0.225,
-                ease: isHome ? ['circOut', 'circOut', 'circIn'] : ['easeIn', 'easeOut'],
+                duration: 0.25,
+                ease: 'circInOut',
                 damping: 300,
                 stiffness: 50,
-                delay: isHome ? 0.25 : 0,
             }}
         />
     );
