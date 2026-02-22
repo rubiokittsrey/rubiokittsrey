@@ -2,41 +2,38 @@ import Ascii3dScene from '@/components/animations/ascii-render-scene/ascii-scene
 import { SlideInFadeTransition } from '@/components/animations/page-transitions';
 import { ScrollAnimate } from '@/components/animations/scroll-animation/scroll-animation';
 import { dirtyLine } from '@/components/resources/fonts';
+import { useScrollSystem } from '@/components/scroll-provider/scroll-system-provider';
 import DOMPortal from '@/components/ui/body-portal';
 import { cn, randomizeCase, calculateYears } from '@/lib/utils';
 
 export default function MainSectionTitle({ className }: { className?: string }) {
     return (
-        <DOMPortal>
-            <SlideInFadeTransition className="fixed left-0 top-0 ">
-                <ScrollAnimate
-                    source="section"
-                    sectionId="main"
-                    className={cn(
-                        'flex flex-row items-center font-sans p-14 z-50 h-48 space-x-7',
-                        className
-                    )}
-                    animations={[
-                        {
-                            key: 'opacity-hide',
-                            mode: 'threshold',
-                            at: 0.95,
-                            transitionDuration: 0.3,
-                            ease: 'easeOut',
-                            opacity: { from: 1, to: 0 },
-                            blur: { from: 0, to: 0.1 },
-                        },
-                    ]}
-                    displayNoneOnInvisible
-                >
-                    <div className="flex flex-col space-y-2 font-sans justify-between">
-                        <MainSectionTitleText />
-                        <MainSectionSubtitle />
-                    </div>
-                    <MainSectionTitleAnimation />
-                </ScrollAnimate>
-            </SlideInFadeTransition>
-        </DOMPortal>
+        <ScrollAnimate
+            source="section"
+            sectionId="main"
+            animations={[
+                {
+                    key: 'hide',
+                    mode: 'threshold',
+                    at: 0.95,
+                    transitionDuration: 0.3,
+                    opacity: { from: 1, to: 0 },
+                    blur: { from: 0, to: 0.1 },
+                    y: { from: 0, to: -25 },
+                    easing: 'circInOut',
+                },
+            ]}
+            className={cn(
+                'fixed flex flex-row items-center font-sans p-14 z-50 h-48 space-x-7',
+                className
+            )}
+            displayNoneOnInvisible
+        >
+            <div className="flex flex-col space-y-2 font-sans justify-between">
+                <MainSectionTitleText />
+                <MainSectionSubtitle />
+            </div>
+        </ScrollAnimate>
     );
 }
 
@@ -61,31 +58,6 @@ export function MainSectionSubtitle({ className }: { className?: string }) {
             <h4>FULL STACK DEVELOPER</h4>
             <h4>{age} YRS</h4>
             <h4>{`PH (GMT+8)`}</h4>
-        </div>
-    );
-}
-
-export function MainSectionTitleAnimation({ className }: { className?: string }) {
-    const customAsciiConf = {
-        ramp: '  .*#8%&$@',
-        cellSize: 8,
-        glyphCellPx: 50,
-        glyphContrast: 35,
-        lumCutoff: 0,
-    } as const;
-
-    return (
-        <div
-            className={cn(
-                'w-75 overflow-clip h-full flex items-center justify-center border rounded-sm',
-                className
-            )}
-        >
-            <Ascii3dScene
-                className="h-125 cursor-grab active:cursor-grabbing"
-                asciiConfig={customAsciiConf}
-                allowControls={true}
-            />
         </div>
     );
 }

@@ -16,7 +16,7 @@ export default function AboutSection({
     useLayoutEffect(() => {
         const el = ref.current;
         if (!el) return;
-        return registerSection('about', el, { icon: UserRoundIcon });
+        return registerSection('about', el, { icon: UserRoundIcon, title: 'About Me' });
     }, [registerSection]);
 
     const enter: Omit<ThresholdScrollAnimation, 'at'> = {

@@ -15,7 +15,7 @@ export default function ContactSection({
     useLayoutEffect(() => {
         const el = ref.current;
         if (!el) return;
-        return registerSection('contact', el, { icon: MailIcon });
+        return registerSection('contact', el, { icon: MailIcon, title: 'Get In Touch' });
     }, [registerSection]);
 
     return (

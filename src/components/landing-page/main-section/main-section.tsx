@@ -17,12 +17,12 @@ export default function MainSection({
     useLayoutEffect(() => {
         const el = ref.current;
         if (!el) return;
-        return registerSection('main', el, { icon: HomeIcon });
+        return registerSection('main', el, { icon: HomeIcon, title: 'Home' });
     }, [registerSection]);
 
     return (
         <section id="main" {...props} ref={ref} className={cn('w-full h-screen', className)}>
-            {/* <MainSectionTitle /> */}
+            <MainSectionTitle />
             {/* <DOMPortal>
                 <div className="fixed left-0 top-0 h-screen w-screen overflow-x-hidden">
                 </div>
