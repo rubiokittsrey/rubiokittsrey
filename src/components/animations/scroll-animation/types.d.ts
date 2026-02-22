@@ -1,3 +1,5 @@
+import { Easing } from 'framer-motion';
+
 export type ScrollProgressSource = 'page' | 'section';
 export type AnimatableProperty = 'x' | 'y' | 'opacity' | 'scale' | 'rotation' | 'blur';
 
@@ -21,7 +23,7 @@ export interface ScrollAnimationBase {
     rotation?: PropertyRange;
     blur?: PropertyRange;
     transformOrigin?: string;
-    ease?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'smooth';
+    easing?: Easing | Easing[];
 }
 
 export interface RangeScrollAnimation extends ScrollAnimationBase {
@@ -51,7 +53,7 @@ export interface ResolvedPropertyState {
     value: number;
     transition?: {
         duration: number;
-        ease: Easing;
+        ease: Easing | Easing[];
     };
     cacheKey: string;
 }
@@ -65,7 +67,7 @@ export interface ScrollAnimateProps {
     sectionId?: string;
     className?: string;
     style?: React.CSSProperties;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     disablePointerOnInvisible?: boolean;
     displayNoneOnInvisible?: boolean;
     animations: ScrollAnimation[];

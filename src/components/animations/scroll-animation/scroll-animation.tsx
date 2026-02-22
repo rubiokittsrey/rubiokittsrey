@@ -34,14 +34,6 @@ const PROPERTY_DEFAULTS: Record<AnimatableProperty, number> = {
 
 const INVISIBLE_OPACITY_THRESHOLD = 0.02;
 
-export const EASE = {
-    linear: [0, 0, 1, 1] as const,
-    easeIn: [0.42, 0, 1, 1] as const,
-    easeOut: [0, 0, 0.58, 1] as const,
-    easeInOut: [0.42, 0, 0.58, 1] as const,
-    smooth: [0.22, 1, 0.36, 1] as const,
-};
-
 function easeInOutCubic(t: number): number {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
@@ -146,7 +138,7 @@ function resolvePropertyChain(
                         cacheKey: `${property}:snap:${animation.key}:pre`,
                     };
                 } else {
-                    const ease = EASE[animation.ease ?? 'smooth'];
+                    const ease = animation.easing ?? 'anticipate';
                     result = {
                         value: range.from,
                         transition: animation.snap
@@ -159,7 +151,7 @@ function resolvePropertyChain(
                 break;
             }
 
-            const ease = EASE[animation.ease ?? 'smooth'];
+            const ease = animation.easing ?? 'anticipate';
             result = {
                 value: range.to,
                 transition: animation.snap
