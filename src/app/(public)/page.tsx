@@ -10,12 +10,10 @@ import ContactSection from '@/components/landing-page/sections/contact-section';
 export default function LandingPage() {
     return (
         <FLowingLayoutShell>
-            {/* <AnchorNavigation /> */}
-            <SlideInFadeTransition>
-                <MainSection />
-                <AboutSection />
-                <ContactSection />
-            </SlideInFadeTransition>
+            <AnchorNavigation />
+            <MainSection />
+            <AboutSection />
+            <ContactSection />
         </FLowingLayoutShell>
     );
 }
