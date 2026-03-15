@@ -2,13 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-
-const geistSans = Geist({
-    variable: '--font-geist-sans',
-    subsets: ['latin'],
-});
+import { ThemeProvider } from 'next-themes';
+import { ppMori } from '@/assets/fonts';
 
 const geistMono = Geist_Mono({
     variable: '--font-geist-mono',
@@ -26,9 +21,11 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={cn('font-sans', inter.variable)}>
-            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                {children}
+        <html lang="en" suppressHydrationWarning>
+            <body className={`${ppMori.variable} ${geistMono.variable} antialiased`}>
+                <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                    {children}
+                </ThemeProvider>
             </body>
         </html>
     );
