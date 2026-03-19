@@ -70,16 +70,6 @@
     --font-mono: var(--font-geist-mono);
     --font-display: var(--font-display);
 
-    --font-size-xs: var(--text-xs);
-    --font-size-sm: var(--text-sm);
-    --font-size-base: var(--text-base);
-    --font-size-lg: var(--text-lg);
-    --font-size-xl: var(--text-xl);
-    --font-size-2xl: var(--text-2xl);
-    --font-size-3xl: var(--text-3xl);
-    --font-size-4xl: var(--text-4xl);
-    --font-size-5xl: var(--text-5xl);
-
     --line-height-xs: var(--leading-xs);
     --line-height-sm: var(--leading-sm);
     --line-height-base: var(--leading-base);
