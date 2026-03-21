@@ -10,7 +10,7 @@
 
 @theme inline {
     --font-sans: var(--font-pp-mori);
-    --font-mono: var(--font-geist-mono);
+    --font-mono: var(--font-ibm-plex-mono);
     --font-display: var(--font-display);
 
     --color-background: var(--background);
