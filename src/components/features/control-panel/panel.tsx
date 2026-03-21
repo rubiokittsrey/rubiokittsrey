@@ -1,28 +1,23 @@
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '../theme-toggle';
-import { Button } from '@/components/ui/button';
-import type { PublicNavItem } from './types';
+import PublicNavItem from '../nav/public-nav-item';
+import { PublicPathMeta } from '../nav/types';
 
-export default function ControlPanel({
-    className,
-    paths,
-}: {
-    className?: string;
-    paths: PublicNavItem[];
-}) {
+export default function ControlPanel({ className }: { className?: string }) {
+    const paths: PublicPathMeta[] = [
+        { path: '/', title: '~/' },
+        { path: '/about', title: 'about this person' },
+        { path: '/projects', title: 'summary of projects done' },
+        { path: '/blog', title: 'opinions about topics' },
+        { path: '/contact', title: 'how to get in touch' },
+    ];
+
     return (
         <div className={cn('flex flex-col justify-between items-end', className)}>
             <ThemeToggle />
             <div className="flex flex-col items-end space-y-px">
-                {paths.map(({ path, icon: PathIcon, title }, idx) => (
-                    <Button
-                        variant={'link'}
-                        type="button"
-                        key={idx}
-                        className="w-fit space-x-2 cursor-pointer pointer-events-auto flex flex-inline items-center justify-center"
-                    >
-                        {title.toUpperCase()}
-                    </Button>
+                {paths.map(({ title, path }, idx) => (
+                    <PublicNavItem title={title} path={path} key={idx} />
                 ))}
             </div>
         </div>
