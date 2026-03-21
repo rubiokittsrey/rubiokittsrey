@@ -2,140 +2,21 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
-/* Token value files — edit these to change the design */
 @import '../tokens/shared.css';
 @import '../tokens/light.css';
 @import '../tokens/dark.css';
 
 @custom-variant dark (&:is(.dark *));
 
-/* ==========================================================================
-   Design Token Mappings
-   ==========================================================================
-   Maps CSS custom properties to Tailwind utilities via @theme inline.
-   The actual values live in tokens/shared.css, tokens/light.css, tokens/dark.css.
-
-   To add a new token:
-   1. Add its value in the appropriate token file
-   2. Map it here so Tailwind generates a utility class for it
-   ========================================================================== */
-
 @theme inline {
-    /* --- Colors (semantic) --- */
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-    --color-popover: var(--popover);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-destructive: var(--destructive);
-    --color-border: var(--border);
-    --color-input: var(--input);
-    --color-ring: var(--ring);
-    --color-chart-1: var(--chart-1);
-    --color-chart-2: var(--chart-2);
-    --color-chart-3: var(--chart-3);
-    --color-chart-4: var(--chart-4);
-    --color-chart-5: var(--chart-5);
-
-    /* --- Colors (sidebar) --- */
-    --color-sidebar: var(--sidebar);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-ring: var(--sidebar-ring);
-
-    /* --- Colors (surface) --- */
-    --color-surface: var(--surface);
-    --color-surface-foreground: var(--surface-foreground);
-    --color-surface-raised: var(--surface-raised);
-    --color-surface-raised-foreground: var(--surface-raised-foreground);
-    --color-surface-sunken: var(--surface-sunken);
-    --color-surface-sunken-foreground: var(--surface-sunken-foreground);
-    --color-surface-overlay: var(--surface-overlay);
-
-    /* --- Typography --- */
-    --font-sans: var(--font-sans);
+    --font-sans: var(--font-pp-mori);
     --font-mono: var(--font-geist-mono);
     --font-display: var(--font-display);
 
-    --line-height-xs: var(--leading-xs);
-    --line-height-sm: var(--leading-sm);
-    --line-height-base: var(--leading-base);
-    --line-height-lg: var(--leading-lg);
-    --line-height-xl: var(--leading-xl);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
 
-    --letter-spacing-tight: var(--tracking-tight);
-    --letter-spacing-normal: var(--tracking-normal);
-    --letter-spacing-wide: var(--tracking-wide);
-
-    /* --- Border Radius --- */
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
-
-    /* --- Spacing (layout) --- */
-    --spacing-page: var(--space-page);
-    --spacing-section: var(--space-section);
-    --spacing-gutter: var(--space-gutter);
-    --spacing-stack-sm: var(--space-stack-sm);
-    --spacing-stack-md: var(--space-stack-md);
-    --spacing-stack-lg: var(--space-stack-lg);
-    --spacing-inline-sm: var(--space-inline-sm);
-    --spacing-inline-md: var(--space-inline-md);
-    --spacing-inline-lg: var(--space-inline-lg);
-
-    /* --- Layout (max widths) --- */
-    --container-sm: var(--width-sm);
-    --container-md: var(--width-md);
-    --container-lg: var(--width-lg);
-    --container-xl: var(--width-xl);
-    --container-prose: var(--width-prose);
-
-    /* --- Shadows --- */
-    --shadow-xs: var(--elevation-xs);
-    --shadow-sm: var(--elevation-sm);
-    --shadow-md: var(--elevation-md);
-    --shadow-lg: var(--elevation-lg);
-    --shadow-xl: var(--elevation-xl);
-
-    /* --- Transitions --- */
-    --transition-timing-default: var(--ease-default);
-    --transition-timing-in: var(--ease-in);
-    --transition-timing-out: var(--ease-out);
-
-    --duration-fast: var(--duration-fast);
-    --duration-normal: var(--duration-normal);
-    --duration-slow: var(--duration-slow);
-}
-
-/* ==========================================================================
-   Base Styles
-   ========================================================================== */
-
-@layer base {
-    * {
-        @apply border-border outline-ring/50;
-    }
-    body {
-        @apply bg-background text-foreground;
-    }
-    html {
-        @apply font-sans;
-    }
+    /* colors (surface) */
+    --color-surface: var(--surface);
+    --color-surface-foreground: var(--surface-foreground);
 }

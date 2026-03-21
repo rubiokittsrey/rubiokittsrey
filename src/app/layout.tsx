@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import { ThemeProvider } from 'next-themes';
+import { Providers } from '@/components/providers';
 import { ppMori } from '@/assets/fonts';
 
 const geistMono = Geist_Mono({
@@ -22,10 +22,24 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
+            <head>
+                <template
+                    id="theme-init"
+                    // @ts-expect-error
+                    shadowrootmode="open"
+                    dangerouslySetInnerHTML={{
+                        __html: `<script>
+                            (function(){try{var e=localStorage.getItem('theme');
+                            var t=e==='dark'||(e!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+                            var d=document.documentElement;
+                            d.classList.add(t?'dark':'light');
+                            d.style.colorScheme=t?'dark':'light'}catch(e){}})()
+                        </script>`,
+                    }}
+                />
+            </head>
             <body className={`${ppMori.variable} ${geistMono.variable} antialiased`}>
-                <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-                    {children}
-                </ThemeProvider>
+                <Providers>{children}</Providers>
             </body>
         </html>
     );
