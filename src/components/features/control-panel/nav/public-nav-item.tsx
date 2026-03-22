@@ -1,47 +1,49 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import type { PublicPathMeta as Meta } from '../types';
-import { ButtonProps } from '@base-ui/react';
 import { cn } from '@/lib/utils';
-import { usePathname, useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
+import { useRef } from 'react';
 
-export default function PublicNavItem({ title, path, className, ...props }: Meta & ButtonProps) {
+export default function PublicNavItem({ title, path, className }: Meta & { className?: string }) {
     const pathName = usePathname();
-    const router = useRouter();
     const isOnPath = pathName === path;
 
-    const handleClick = () => {
-        if (isOnPath) return;
-        router.push(path);
-    };
+    const linkRef = useRef<HTMLAnchorElement>(null);
+    const linkHeight = linkRef.current?.getBoundingClientRect().height ?? 30;
 
     return (
-        <Button
-            variant={'link'}
-            type="button"
+        <Link
+            ref={linkRef}
+            href={path}
+            aria-current={isOnPath ? 'page' : undefined}
             className={cn(
-                'relative',
-                'cursor-pointer pointer-events-auto',
-                isOnPath && 'text-neutral-950 cursor-default',
+                buttonVariants({ variant: 'link', size: 'default' }),
+                'relative cursor-pointer pointer-events-auto',
+                'bg-transparent dark:bg-transparent text-surface',
+                isOnPath &&
+                    'text-surface-foreground cursor-default hover:decoration-0 active:translate-y-0',
                 className
             )}
-            {...props}
-            onClick={handleClick}
         >
-            {isOnPath && (
-                <motion.div
-                    initial={{ y: 25 }}
-                    animate={{ y: 0 }}
-                    className="bg-blue-300 absolute w-full h-full z-10"
-                    transition={{
-                        ease: 'circInOut',
-                        duration: 0.25,
-                    }}
-                />
-            )}
+            <AnimatePresence mode="wait">
+                {!isOnPath && (
+                    <motion.div
+                        initial={{ y: linkHeight }}
+                        animate={{ y: 0 }}
+                        exit={{ y: linkHeight }}
+                        className="bg-surface-foreground absolute w-full h-full z-10"
+                        transition={{
+                            ease: 'circInOut',
+                            duration: 0.3,
+                        }}
+                    />
+                )}
+            </AnimatePresence>
             <div className="z-20">{title.toUpperCase()}</div>
-        </Button>
+        </Link>
     );
 }

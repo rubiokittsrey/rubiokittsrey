@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-screen h-screen grid grid-cols-12 py-24 px-28 bg-surface text-surface-foreground">
+        <div className="w-screen h-screen grid grid-cols-12 py-24 px-28 bg-surface-noised text-surface-foreground">
             <div className="col-span-9">{children}</div>
             <ControlPanel className="col-span-3" />
         </div>

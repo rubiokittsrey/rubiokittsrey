@@ -4,14 +4,14 @@ import { PublicPathMeta } from '../types';
 export default function PublicNavSection() {
     const paths: PublicPathMeta[] = [
         { path: '/', title: '~/' },
-        { path: '/about', title: 'about this person' },
-        { path: '/projects', title: 'summary of projects done' },
-        { path: '/blog', title: 'opinions about topics' },
-        { path: '/contact', title: 'how to get in touch' },
+        { path: '/about', title: 'about' },
+        { path: '/projects', title: 'projects' },
+        { path: '/contact', title: 'contact' },
+        { path: '/blog', title: 'blog' },
     ];
 
     return (
-        <div className="flex flex-col items-end space-y-px">
+        <div className="flex flex-col items-end space-y-0.5">
             {paths.map(({ title, path }, idx) => (
                 <PublicNavItem title={title} path={path} key={idx} />
             ))}
