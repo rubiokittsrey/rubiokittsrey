@@ -24,6 +24,7 @@ export function HolographicCard({
     backFaceClassName,
     faceClassNames,
     disableFlip,
+    disableTranslate,
     dynamicOverlayPos = false,
     enableThemeAwareFoilBackground = false,
 }: {
@@ -34,6 +35,7 @@ export function HolographicCard({
     backFaceClassName?: string;
     faceClassNames?: string;
     disableFlip?: boolean;
+    disableTranslate?: boolean;
     dynamicOverlayPos?: boolean;
     enableThemeAwareFoilBackground?: boolean;
 }) {
@@ -159,7 +161,7 @@ export function HolographicCard({
             const cy = pctY - 50;
             updateSprings(
                 { x: adjust(pctX, 0, 100, 37, 63), y: adjust(pctY, 0, 100, 33, 67) },
-                { x: round(cy / 3.5), y: round(-cx / 3.5) },
+                disableTranslate ? { x: 0, y: 0 } : { x: round(cy / 3.5), y: round(-cx / 3.5) },
                 { x: pctX, y: pctY, o: 1 }
             );
         },
