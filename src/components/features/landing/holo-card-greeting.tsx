@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 export default function HoloCardGreeting() {
     return (
-        <div className="shrink-0 flex flex-col w-65 h-fit border border-surface-foreground/25 rounded-sm overflow-clip font-mono space-y-5">
+        <div className="shrink-0 flex flex-col w-65 h-fit border-surface-foreground/25 rounded-sm overflow-clip font-mono space-y-5">
             <div className="aspect-square w-full">
                 <HolographicCard
                     enableThemeAwareFoilBackground
