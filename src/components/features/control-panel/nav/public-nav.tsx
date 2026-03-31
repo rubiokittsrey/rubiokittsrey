@@ -11,7 +11,7 @@ export default function PublicNavSection() {
     ];
 
     return (
-        <div className="flex flex-col items-end space-y-0.5">
+        <div className="flex flex-col space-y-0.5">
             {paths.map(({ title, path }, idx) => (
                 <PublicNavItem title={title} path={path} key={idx} />
             ))}

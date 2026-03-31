@@ -17,12 +17,12 @@
         position: absolute;
         inset: 0;
         background: url('/noise.png') repeat;
-        opacity: 0.35;
+        opacity: 0.3;
         pointer-events: none;
     }
 
     :is(.dark &)::before {
-        opacity: 0.3;
+        opacity: 0.25;
     }
 }
 
@@ -41,7 +41,7 @@
 
 @theme inline {
     --font-sans: var(--font-pp-mori);
-    --font-mono: var(--font-ibm-plex-mono);
+    --font-mono: var(--font-sf-mono);
     --font-display: var(--font-display);
 
     --color-background: var(--background);

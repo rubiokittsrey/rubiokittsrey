@@ -15,9 +15,11 @@ export default function HoloCardGreeting() {
                     disableTranslate
                 />
             </div>
-            <div className="w-full flex justify-between items-end px-0.5">
-                <p>HELLO STRANGER</p>
-                <div className="w-fit flex flex-col">
+            <div className="w-full grid grid-cols-2 gap-0.5">
+                <div className="col-span-1 h-full flex items-end">
+                    <p>HELLO STRANGER</p>
+                </div>
+                <div className="w-fit col-span-1 flex flex-col">
                     <p>MY NAME</p>
                     <p>IS KITTS REY RUBIO</p>
                 </div>
