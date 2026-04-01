@@ -3,7 +3,7 @@ import { Label } from '@/components/ui/label';
 export function Socials() {
     const socials: { title?: string; url: string }[] = [
         { title: 'x.com', url: 'x.com/mcntopher' },
-        { title: 'instagram.com', url: 'github.com/rubiokittsrey' },
+        { title: 'instagram.com', url: 'instagram.com/rubio.kittsrey' },
         { title: 'github.com', url: 'github.com/rubiokittsrey' },
     ];
 

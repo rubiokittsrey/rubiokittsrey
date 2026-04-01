@@ -7,7 +7,7 @@ export default function AboutMeBlurb() {
                 <p className="font-mono text-base whitespace-pre-line">
                     {'I AM A SOFTWARE\nDEVELOPER\nBASED IN THE PHILIPPINES'}
                 </p>
-                <GlobeWireIcon className="text-red-500" />
+                <GlobeWireIcon className="" />
             </div>
             <div className="flex-1 flex flex-col justify-between space-y-10">
                 <p className="font-mono text-base whitespace-pre-line">
@@ -16,9 +16,7 @@ export default function AboutMeBlurb() {
             </div>
             <div className="flex-1 text-end">
                 <p className="font-mono text-base whitespace-pre-line">
-                    {
-                        'A SIMPLE PHILOSOPHY\n\nA GOOD DESIGN\nIS FIRST APPROACHABLE\n& THEN EFFICIENT'
-                    }
+                    {'SOMETIMES\n\nI GO TO PLACES\nAND TAKE\nDECENT PHOTOGRAPHS'}
                 </p>
             </div>
         </div>
