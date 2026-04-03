@@ -1,4 +1,3 @@
-import { GlobeWireIcon } from '@/assets/icons';
 import { Label } from '@/components/ui/label';
 
 export default function AboutMeBlurb() {
