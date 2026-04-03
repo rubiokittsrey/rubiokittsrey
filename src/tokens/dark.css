@@ -6,3 +6,11 @@
     --surface: oklch(0.129 0 0);
     --surface-foreground: oklch(0.961 0 0);
 }
+
+.dark.ambience {
+    --surface: oklch(0.268 0.015 250);
+}
+
+.dark.ambience body {
+    filter: saturate(1.2) hue-rotate(15deg) brightness(0.94);
+}

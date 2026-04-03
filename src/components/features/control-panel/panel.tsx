@@ -8,7 +8,7 @@ export default function ControlPanel({ className }: { className?: string }) {
     return (
         <div className={cn('flex flex-col justify-between', className)}>
             <div className="w-full flex flex-col space-y-20">
-                <div className="flex flex-col space-y-10">
+                <div className="flex space-x-10">
                     <ThemeToggle />
                     <AmbienceToggle />
                 </div>

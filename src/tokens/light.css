@@ -6,3 +6,11 @@
     --surface: oklch(0.961 0 0);
     --surface-foreground: oklch(0.129 0 0);
 }
+
+:root body {
+    transition: filter 700ms ease-out;
+}
+
+:root.ambience body {
+    filter: sepia(0.12) saturate(1.2) hue-rotate(-5deg);
+}
