@@ -1,23 +1,20 @@
 import { GlobeWireIcon } from '@/assets/icons';
+import { Label } from '@/components/ui/label';
 
 export default function AboutMeBlurb() {
     return (
-        <div className="flex space-x-5">
-            <div className="flex-1 flex flex-col justify-between">
-                <p className="font-mono text-base whitespace-pre-line">
-                    {'I AM A SOFTWARE\nDEVELOPER\nBASED IN THE PHILIPPINES'}
-                </p>
-                <GlobeWireIcon className="" />
+        <div className="grid grid-cols-3 gap-15 w-ful font-mono whitespace-pre-wrap">
+            <div className="flex flex-col space-y-2">
+                <p>{'I AM A\nSOFTWARE DEVELOPER FROM\nTHE PHILIPPINES'}</p>
+                <Label>01</Label>
             </div>
-            <div className="flex-1 flex flex-col justify-between space-y-10">
-                <p className="font-mono text-base whitespace-pre-line">
-                    {'I ENJOY BUILDING, DESIGNING\nAND CREATING THINGS'}
-                </p>
+            <div className="flex flex-col space-y-2">
+                <p>{'I ENJOY BUILDING,\nDESIGNING\nAND CREATING THINGS'}</p>
+                <Label>02</Label>
             </div>
-            <div className="flex-1 text-end">
-                <p className="font-mono text-base whitespace-pre-line">
-                    {'SOMETIMES\n\nI GO TO PLACES\nAND TAKE\nDECENT PHOTOGRAPHS'}
-                </p>
+            <div className="flex flex-col space-y-2">
+                <p>{'SOMETIMES\nI GO TO PLACES AND TAKE\nDECENT PHOTOGRAPHS'}</p>
+                <Label>03</Label>
             </div>
         </div>
     );

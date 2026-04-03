@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 export default function HeroHeadline() {
     return (
         <div className="w-full flex space-x-12">
-            <div className="flex pb-3.5">
+            <div className="flex pb-5">
                 <HolographicCard
                     enableThemeAwareFoilBackground
                     dynamicOverlayPos
@@ -16,7 +16,7 @@ export default function HeroHeadline() {
                 />
             </div>
             <div className="flex">
-                <h1 className={cn('text-6xl font-mono whitespace-pre-line', dirtyLine.className)}>
+                <h1 className={cn('text-7xl font-mono whitespace-pre-line', dirtyLine.className)}>
                     {'WelcOme to my\ncorner of thE\ninterNet'}
                 </h1>
             </div>

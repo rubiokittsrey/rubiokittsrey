@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import { AboutMeBlurb, HeroHeadline, HoloCardGreeting } from '@/components/features/landing';
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+import { dirtyLine } from '@/assets/fonts';
 
 export const metadata: Metadata = {
     title: { absolute: 'rubiokittsrey' },

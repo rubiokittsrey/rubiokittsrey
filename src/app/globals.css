@@ -17,12 +17,12 @@
         position: absolute;
         inset: 0;
         background: url('/noise.png') repeat;
-        opacity: 0.3;
+        opacity: 0.35;
         pointer-events: none;
     }
 
     :is(.dark &)::before {
-        opacity: 0.25;
+        opacity: 0.3;
     }
 }
 
