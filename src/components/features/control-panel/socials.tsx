@@ -1,3 +1,4 @@
+import { Anchor } from '@/components/ui/anchor';
 import { Label } from '@/components/ui/label';
 
 export function Socials() {
@@ -9,17 +10,11 @@ export function Socials() {
 
     return (
         <div className="flex flex-col items-end space-y-5">
-            <div className="flex flex-col space-y-1.5 items-end font-mono">
+            <div className="flex flex-col space-y-1.5 items-end">
                 {socials.map(({ title, url }, idx) => (
-                    <a
-                        key={idx}
-                        className="hover:underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={`https://${url}`}
-                    >
+                    <Anchor key={idx} href={`https://${url}`}>
                         {title ?? url}
-                    </a>
+                    </Anchor>
                 ))}
             </div>
             <Label>LINKS</Label>
