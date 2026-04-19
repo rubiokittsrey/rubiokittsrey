@@ -3,16 +3,13 @@ import { AboutMeBlurb, HeroHeadline, HoloCardGreeting } from '@/components/featu
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { dirtyLine } from '@/assets/fonts';
+import { ControlPanel, UnderConstruction } from '@/components/features';
+import { Socials } from '@/components/features/control-panel/socials';
 
 export const metadata: Metadata = {
     title: { absolute: 'rubiokittsrey' },
 };
 
 export default function LandingPage() {
-    return (
-        <div className="w-full space-y-15 flex flex-col space-x-3">
-            <HeroHeadline />
-            <AboutMeBlurb />
-        </div>
-    );
+    return <UnderConstruction />;
 }

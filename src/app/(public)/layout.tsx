@@ -10,12 +10,18 @@ export const metadata: Metadata = {
 };
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
+    // return (
+    //     <div className="w-screen h-screen grid grid-cols-12 px-16 bg-surface-noised text-surface-foreground">
+    //         <div className="col-span-9 h-full w-full py-16 overflow-y-scroll scrollbar-hide pr-16">
+    //             {children}
+    //         </div>
+    //         <ControlPanel className="col-span-3 py-16 border-l border-surface-foreground/10 pl-16" />
+    //     </div>
+    // );
+
     return (
-        <div className="w-screen h-screen grid grid-cols-12 px-16 bg-surface-noised text-surface-foreground">
-            <div className="col-span-9 h-full w-full py-16 overflow-y-scroll scrollbar-hide pr-16">
-                {children}
-            </div>
-            <ControlPanel className="col-span-3 py-16 border-l border-surface-foreground/10 pl-16" />
+        <div className="w-screen h-screen overflow-clip flex flex-col items-center justify-center bg-surface-noised">
+            {children}
         </div>
     );
 }
