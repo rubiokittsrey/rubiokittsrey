@@ -2,19 +2,15 @@ import { Label } from '@/components/ui/label';
 
 export default function AboutMeBlurb() {
     return (
-        <div className="grid grid-cols-3 gap-15 w-ful font-mono whitespace-pre-wrap">
-            <div className="flex flex-col space-y-2">
-                <p>{'I AM A\nSOFTWARE DEVELOPER FROM\nTHE PHILIPPINES'}</p>
-                <Label>01</Label>
-            </div>
-            <div className="flex flex-col space-y-2">
-                <p>{'I ENJOY BUILDING,\nDESIGNING\nAND CREATING THINGS'}</p>
-                <Label>02</Label>
-            </div>
-            <div className="flex flex-col space-y-2">
-                <p>{'SOMETIMES\nI GO TO PLACES AND TAKE\nDECENT PHOTOGRAPHS'}</p>
-                <Label>03</Label>
-            </div>
+        <div className="flex flex-col space-y-5 items-start max-w-3/5">
+            <p>Hey, I'm Kitts.</p>
+            <p>I'm from Mindanao, Philippines. I build and develop software for a living.</p>
+            <p>
+                I'm interested in how software systems are applied in the real world for research,
+                surveying, mapping, and auditing physical environments — and where all of that is
+                headed as AI technologies become more intelligent and accessible.
+            </p>
+            <p>I also enjoy videogames, esports, food, photography, and being outdoors.</p>
         </div>
     );
 }

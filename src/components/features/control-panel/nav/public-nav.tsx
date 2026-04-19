@@ -4,9 +4,7 @@ import { PublicPathMeta } from '../types';
 export default function PublicNavSection() {
     const paths: PublicPathMeta[] = [
         { path: '/', title: '~/' },
-        { path: '/about', title: 'about' },
         { path: '/projects', title: 'projects' },
-        { path: '/contact', title: 'contact' },
         { path: '/blog', title: 'blog' },
     ];
 
