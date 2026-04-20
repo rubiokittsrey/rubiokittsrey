@@ -6,7 +6,7 @@ import { AmbienceToggle } from '../ambience-overlay/ambience-toggle';
 
 export default function ControlPanel({ className }: { className?: string }) {
     return (
-        <div className={cn('flex flex-col justify-between', className)}>
+        <div className={cn('flex flex-col justify-between font-mono', className)}>
             <PublicNavSection />
             <div className="flex">
                 <ThemeToggle />

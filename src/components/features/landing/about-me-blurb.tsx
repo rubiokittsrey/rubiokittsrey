@@ -2,7 +2,7 @@ import { Label } from '@/components/ui/label';
 
 export default function AboutMeBlurb() {
     return (
-        <div className="flex flex-col space-y-5 items-start">
+        <div className="flex flex-col space-y-5 items-start font-mono">
             <p>Hey, I'm Kitts.</p>
             <p>I'm from Mindanao, Philippines. I build and develop software for a living.</p>
             <p>

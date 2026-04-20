@@ -1,17 +1,22 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/providers';
-import { ppMori, sfMono } from '@/assets/fonts';
-import { Geist } from 'next/font/google';
+import { ppMori } from '@/assets/fonts';
+import { Roboto, Roboto_Mono } from 'next/font/google';
 
 export const metadata: Metadata = {
     title: 'rubiokittsrey',
     description: '',
 };
 
-const geist = Geist({
+const robotoMono = Roboto_Mono({
     subsets: ['latin'],
-    variable: '--font-geist',
+    variable: '--font-roboto-mono',
+});
+
+const roboto = Roboto({
+    subsets: ['latin'],
+    variable: '--font-roboto',
 });
 
 export default function RootLayout({
@@ -22,7 +27,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <head />
-            <body className={`${geist.variable} ${sfMono.variable} antialiased`}>
+            <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
                 <Providers>{children}</Providers>
             </body>
         </html>

@@ -40,8 +40,8 @@
 }
 
 @theme inline {
-    --font-sans: var(--font-geist);
-    --font-mono: var(--font-sf-mono);
+    --font-sans: var(--font-roboto);
+    --font-mono: var(--font-roboto-mono);
     --font-display: var(--font-display);
 
     --color-background: var(--background);

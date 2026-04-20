@@ -8,7 +8,7 @@ export function ThemeToggle() {
     const { resolvedTheme, setTheme, mounted } = useTheme();
 
     const isDark = mounted ? resolvedTheme === 'dark' : false;
-    const modeLabel = isDark ? 'Midnight' : 'Sunlight';
+    const modeLabel = isDark ? 'midnight' : 'sunlight';
 
     const handleThemeToggle = () => {
         if (!mounted) return;
@@ -17,7 +17,7 @@ export function ThemeToggle() {
 
     return (
         <div className="flex flex-col items-start space-y-4">
-            <Button className={'text-lg'} onClick={handleThemeToggle} type="button">
+            <Button className="font-mono" onClick={handleThemeToggle} type="button">
                 {modeLabel}
             </Button>
             <Label>MODE</Label>
