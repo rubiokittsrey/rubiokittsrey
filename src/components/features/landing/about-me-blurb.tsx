@@ -10,7 +10,7 @@ export default function AboutMeBlurb() {
                 surveying, mapping, and auditing physical environments — and where all of that is
                 headed as AI technologies become more intelligent and accessible.
             </p>
-            <p>I also enjoy videogames, esports, food, photography, and being outdoors.</p>
+            <p>I also enjoy videogames, esports, food, photography, and the outdoors.</p>
         </div>
     );
 }

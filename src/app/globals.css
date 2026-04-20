@@ -40,7 +40,7 @@
 }
 
 @theme inline {
-    --font-sans: var(--font-pp-mori);
+    --font-sans: var(--font-geist);
     --font-mono: var(--font-sf-mono);
     --font-display: var(--font-display);
 
