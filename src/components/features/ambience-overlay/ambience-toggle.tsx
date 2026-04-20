@@ -8,8 +8,8 @@ export function AmbienceToggle() {
     const { active, toggle } = useAmbience();
 
     return (
-        <div className="flex flex-col items-start space-y-5">
-            <Button onClick={toggle} type="button">
+        <div className="flex flex-col items-start space-y-3">
+            <Button className="text-lg" onClick={toggle} type="button">
                 {active ? 'on' : 'off'}
             </Button>
             <Label>AMBIENCE</Label>

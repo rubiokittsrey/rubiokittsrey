@@ -11,7 +11,7 @@ export function Socials({ className }: { className?: String }) {
     ];
 
     return (
-        <div className={cn('flex flex-col items-start space-y-5 font-mono')}>
+        <div className={cn('flex flex-col items-start space-y-3 font-mono')}>
             <div className="flex flex-col space-x-3 items-start">
                 {socials.map(({ title, url }, idx) => (
                     <Anchor key={idx} href={`https://${url}`}>

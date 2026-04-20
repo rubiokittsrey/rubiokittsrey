@@ -8,8 +8,9 @@ export default function ControlPanel({ className }: { className?: string }) {
     return (
         <div className={cn('flex flex-col justify-between font-mono', className)}>
             <PublicNavSection />
-            <div className="flex">
+            <div className="flex space-x-10">
                 <ThemeToggle />
+                <AmbienceToggle />
             </div>
         </div>
     );

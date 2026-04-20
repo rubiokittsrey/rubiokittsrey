@@ -16,8 +16,8 @@ export function ThemeToggle() {
     };
 
     return (
-        <div className="flex flex-col items-start space-y-4">
-            <Button className="font-mono" onClick={handleThemeToggle} type="button">
+        <div className="flex flex-col items-start space-y-3">
+            <Button className="font-mono text-lg" onClick={handleThemeToggle} type="button">
                 {modeLabel}
             </Button>
             <Label>MODE</Label>

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Providers } from '@/components/providers';
-import { ppMori } from '@/assets/fonts';
 import { Roboto, Roboto_Mono } from 'next/font/google';
 
 export const metadata: Metadata = {

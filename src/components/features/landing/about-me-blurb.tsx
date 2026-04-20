@@ -1,16 +1,21 @@
-import { Label } from '@/components/ui/label';
-
 export default function AboutMeBlurb() {
     return (
         <div className="flex flex-col space-y-5 items-start font-mono">
             <p>Hey, I'm Kitts.</p>
-            <p>I'm from Mindanao, Philippines. I build and develop software for a living.</p>
+            <p>
+                Based in the Philippines. I write code for a living and spend most of my time
+                figuring out how things work. I think good design is approachable first, efficient
+                second.
+            </p>
             <p>
                 I'm interested in how software systems are applied in the real world for research,
-                surveying, mapping, and auditing physical environments — and where all of that is
+                surveying, mapping, and auditing of physical environments — and where all of that is
                 headed as AI technologies become more intelligent and accessible.
             </p>
-            <p>I also enjoy videogames, esports, food, photography, and the outdoors.</p>
+            <p>
+                Photography, cooking, video games, or just being outdoors are things I usually do
+                when I'm not in front of a computer.
+            </p>
         </div>
     );
 }
