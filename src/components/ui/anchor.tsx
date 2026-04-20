@@ -10,7 +10,7 @@ function Anchor({ href, className, children, ...props }: React.ComponentProps<ty
     const isActive = !isExternal && pathname === href;
 
     const sharedClassName = cn(
-        'inline-flex items-center font-mono text-base cursor-pointer',
+        'inline-flex items-center cursor-pointer',
         'select-none text-surface-foreground/50 hover:underline',
         isActive && 'text-surface-foreground',
         className
