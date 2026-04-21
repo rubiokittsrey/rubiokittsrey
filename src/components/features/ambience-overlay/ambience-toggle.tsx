@@ -9,7 +9,7 @@ export function AmbienceToggle() {
 
     return (
         <div className="flex flex-col items-start space-y-3">
-            <Button className="text-lg" onClick={toggle} type="button">
+            <Button onClick={toggle} type="button">
                 {active ? 'on' : 'off'}
             </Button>
             <Label>AMBIENCE</Label>

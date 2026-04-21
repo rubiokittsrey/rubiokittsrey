@@ -1,5 +1,6 @@
 import { Socials } from '@/components/features/control-panel/socials';
 import { AboutMeBlurb } from '@/components/features/landing';
+import { SocialsPrefs } from '@/components/features/landing/socials-and-prefs';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,11 +9,9 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
     return (
-        <div className="w-full h-full space-y-5 flex flex-col items-center justify-center text-lg pl-16">
-            <div className="flex flex-col space-y-20 max-w-3/5">
-                <AboutMeBlurb />
-                <Socials />
-            </div>
+        <div className="max-w-5/5 md:max-w-4/5 xl:max-w-3/5 space-y-15 flex flex-col text-sm">
+            <AboutMeBlurb />
+            <SocialsPrefs />
         </div>
     );
 }

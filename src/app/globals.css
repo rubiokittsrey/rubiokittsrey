@@ -50,4 +50,14 @@
     /* colors (surface) */
     --color-surface: var(--surface);
     --color-surface-foreground: var(--surface-foreground);
+
+    /* fluid typography */
+    --text-xxs: var(--text-size-xxs);
+    --text-xs: var(--text-size-xs);
+    --text-sm: var(--text-size-sm);
+    --text-base: var(--text-size-base);
+    --text-lg: var(--text-size-lg);
+    --text-xl: var(--text-size-xl);
+    --text-2xl: var(--text-size-2xl);
+    --text-3xl: var(--text-size-3xl);
 }

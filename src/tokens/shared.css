@@ -1,4 +1,14 @@
 :root {
     /* spacing */
     --space-page: 3.75rem;
+
+    /* fluid typography — scales between 320px and 1280px viewports */
+    --text-size-xxs: clamp(0.625rem, 0.575rem + 0.25vw, 0.75rem);
+    --text-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+    --text-size-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+    --text-size-base: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+    --text-size-lg: clamp(1.125rem, 1rem + 0.625vw, 1.375rem);
+    --text-size-xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.625rem);
+    --text-size-2xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+    --text-size-3xl: clamp(1.875rem, 1.6rem + 1.375vw, 2.625rem);
 }

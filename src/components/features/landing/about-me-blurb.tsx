@@ -4,8 +4,8 @@ export default function AboutMeBlurb() {
             <p>Hey, I'm Kitts.</p>
             <p>
                 Based in the Philippines. I write code for a living and spend most of my time
-                figuring out how things work. I think good design is approachable first, efficient
-                second.
+                figuring out how things work. My approach to design and building things in general
+                is approachability first, efficiency second.
             </p>
             <p>
                 I'm interested in how software systems are applied in the real world for research,

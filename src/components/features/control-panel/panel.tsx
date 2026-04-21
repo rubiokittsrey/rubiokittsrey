@@ -4,13 +4,26 @@ import { Socials } from './socials';
 import { ThemeToggle } from './theme-toggle';
 import { AmbienceToggle } from '../ambience-overlay/ambience-toggle';
 
-export default function ControlPanel({ className }: { className?: string }) {
+export default function ControlPanel({
+    className,
+    horizontal = false,
+}: {
+    className?: string;
+    horizontal?: boolean;
+}) {
     return (
-        <div className={cn('flex flex-col justify-between font-mono', className)}>
-            <PublicNavSection />
-            <div className="flex space-x-10">
-                <ThemeToggle />
-                <AmbienceToggle />
+        <div className={cn('font-mono', className)}>
+            <div
+                className={cn(
+                    'flex h-full justify-between',
+                    horizontal ? 'items-center' : 'flex-col'
+                )}
+            >
+                <PublicNavSection />
+                <div className="flex space-x-10">
+                    <ThemeToggle />
+                    <AmbienceToggle />
+                </div>
             </div>
         </div>
     );
