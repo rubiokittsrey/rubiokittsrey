@@ -1,24 +1,12 @@
 import { cn } from '@/lib/utils';
 import PublicNavSection from './nav/public-nav';
-import { Socials } from './socials';
 import { ThemeToggle } from './theme-toggle';
 import { AmbienceToggle } from '../ambience-overlay/ambience-toggle';
 
-export default function ControlPanel({
-    className,
-    horizontal = false,
-}: {
-    className?: string;
-    horizontal?: boolean;
-}) {
+export default function ControlPanel({ className }: { className?: string }) {
     return (
         <div className={cn('font-mono', className)}>
-            <div
-                className={cn(
-                    'flex h-full justify-between',
-                    horizontal ? 'items-center' : 'flex-col'
-                )}
-            >
+            <div className="flex h-full flex-col justify-between">
                 <PublicNavSection />
                 <div className="flex space-x-10">
                     <ThemeToggle />

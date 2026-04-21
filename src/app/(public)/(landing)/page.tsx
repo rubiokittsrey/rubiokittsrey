@@ -1,4 +1,3 @@
-import { Socials } from '@/components/features/control-panel/socials';
 import { AboutMeBlurb } from '@/components/features/landing';
 import { SocialsPrefs } from '@/components/features/landing/socials-and-prefs';
 import type { Metadata } from 'next';

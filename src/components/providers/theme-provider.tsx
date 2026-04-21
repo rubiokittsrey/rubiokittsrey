@@ -1,7 +1,7 @@
 'use client';
 
 import { ThemeProvider as NextThemeProvider, useTheme as useNextTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return (
@@ -11,13 +11,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function useTheme() {
     const { theme, resolvedTheme, setTheme } = useNextTheme();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
     return {
         theme: (theme ?? 'system') as 'light' | 'dark' | 'system',
