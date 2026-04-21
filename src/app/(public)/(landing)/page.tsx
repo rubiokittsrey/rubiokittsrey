@@ -8,9 +8,11 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
     return (
-        <div className="max-w-5/5 md:max-w-4/5 xl:max-w-3/5 space-y-15 flex flex-col text-sm">
-            <AboutMeBlurb />
-            <SocialsPrefs />
+        <div className="h-full w-full overflow-clip flex items-center justify-center">
+            <div className="max-w-5/5 md:max-w-4/5 xl:max-w-3/5 space-y-15 flex flex-col text-sm">
+                <AboutMeBlurb />
+                <SocialsPrefs />
+            </div>
         </div>
     );
 }
