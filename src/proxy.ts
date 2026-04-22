@@ -1,16 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { updateSession } from '@/lib/supabase/middleware';
 
 const ROOT_DOMAIN = 'rubiokittsrey.dev';
 const GALLERY_SUBDOMAIN = 'gallery';
+const ADMIN_SUBDOMAIN = 'admin';
 const GALLERY_HOST = `${GALLERY_SUBDOMAIN}.${ROOT_DOMAIN}`;
+const ADMIN_HOST = `${ADMIN_SUBDOMAIN}.${ROOT_DOMAIN}`;
 
-export function proxy(request: NextRequest) {
+async function gateAdmin(
+    request: NextRequest,
+    response: NextResponse,
+    pathname: string
+): Promise<NextResponse> {
+    const { user } = await updateSession(request, response);
+    const isLogin = pathname === '/admin/login';
+
+    if (!user && !isLogin) {
+        const redir = NextResponse.redirect(new URL('/admin/login', request.nextUrl.origin));
+        await updateSession(request, redir);
+        return redir;
+    }
+    if (user && isLogin) {
+        const redir = NextResponse.redirect(new URL('/admin/content', request.nextUrl.origin));
+        await updateSession(request, redir);
+        return redir;
+    }
+    return response;
+}
+
+export async function proxy(request: NextRequest) {
     const host = request.headers.get('host') ?? '';
     const hostname = host.split(':')[0];
 
     const isGallerySubdomain =
         hostname === GALLERY_HOST || hostname.startsWith(`${GALLERY_SUBDOMAIN}.`);
-
+    const isAdminSubdomain =
+        hostname === ADMIN_HOST || hostname.startsWith(`${ADMIN_SUBDOMAIN}.`);
     const isRootDomain = hostname === ROOT_DOMAIN || hostname === `www.${ROOT_DOMAIN}`;
 
     if (isRootDomain && request.nextUrl.pathname.startsWith('/gallery')) {
@@ -20,10 +45,31 @@ export function proxy(request: NextRequest) {
         return NextResponse.redirect(url, 308);
     }
 
+    if (isRootDomain && request.nextUrl.pathname.startsWith('/admin')) {
+        const url = request.nextUrl.clone();
+        url.hostname = ADMIN_HOST;
+        url.pathname = request.nextUrl.pathname.replace(/^\/admin/, '') || '/';
+        return NextResponse.redirect(url, 308);
+    }
+
     if (isGallerySubdomain && !request.nextUrl.pathname.startsWith('/gallery')) {
         const url = request.nextUrl.clone();
         url.pathname = `/gallery${url.pathname === '/' ? '' : url.pathname}`;
         return NextResponse.rewrite(url);
+    }
+
+    if (isAdminSubdomain) {
+        const url = request.nextUrl.clone();
+        if (!url.pathname.startsWith('/admin')) {
+            url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
+        }
+        const response = NextResponse.rewrite(url);
+        return gateAdmin(request, response, url.pathname);
+    }
+
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+        const response = NextResponse.next();
+        return gateAdmin(request, response, request.nextUrl.pathname);
     }
 
     return NextResponse.next();

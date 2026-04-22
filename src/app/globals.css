@@ -49,6 +49,7 @@
 
     /* colors (surface) */
     --color-surface: var(--surface);
+    --color-surface-item: var(--surface-item);
     --color-surface-foreground: var(--surface-foreground);
 
     /* fluid typography */

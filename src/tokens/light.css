@@ -4,6 +4,7 @@
 
     /* Colors (surface) */
     --surface: oklch(0.961 0 0);
+    --surface-item: oklch(0.985 0 0);
     --surface-foreground: oklch(0.129 0 0);
 }
 

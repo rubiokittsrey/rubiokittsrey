@@ -4,11 +4,13 @@
 
     /* colors (surface) */
     --surface: oklch(0.129 0 0);
+    --surface-item: oklch(0.185 0 0);
     --surface-foreground: oklch(0.961 0 0);
 }
 
 .dark.ambience {
     --surface: oklch(0.268 0.015 250);
+    --surface-item: oklch(0.32 0.015 250);
 }
 
 .dark.ambience body {
