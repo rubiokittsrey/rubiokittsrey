@@ -3,6 +3,8 @@ import './globals.css';
 import { Providers } from '@/components/providers';
 import { Roboto, Roboto_Mono } from 'next/font/google';
 
+const themeSyncScript = `(function(){try{var h=location.hostname;if(!/rubiokittsrey\\.dev$/.test(h))return;var m=document.cookie.match(/(?:^|; )theme=([^;]+)/);if(!m)return;var v=decodeURIComponent(m[1]);if(v==='light'||v==='dark'||v==='system'){localStorage.setItem('theme',v);}}catch(e){}})();`;
+
 export const metadata: Metadata = {
     title: 'rubiokittsrey',
     description: '',
@@ -25,7 +27,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <head />
+            <head>
+                <script dangerouslySetInnerHTML={{ __html: themeSyncScript }} />
+            </head>
             <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
                 <Providers>{children}</Providers>
             </body>
