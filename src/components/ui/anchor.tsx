@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 function Anchor({ href, className, children, ...props }: React.ComponentProps<typeof Link>) {
     const pathname = usePathname();
-    const isExternal = typeof href === 'string' && href.startsWith('http');
+    const isExternal = typeof href === 'string' && /^[a-z]+:/i.test(href);
     const isActive = !isExternal && pathname === href;
 
     const sharedClassName = cn(

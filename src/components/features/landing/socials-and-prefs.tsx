@@ -1,22 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Anchor } from '@/components/ui/anchor';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import PublicNavSection from '../control-panel/nav/public-nav';
+import { Socials } from '../control-panel/socials';
 import { ThemeToggle } from '../control-panel/theme-toggle';
 import { AmbienceToggle } from '../ambience-overlay/ambience-toggle';
 
 export function SocialsPrefs() {
-    const socials: { title?: string; url: string }[] = [
-        { title: 'x.com', url: 'x.com/mcntopher' },
-        { title: 'instagram.com', url: 'instagram.com/rubio.kittsrey' },
-        { title: 'github.com', url: 'github.com/rubiokittsrey' },
-        { title: 'contact@rubiokittsrey.dev', url: 'github.com/rubiokittsrey' },
-    ];
-
     const [value, setValue] = useState<string>('links');
 
     useEffect(() => {
@@ -35,13 +28,7 @@ export function SocialsPrefs() {
     return (
         <Tabs value={value} onValueChange={(v) => setValue(v as string)} className="w-full font-mono items-start">
             <TabsContent value="links">
-                <div className="flex flex-col items-start">
-                    {socials.map(({ title, url }, idx) => (
-                        <Anchor key={idx} href={`https://${url}`}>
-                            {title ?? url}
-                        </Anchor>
-                    ))}
-                </div>
+                <Socials />
             </TabsContent>
             <TabsContent value="prefs" className="flex space-x-15">
                 <ThemeToggle />
