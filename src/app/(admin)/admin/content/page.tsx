@@ -39,7 +39,7 @@ export default async function AdminContentListPage({
                 <Label>NO ITEMS</Label>
             ) : (
                 <div className="border border-surface-foreground/15">
-                    <div className="grid grid-cols-[6rem_1fr_8rem_6rem_10rem] gap-4 px-4 py-2 border-b border-surface-foreground/15 font-mono text-xs text-surface-foreground/50 uppercase">
+                    <div className="grid bg-surface-item grid-cols-[6rem_1fr_8rem_6rem_15rem] gap-10 px-4 py-2 border-b border-surface-foreground/15 font-mono text-xs text-surface-foreground/50 uppercase">
                         <div>type</div>
                         <div>title</div>
                         <div>slug</div>
@@ -50,26 +50,21 @@ export default async function AdminContentListPage({
                         <Link
                             key={item.id}
                             href={`/admin/content/${item.id}`}
-                            className="grid grid-cols-[6rem_1fr_8rem_6rem_10rem] gap-4 px-4 py-3 border-b border-surface-foreground/10 last:border-b-0 text-sm hover:bg-surface-foreground/5"
+                            className="font-mono text-sm grid grid-cols-[6rem_1fr_8rem_6rem_15rem] gap-10 px-4 py-3 border-b border-surface-foreground/10 last:border-b-0 hover:bg-surface-foreground/5"
                         >
-                            <div className="font-mono text-xs text-surface-foreground/60">
-                                {item.type}
-                            </div>
-                            <div className="truncate">{item.title}</div>
-                            <div className="font-mono text-xs truncate text-surface-foreground/60">
-                                {item.slug}
-                            </div>
+                            <div className="font-mono text-surface-foreground/60">{item.type}</div>
+                            <div className="truncate font-mono">{item.title}</div>
+                            <div className=" truncate text-surface-foreground/60">{item.slug}</div>
                             <div
                                 className={
-                                    'font-mono text-xs ' +
-                                    (item.status === 'published'
+                                    item.status === 'published'
                                         ? 'text-surface-foreground'
-                                        : 'text-surface-foreground/40')
+                                        : 'text-surface-foreground/40'
                                 }
                             >
                                 {item.status}
                             </div>
-                            <div className="font-mono text-xs text-surface-foreground/40">
+                            <div className="text-surface-foreground/40">
                                 {new Date(item.updated_at).toLocaleString()}
                             </div>
                         </Link>
