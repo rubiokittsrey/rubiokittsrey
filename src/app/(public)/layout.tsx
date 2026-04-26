@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="w-screen h-screen bg-surface-noised text-surface-foreground">
+        <div className="min-h-screen flex flex-col bg-surface-noised text-surface-foreground">
             <SiteHeader />
-            <div className="h-screen w-screen p-12 sm:p-16">{children}</div>
+            <main className="flex-1 flex flex-col px-10 pt-16 pb-7">{children}</main>
         </div>
     );
 }

@@ -11,11 +11,9 @@ export const metadata: Metadata = {
 
 export default function GalleryPage() {
     return (
-        <div className="w-full h-full overflow-y-auto">
-            <Suspense fallback={<GallerySkeleton />}>
-                <GalleryList />
-            </Suspense>
-        </div>
+        <Suspense fallback={<GallerySkeleton />}>
+            <GalleryList />
+        </Suspense>
     );
 }
 
@@ -59,7 +57,7 @@ async function GalleryList() {
 
 function GallerySkeleton() {
     return (
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center">
             <p className="text-surface-foreground/25 animate-pulse text-sm font-mono">
                 fetching content...
             </p>

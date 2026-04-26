@@ -1,7 +1,6 @@
 'use client';
 
 import type { ComponentPropsWithoutRef } from 'react';
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -11,7 +10,8 @@ const ROOT_DOMAIN = 'rubiokittsrey.dev';
 const GALLERY_SUBDOMAIN = 'gallery';
 const GALLERY_HOST = `${GALLERY_SUBDOMAIN}.${ROOT_DOMAIN}`;
 
-function resolveCrossOriginHref(host: string, path: string): string | null {
+function resolveCrossOriginHref(host: string | null, path: string): string | null {
+    if (!host) return null;
     const isGallerySub = host === GALLERY_HOST || host.startsWith(`${GALLERY_SUBDOMAIN}.`);
     const isRoot = host === ROOT_DOMAIN || host === `www.${ROOT_DOMAIN}`;
 
@@ -25,17 +25,25 @@ function resolveCrossOriginHref(host: string, path: string): string | null {
     return null;
 }
 
-type Props = Meta & Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'title'>;
+function resolveLocalHref(host: string | null, path: string): string {
+    if (!host) return path;
+    const isGallerySub = host === GALLERY_HOST || host.startsWith(`${GALLERY_SUBDOMAIN}.`);
+    if (isGallerySub && path.startsWith('/gallery')) {
+        return path.replace(/^\/gallery/, '') || '/';
+    }
+    return path;
+}
 
-export default function PublicNavItem({ title, path, className, ...rest }: Props) {
+type Props = Meta &
+    Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'title'> & {
+        host?: string | null;
+    };
+
+export default function PublicNavItem({ title, path, className, host = null, ...rest }: Props) {
     const pathname = usePathname();
-    const [crossOrigin, setCrossOrigin] = useState<string | null>(null);
-
-    useEffect(() => {
-        setCrossOrigin(resolveCrossOriginHref(window.location.hostname, path));
-    }, [path]);
-
-    const isActive = !crossOrigin && pathname === path;
+    const crossOrigin = resolveCrossOriginHref(host, path);
+    const localHref = resolveLocalHref(host, path);
+    const isActive = !crossOrigin && pathname === localHref;
 
     const sharedClassName = cn(
         'inline-flex items-center cursor-pointer text-sm',
@@ -55,7 +63,7 @@ export default function PublicNavItem({ title, path, className, ...rest }: Props
     return (
         <Link
             {...rest}
-            href={path}
+            href={localHref}
             aria-current={isActive ? 'page' : undefined}
             className={sharedClassName}
         >
