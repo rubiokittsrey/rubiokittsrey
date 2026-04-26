@@ -9,7 +9,7 @@ type Social = { title?: string; url: string; enableCopy?: boolean };
 
 const socials: Social[] = [
     { title: 'x.com', url: 'x.com/mcntopher' },
-    { title: 'instagram.com', url: 'instagram.com/rubio.kittsrey' },
+    { title: 'instagram.com', url: 'instagram.com/rubiokittsrey' },
     { title: 'github.com', url: 'github.com/rubiokittsrey' },
     {
         title: 'contact@rubiokittsrey.dev',
@@ -64,7 +64,7 @@ function CopyButton({ value }: { value: string }) {
 
 export function Socials({ className }: { className?: string }) {
     return (
-        <div className={cn('flex flex-col items-start', className)}>
+        <div className={cn('flex flex-col items-start font-mono text-sm', className)}>
             {socials.map(({ title, url, enableCopy }, idx) => {
                 const href = /^[a-z]+:/i.test(url) ? url : `https://${url}`;
                 return (

@@ -26,7 +26,11 @@ export function SocialsPrefs() {
         'p-0 h-fit group-data-[variant=default]/tabs-list:data-active:shadow-none border-none bg-transparent data-active:bg-transparent opacity-40 data-active:opacity-100 transition-opacity';
 
     return (
-        <Tabs value={value} onValueChange={(v) => setValue(v as string)} className="w-full font-mono items-start">
+        <Tabs
+            value={value}
+            onValueChange={(v) => setValue(v as string)}
+            className="w-full font-mono items-start"
+        >
             <TabsContent value="links">
                 <Socials />
             </TabsContent>

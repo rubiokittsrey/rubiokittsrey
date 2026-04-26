@@ -1,5 +1,6 @@
 'use client';
 
+import type { ComponentPropsWithoutRef } from 'react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -24,7 +25,9 @@ function resolveCrossOriginHref(host: string, path: string): string | null {
     return null;
 }
 
-export default function PublicNavItem({ title, path, className }: Meta & { className?: string }) {
+type Props = Meta & Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'title'>;
+
+export default function PublicNavItem({ title, path, className, ...rest }: Props) {
     const pathname = usePathname();
     const [crossOrigin, setCrossOrigin] = useState<string | null>(null);
 
@@ -43,14 +46,19 @@ export default function PublicNavItem({ title, path, className }: Meta & { class
 
     if (crossOrigin) {
         return (
-            <a href={crossOrigin} className={sharedClassName}>
+            <a {...rest} href={crossOrigin} className={sharedClassName}>
                 {title}
             </a>
         );
     }
 
     return (
-        <Link href={path} aria-current={isActive ? 'page' : undefined} className={sharedClassName}>
+        <Link
+            {...rest}
+            href={path}
+            aria-current={isActive ? 'page' : undefined}
+            className={sharedClassName}
+        >
             {title}
         </Link>
     );

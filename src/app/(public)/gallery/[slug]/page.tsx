@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getPublishedBySlug } from '@/lib/content/queries';
 import { r2 } from '@/lib/r2';
+import { MoveLeft } from 'lucide-react';
 
 type Params = Promise<{ slug: string }>;
 
@@ -23,23 +24,23 @@ export default async function GalleryPostPage({ params }: { params: Params }) {
 
     return (
         <div className="w-full h-full overflow-y-auto">
-            <div className="max-w-4xl space-y-8">
-                <div className="space-y-2 font-mono text-xs">
-                    <Link href="/gallery" className="text-surface-foreground/50 hover:underline">
-                        ← gallery
-                    </Link>
-                    <h1 className="text-sm">{item.title}</h1>
-                    {item.description && (
-                        <p className="text-surface-foreground/60">{item.description}</p>
-                    )}
-                </div>
-
-                {item.body && (
-                    <div className="font-mono text-xs whitespace-pre-wrap text-surface-foreground/80">
-                        {item.body}
+            <div className="w-full space-y-8">
+                <div className="sticky">
+                    <div className="flex items-center justify-between font-mono text-sm space-x-5 ">
+                        <div className="inline-flex items-center space-x-5">
+                            <Link
+                                href="/gallery"
+                                className="text-surface-foreground/50 hover:underline"
+                            >
+                                <MoveLeft className="stroke-1" />
+                            </Link>
+                            <h4 className="font-bold">{item.title}</h4>
+                        </div>
+                        <p className="opacity-50">
+                            {new Date(item.published_at!).toLocaleString()}
+                        </p>
                     </div>
-                )}
-
+                </div>
                 {item.media.length > 0 && (
                     <div className="flex flex-col gap-4">
                         {item.media.map((ref) => (
