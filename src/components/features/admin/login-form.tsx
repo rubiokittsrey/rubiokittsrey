@@ -28,7 +28,7 @@ export function LoginForm() {
             return;
         }
 
-        router.replace('/admin/content');
+        router.replace('/admin/albums');
         router.refresh();
     }
 

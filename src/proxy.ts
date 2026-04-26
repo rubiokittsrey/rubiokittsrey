@@ -21,7 +21,7 @@ async function gateAdmin(
         return redir;
     }
     if (user && isLogin) {
-        const redir = NextResponse.redirect(new URL('/admin/content', request.nextUrl.origin));
+        const redir = NextResponse.redirect(new URL('/admin/albums', request.nextUrl.origin));
         await updateSession(request, redir);
         return redir;
     }

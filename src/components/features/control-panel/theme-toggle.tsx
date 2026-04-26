@@ -7,7 +7,7 @@ export function ThemeToggle() {
     const { resolvedTheme, setTheme, mounted } = useTheme();
 
     const isDark = mounted ? resolvedTheme === 'dark' : false;
-    const modeLabel = isDark ? 'midnight' : 'sunlight';
+    const modeLabel = isDark ? 'dark' : 'light';
 
     const handleThemeToggle = () => {
         if (!mounted) return;

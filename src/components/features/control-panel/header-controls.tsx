@@ -15,8 +15,8 @@ export function HeaderControls() {
         <>
             <div className="hidden md:flex items-center space-x-6">
                 <ThemeToggle />
-                <span className="text-surface-foreground/25">/</span>
-                <AmbienceToggle />
+                {/* <span className="text-surface-foreground/25">/</span>
+                <AmbienceToggle /> */}
             </div>
 
             <div className="md:hidden">
