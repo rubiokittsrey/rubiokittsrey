@@ -6,14 +6,10 @@ create table if not exists public.albums (
     title         text not null,
     description   text,
     cover_image   text not null,
-    date          timestamptz,
     location      text,
     created_at    timestamptz not null default now(),
     updated_at    timestamptz not null default now()
 );
-
-create index if not exists albums_date_idx
-    on public.albums (date desc nulls last);
 
 create table if not exists public.photographs (
     id            uuid primary key default gen_random_uuid(),
@@ -21,6 +17,7 @@ create table if not exists public.photographs (
     url           text not null,
     title         text not null,
     description   text,
+    date          timestamptz,
     coordinates   jsonb,
     position      integer not null default 0,
     created_at    timestamptz not null default now(),
@@ -29,6 +26,9 @@ create table if not exists public.photographs (
 
 create index if not exists photographs_album_position_idx
     on public.photographs (album_id, position);
+
+create index if not exists photographs_date_idx
+    on public.photographs (date desc nulls last);
 
 drop trigger if exists albums_set_updated_at on public.albums;
 create trigger albums_set_updated_at

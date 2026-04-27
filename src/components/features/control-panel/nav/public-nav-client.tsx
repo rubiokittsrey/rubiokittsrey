@@ -82,7 +82,7 @@ export default function PublicNavClient({ host }: { host: string | null }) {
                 <DropdownMenu>
                     <DropdownMenuTrigger
                         aria-label="Open navigation"
-                        className="inline-flex items-center font-mono text-sm text-surface-foreground hover:underline cursor-pointer outline-none"
+                        className="h-fit inline-flex items-center font-mono text-sm text-surface-foreground hover:underline cursor-pointer outline-none"
                     >
                         {label}
                     </DropdownMenuTrigger>
@@ -90,7 +90,7 @@ export default function PublicNavClient({ host }: { host: string | null }) {
                         align="start"
                         sideOffset={12}
                         className={cn(
-                            'min-w-32 px-3 py-2 flex flex-col space-y-2',
+                            'min-w-32 px-3 flex flex-col space-y-2',
                             'rounded-none bg-surface-noised text-surface-foreground',
                             'shadow-none ring-0 border border-surface-foreground/10'
                         )}

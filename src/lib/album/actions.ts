@@ -54,10 +54,14 @@ function parsePhotographs(raw: FormDataEntryValue | null): PhotographInput[] {
                 ? obj.description.trim()
                 : null;
 
+        const dateRaw = typeof obj.date === 'string' ? obj.date.trim() : '';
+        const date = dateRaw ? new Date(dateRaw).toISOString() : null;
+
         return {
             url,
             title,
             description,
+            date,
             coordinates: parseCoordinates(obj.coordinates),
             position: typeof obj.position === 'number' ? obj.position : idx,
         };
@@ -69,15 +73,11 @@ function payloadFromForm(formData: FormData): AlbumInput {
     const title = strRequired(formData.get('title'), 'Title');
     const cover_image = strRequired(formData.get('cover_image'), 'Cover image');
 
-    const dateRaw = str(formData.get('date'));
-    const date = dateRaw ? new Date(dateRaw).toISOString() : null;
-
     return {
         slug,
         title,
         description: str(formData.get('description')),
         cover_image,
-        date,
         location: str(formData.get('location')),
         photographs: parsePhotographs(formData.get('photographs')),
     };

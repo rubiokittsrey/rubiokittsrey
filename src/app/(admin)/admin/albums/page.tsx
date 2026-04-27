@@ -24,18 +24,17 @@ export default async function AdminAlbumsPage() {
                 <Label>NO ALBUMS</Label>
             ) : (
                 <div className="border border-surface-foreground/15">
-                    <div className="grid bg-surface-item grid-cols-[1fr_8rem_6rem_10rem_15rem] gap-10 px-4 py-2 border-b border-surface-foreground/15 font-mono text-xs text-surface-foreground/50 uppercase">
+                    <div className="grid bg-surface-item grid-cols-[1fr_8rem_6rem_15rem] gap-10 px-4 py-2 border-b border-surface-foreground/15 font-mono text-xs text-surface-foreground/50 uppercase">
                         <div>title</div>
                         <div>slug</div>
                         <div>photos</div>
-                        <div>date</div>
                         <div>updated</div>
                     </div>
                     {albums.map((album) => (
                         <Link
                             key={album.id}
                             href={`/admin/albums/${album.id}`}
-                            className="font-mono text-sm grid grid-cols-[1fr_8rem_6rem_10rem_15rem] gap-10 px-4 py-3 border-b border-surface-foreground/10 last:border-b-0 hover:bg-surface-foreground/5"
+                            className="font-mono text-sm grid grid-cols-[1fr_8rem_6rem_15rem] gap-10 px-4 py-3 border-b border-surface-foreground/10 last:border-b-0 hover:bg-surface-foreground/5"
                         >
                             <div className="truncate">{album.title}</div>
                             <div className="truncate text-surface-foreground/60">
@@ -43,11 +42,6 @@ export default async function AdminAlbumsPage() {
                             </div>
                             <div className="text-surface-foreground/60">
                                 {album.photographs.length}
-                            </div>
-                            <div className="text-surface-foreground/60">
-                                {album.date
-                                    ? new Date(album.date).toLocaleDateString()
-                                    : '—'}
                             </div>
                             <div className="text-surface-foreground/40">
                                 {new Date(album.updated_at).toLocaleString()}

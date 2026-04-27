@@ -9,6 +9,7 @@ export interface Photograph {
     url: string;
     title: string;
     description: string | null;
+    date: string | null;
     coordinates: Coordinates | null;
     position: number;
     created_at: string;
@@ -22,7 +23,6 @@ export interface Album {
     description: string | null;
     cover_image: string;
     photographs: Photograph[];
-    date: string | null;
     location: string | null;
     created_at: string;
     updated_at: string;

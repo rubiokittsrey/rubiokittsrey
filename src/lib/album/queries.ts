@@ -14,7 +14,7 @@ const ALBUM_SELECT = '*, photographs(*)';
 function hydrate(row: AlbumRow): Album {
     const photographs = (row.photographs ?? [])
         .slice()
-        .sort((a, b) => a.position - b.position || a.created_at.localeCompare(b.created_at));
+        .sort((a, b) => a.position - b.position || a.updated_at.localeCompare(b.updated_at));
 
     return {
         id: row.id,
@@ -22,7 +22,6 @@ function hydrate(row: AlbumRow): Album {
         title: row.title,
         description: row.description,
         cover_image: row.cover_image,
-        date: row.date,
         location: row.location,
         created_at: row.created_at,
         updated_at: row.updated_at,
@@ -35,8 +34,7 @@ export async function listAlbums(): Promise<Album[]> {
     const { data, error } = await supabase
         .from('albums')
         .select(ALBUM_SELECT)
-        .order('date', { ascending: false, nullsFirst: false })
-        .order('created_at', { ascending: false });
+        .order('updated_at', { ascending: false });
 
     if (error) throw error;
     return (data ?? []).map((row) => hydrate(row as AlbumRow));

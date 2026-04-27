@@ -23,7 +23,7 @@ export function HeaderControls() {
                 <DropdownMenu>
                     <DropdownMenuTrigger
                         aria-label="Open settings"
-                        className="inline-flex items-center text-surface-foreground/70 hover:text-surface-foreground cursor-pointer outline-none pt-2"
+                        className="inline-flex items-center text-surface-foreground/70 hover:text-surface-foreground cursor-pointer outline-none"
                     >
                         <SunMoonIcon className="stroke-1" />
                     </DropdownMenuTrigger>

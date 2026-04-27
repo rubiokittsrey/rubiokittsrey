@@ -23,16 +23,9 @@ export default async function AlbumPage({ params }: { params: Params }) {
     return (
         <div className="space-y-8">
             {album.photographs.length > 0 && (
-                <div className="flex flex-col gap-4">
-                    {album.photographs.map((photo) => (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                            key={photo.id}
-                            src={r2.resolve(photo.url)}
-                            alt={photo.title}
-                            className="w-full h-auto block"
-                        />
-                    ))}
+                <div className="grid grid-cols-12">
+                    <div className="col-span-4 h-full bg-red-200"></div>
+                    <div className="col-span-8"></div>
                 </div>
             )}
         </div>

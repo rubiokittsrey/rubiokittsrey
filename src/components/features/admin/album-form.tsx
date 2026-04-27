@@ -17,6 +17,7 @@ interface PhotographDraft {
     url: string;
     title: string;
     description: string;
+    date: string;
     lat: string;
     lng: string;
 }
@@ -30,11 +31,17 @@ function slugify(input: string): string {
         .replace(/^-+|-+$/g, '');
 }
 
+function toDateInput(iso: string | null): string {
+    if (!iso) return '';
+    return iso.slice(0, 10);
+}
+
 function toDraft(p: Album['photographs'][number]): PhotographDraft {
     return {
         url: p.url,
         title: p.title,
         description: p.description ?? '',
+        date: toDateInput(p.date),
         lat: p.coordinates ? String(p.coordinates.lat) : '',
         lng: p.coordinates ? String(p.coordinates.lng) : '',
     };
@@ -50,18 +57,14 @@ function fromDraft(d: PhotographDraft, idx: number): PhotographInput {
         url: d.url.trim(),
         title: d.title.trim(),
         description: d.description.trim() === '' ? null : d.description.trim(),
+        date: d.date.trim() === '' ? null : d.date.trim(),
         coordinates,
         position: idx,
     };
 }
 
 function emptyPhoto(): PhotographDraft {
-    return { url: '', title: '', description: '', lat: '', lng: '' };
-}
-
-function toDateInput(iso: string | null): string {
-    if (!iso) return '';
-    return iso.slice(0, 10);
+    return { url: '', title: '', description: '', date: '', lat: '', lng: '' };
 }
 
 export function AlbumForm({ mode, initial }: Props) {
@@ -182,19 +185,9 @@ export function AlbumForm({ mode, initial }: Props) {
                 <Label>COVER IMAGE (PATH OR URL)</Label>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-1">
-                    <Input
-                        type="date"
-                        name="date"
-                        defaultValue={toDateInput(initial?.date ?? null)}
-                    />
-                    <Label>DATE</Label>
-                </div>
-                <div className="space-y-1">
-                    <Input name="location" defaultValue={initial?.location ?? ''} />
-                    <Label>LOCATION</Label>
-                </div>
+            <div className="space-y-1">
+                <Input name="location" defaultValue={initial?.location ?? ''} />
+                <Label>LOCATION</Label>
             </div>
 
             <div className="space-y-3">
@@ -281,7 +274,17 @@ export function AlbumForm({ mode, initial }: Props) {
                                 <Label>DESCRIPTION</Label>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-3 gap-3">
+                                <div className="space-y-1">
+                                    <Input
+                                        type="date"
+                                        value={p.date}
+                                        onChange={(e) =>
+                                            updatePhoto(idx, { date: e.target.value })
+                                        }
+                                    />
+                                    <Label>DATE</Label>
+                                </div>
                                 <div className="space-y-1">
                                     <Input
                                         value={p.lat}
