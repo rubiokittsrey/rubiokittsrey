@@ -38,9 +38,14 @@ function CrossSubdomainThemeSync() {
     return null;
 }
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
+export default function ThemeProvider({ children }: { children: React.ReactNode }) {
     return (
-        <NextThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <NextThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+        >
             <CrossSubdomainThemeSync />
             {children}
         </NextThemeProvider>

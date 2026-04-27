@@ -2,27 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Check, Copy } from 'lucide-react';
-import { Anchor } from '@/components/ui/anchor';
 import { cn } from '@/lib/utils';
 
-type Social = { title?: string; url: string; enableCopy?: boolean };
-
-const socials: Social[] = [
-    { title: 'x.com', url: 'x.com/mcntopher' },
-    { title: 'instagram.com', url: 'instagram.com/rubiokittsrey' },
-    { title: 'github.com', url: 'github.com/rubiokittsrey' },
-    {
-        title: 'contact@rubiokittsrey.dev',
-        url: 'mailto:contact@rubiokittsrey.dev',
-        enableCopy: true,
-    },
-];
-
-function getCopyValue(url: string) {
-    return url.startsWith('mailto:') ? url.slice('mailto:'.length) : url;
-}
-
-function CopyButton({ value }: { value: string }) {
+export default function CopyButton({ value }: { value: string }) {
     const [copied, setCopied] = useState(false);
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -59,21 +41,5 @@ function CopyButton({ value }: { value: string }) {
                 )}
             />
         </button>
-    );
-}
-
-export function Socials({ className }: { className?: string }) {
-    return (
-        <div className={cn('flex flex-col items-start font-mono text-sm', className)}>
-            {socials.map(({ title, url, enableCopy }, idx) => {
-                const href = /^[a-z]+:/i.test(url) ? url : `https://${url}`;
-                return (
-                    <div key={idx} className="flex items-center gap-2">
-                        <Anchor href={href}>{title ?? url}</Anchor>
-                        {enableCopy && <CopyButton value={getCopyValue(url)} />}
-                    </div>
-                );
-            })}
-        </div>
     );
 }

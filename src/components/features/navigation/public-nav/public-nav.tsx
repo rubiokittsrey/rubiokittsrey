@@ -9,3 +9,8 @@ export default async function PublicNavSection() {
     const host = rawHost.split(':')[0] || null;
     return <PublicNavClient host={host} />;
 }
+
+export interface PublicPathMeta {
+    path: string;
+    title: string;
+}

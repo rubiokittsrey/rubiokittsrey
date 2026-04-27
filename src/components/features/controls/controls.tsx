@@ -1,16 +1,15 @@
 'use client';
 
-import { SlidersHorizontal, SunMoon, SunMoonIcon } from 'lucide-react';
+import { SunMoonIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ThemeToggle } from './theme-toggle';
-import { AmbienceToggle } from '../ambience-overlay/ambience-toggle';
+import { ThemeToggle, AmbienceToggle } from '@/components/features/controls';
 
-export function HeaderControls() {
+export default function Controls() {
     return (
         <>
             <div className="hidden md:flex items-center space-x-6">

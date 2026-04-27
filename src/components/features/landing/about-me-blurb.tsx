@@ -1,6 +1,6 @@
 export default function AboutMeBlurb() {
     return (
-        <div className="flex flex-col space-y-5 items-start font-mono">
+        <div className="flex flex-col space-y-5 items-start text-body">
             <p>Hey, I’m Kitts.</p>
             <p>
                 Based in the Philippines. I write code for a living and spend most of my time

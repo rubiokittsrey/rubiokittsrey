@@ -1,5 +1,4 @@
-import { AmbienceProvider } from '@/components/features';
-import { ThemeProvider } from './theme-provider';
+import { AmbienceProvider, ThemeProvider } from '@/components/features/controls';
 
 export function Providers({ children }: { children: React.ReactNode }) {
     return (

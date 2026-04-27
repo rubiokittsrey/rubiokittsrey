@@ -4,7 +4,7 @@ import type { ComponentPropsWithoutRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import type { PublicPathMeta as Meta } from '../types';
+import { PublicPathMeta as Meta } from './public-nav';
 
 const ROOT_DOMAIN = 'rubiokittsrey.dev';
 const GALLERY_SUBDOMAIN = 'gallery';

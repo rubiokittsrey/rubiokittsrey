@@ -30,7 +30,7 @@ export default function RootLayout({
             <head>
                 <script dangerouslySetInnerHTML={{ __html: themeSyncScript }} />
             </head>
-            <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
+            <body className={`${roboto.variable} ${robotoMono.variable} antialiased font-sans`}>
                 <Providers>{children}</Providers>
             </body>
         </html>

@@ -1,9 +1,9 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { useAmbience } from './ambience-context';
+import { useAmbience } from '@/components/features/controls';
 
-export function AmbienceToggle() {
+export default function AmbienceToggle() {
     const { active, toggle } = useAmbience();
 
     return (

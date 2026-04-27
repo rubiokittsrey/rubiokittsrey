@@ -1,6 +1,6 @@
 'use client';
 
-import { useTheme } from '@/components/providers';
+import { useTheme } from '@/components/features/controls';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 
 type AmbienceContextValue = {
@@ -13,7 +13,7 @@ const AmbienceContext = createContext<AmbienceContextValue>({
     toggle: () => {},
 });
 
-export function AmbienceProvider({ children }: { children: React.ReactNode }) {
+export default function AmbienceProvider({ children }: { children: React.ReactNode }) {
     const [active, setActive] = useState(false);
     const { resolvedTheme } = useTheme();
     const videoRef = useRef<HTMLVideoElement | null>(null);

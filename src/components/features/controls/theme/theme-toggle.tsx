@@ -1,9 +1,9 @@
 'use client';
 
-import { useTheme } from '@/components/providers';
+import { useTheme } from '@/components/features/controls/theme/theme-provider';
 import { Button } from '@/components/ui/button';
 
-export function ThemeToggle() {
+export default function ThemeToggle() {
     const { resolvedTheme, setTheme, mounted } = useTheme();
 
     const isDark = mounted ? resolvedTheme === 'dark' : false;

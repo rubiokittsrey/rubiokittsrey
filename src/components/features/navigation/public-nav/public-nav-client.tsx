@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import PublicNavItem from './public-nav-item';
-import { PublicPathMeta } from '../types';
+import { PublicPathMeta } from './public-nav';
 
 const paths: PublicPathMeta[] = [
     { path: '/', title: '~/' },
