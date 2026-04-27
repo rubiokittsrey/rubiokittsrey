@@ -46,7 +46,7 @@ export default function PublicNavItem({ title, path, className, host = null, ...
     const isActive = !crossOrigin && pathname === localHref;
 
     const sharedClassName = cn(
-        'inline-flex items-center cursor-pointer text-sm',
+        'inline-flex items-center cursor-pointer',
         'select-none text-surface-foreground/50 hover:underline',
         isActive && 'text-surface-foreground',
         className

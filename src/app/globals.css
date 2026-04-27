@@ -63,5 +63,5 @@
     --text-3xl: var(--text-size-3xl);
 
     /* role-based typography utility classes */
-    --text-body: var(--text-size-base);
+    --text-body: var(--text-size-sm);
 }

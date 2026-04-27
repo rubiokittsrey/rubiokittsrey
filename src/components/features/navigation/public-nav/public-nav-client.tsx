@@ -2,20 +2,20 @@
 
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import PublicNavItem from './public-nav-item';
 import { PublicPathMeta } from './public-nav';
+import {
+    FullScreenDialog,
+    FullScreenDialogContent,
+    FullScreenDialogTrigger,
+} from '@/components/ui/full-screen-dialog';
+import { Label } from '@/components/ui/label';
 
 const paths: PublicPathMeta[] = [
     { path: '/', title: '~/' },
     // { path: '/projects', title: 'Projects' },
     // { path: '/blog', title: 'Blog' },
-    { path: '/gallery', title: 'gallery' },
+    { path: '/gallery', title: 'Gallery' },
 ];
 
 const GALLERY_SUBDOMAIN_PREFIX = 'gallery.';
@@ -52,69 +52,42 @@ export default function PublicNavClient({ host }: { host: string | null }) {
 
     return (
         <>
-            <div className="hidden md:flex items-center space-x-6">
+            <div className="hidden md:flex items-center space-x-6 text-body font-sans">
                 {paths.map(({ title, path }, idx) => {
                     if (detail && detail.typeMeta.path === path) {
                         return (
-                            <span
-                                key={idx}
-                                className="inline-flex items-center space-x-1 font-mono text-sm"
-                            >
+                            <span key={idx} className="inline-flex items-center space-x-1">
                                 <PublicNavItem title={title} path={path} host={host} />
                                 <span className="text-surface-foreground/50">/</span>
                                 <span className="text-surface-foreground">{detail.slug}</span>
                             </span>
                         );
                     }
-                    return (
-                        <PublicNavItem
-                            className="font-mono"
-                            title={title}
-                            path={path}
-                            host={host}
-                            key={idx}
-                        />
-                    );
+                    return <PublicNavItem title={title} path={path} host={host} key={idx} />;
                 })}
             </div>
 
             <div className="md:hidden">
-                <DropdownMenu>
-                    <DropdownMenuTrigger
+                <FullScreenDialog>
+                    <FullScreenDialogTrigger
                         aria-label="Open navigation"
-                        className="h-fit inline-flex items-center font-mono text-sm text-surface-foreground hover:underline cursor-pointer outline-none"
+                        className="h-fit inline-flex items-center text-surface-foreground hover:underline cursor-pointer outline-none"
                     >
                         {label}
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                        align="start"
-                        sideOffset={12}
+                    </FullScreenDialogTrigger>
+
+                    <FullScreenDialogContent
                         className={cn(
-                            'min-w-32 px-3 flex flex-col space-y-2',
-                            'rounded-none bg-surface-noised text-surface-foreground',
-                            'shadow-none ring-0 border border-surface-foreground/10'
+                            'w-screen h-screen flex flex-col justify-center items-center',
+                            'rounded-none text-surface-foreground',
+                            'shadow-none ring-0 font-sans text-body'
                         )}
                     >
                         {paths.map(({ title, path }, idx) => (
-                            <DropdownMenuItem
-                                key={idx}
-                                className={cn(
-                                    'rounded-none px-0 py-0 gap-0',
-                                    'focus:bg-transparent focus:text-inherit',
-                                    'data-highlighted:bg-transparent'
-                                )}
-                                render={
-                                    <PublicNavItem
-                                        path={path}
-                                        title={title}
-                                        host={host}
-                                        className="font-mono"
-                                    />
-                                }
-                            />
+                            <PublicNavItem key={idx} path={path} title={title} host={host} />
                         ))}
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                    </FullScreenDialogContent>
+                </FullScreenDialog>
             </div>
         </>
     );
