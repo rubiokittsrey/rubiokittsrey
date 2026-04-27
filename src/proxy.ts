@@ -31,6 +31,7 @@ async function gateAdmin(
 export async function proxy(request: NextRequest) {
     const host = request.headers.get('host') ?? '';
     const hostname = host.split(':')[0];
+    const pathname = request.nextUrl.pathname;
 
     const isGallerySubdomain =
         hostname === GALLERY_HOST || hostname.startsWith(`${GALLERY_SUBDOMAIN}.`);
@@ -38,21 +39,37 @@ export async function proxy(request: NextRequest) {
         hostname === ADMIN_HOST || hostname.startsWith(`${ADMIN_SUBDOMAIN}.`);
     const isRootDomain = hostname === ROOT_DOMAIN || hostname === `www.${ROOT_DOMAIN}`;
 
-    if (isRootDomain && request.nextUrl.pathname.startsWith('/gallery')) {
+    if (isRootDomain && pathname.startsWith('/gallery')) {
         const url = request.nextUrl.clone();
         url.hostname = GALLERY_HOST;
-        url.pathname = request.nextUrl.pathname.replace(/^\/gallery/, '') || '/';
+        url.pathname = pathname.replace(/^\/gallery/, '') || '/';
         return NextResponse.redirect(url, 308);
     }
 
-    if (isRootDomain && request.nextUrl.pathname.startsWith('/admin')) {
+    if (isRootDomain && pathname.startsWith('/admin')) {
         const url = request.nextUrl.clone();
         url.hostname = ADMIN_HOST;
-        url.pathname = request.nextUrl.pathname.replace(/^\/admin/, '') || '/';
+        url.pathname = pathname.replace(/^\/admin/, '') || '/';
         return NextResponse.redirect(url, 308);
     }
 
-    if (isGallerySubdomain && !request.nextUrl.pathname.startsWith('/gallery')) {
+    // Strip the route-segment prefix from the URL on subdomains; the rewrites
+    // below add it back internally to match the file-system route. Without
+    // this, links/redirects that include the prefix leave it in the address
+    // bar (e.g. gallery.rubiokittsrey.dev/gallery/foo).
+    if (isGallerySubdomain && pathname.startsWith('/gallery')) {
+        const url = request.nextUrl.clone();
+        url.pathname = pathname.replace(/^\/gallery/, '') || '/';
+        return NextResponse.redirect(url, 308);
+    }
+
+    if (isAdminSubdomain && pathname.startsWith('/admin')) {
+        const url = request.nextUrl.clone();
+        url.pathname = pathname.replace(/^\/admin/, '') || '/';
+        return NextResponse.redirect(url, 308);
+    }
+
+    if (isGallerySubdomain) {
         const url = request.nextUrl.clone();
         url.pathname = `/gallery${url.pathname === '/' ? '' : url.pathname}`;
         return NextResponse.rewrite(url);
@@ -60,16 +77,14 @@ export async function proxy(request: NextRequest) {
 
     if (isAdminSubdomain) {
         const url = request.nextUrl.clone();
-        if (!url.pathname.startsWith('/admin')) {
-            url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
-        }
+        url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
         const response = NextResponse.rewrite(url);
         return gateAdmin(request, response, url.pathname);
     }
 
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    if (pathname.startsWith('/admin')) {
         const response = NextResponse.next();
-        return gateAdmin(request, response, request.nextUrl.pathname);
+        return gateAdmin(request, response, pathname);
     }
 
     return NextResponse.next();
