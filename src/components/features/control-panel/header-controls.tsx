@@ -37,7 +37,7 @@ export function HeaderControls() {
                         )}
                     >
                         <ThemeToggle />
-                        <AmbienceToggle />
+                        {/* <AmbienceToggle /> */}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

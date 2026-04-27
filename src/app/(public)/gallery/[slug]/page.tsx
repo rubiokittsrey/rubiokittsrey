@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getAlbumBySlug } from '@/lib/album/queries';
 import { r2 } from '@/lib/r2';
+import { AlbumViewer } from '@/components/features/gallery';
 
 type Params = Promise<{ slug: string }>;
 
@@ -20,14 +21,14 @@ export default async function AlbumPage({ params }: { params: Params }) {
     const album = await getAlbumBySlug(slug);
     if (!album) notFound();
 
-    return (
-        <div className="space-y-8">
-            {album.photographs.length > 0 && (
-                <div className="grid grid-cols-12">
-                    <div className="col-span-4 h-full bg-red-200"></div>
-                    <div className="col-span-8"></div>
-                </div>
-            )}
-        </div>
-    );
+    const photographs = album.photographs.map((p) => ({
+        id: p.id,
+        url: r2.resolve(p.url),
+        title: p.title,
+        description: p.description,
+        date: p.date,
+        coordinates: p.coordinates,
+    }));
+
+    return <AlbumViewer photographs={photographs} />;
 }

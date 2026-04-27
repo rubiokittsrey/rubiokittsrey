@@ -12,7 +12,3 @@
     --surface: oklch(0.268 0.015 250);
     --surface-item: oklch(0.32 0.015 250);
 }
-
-.dark.ambience body {
-    filter: saturate(1.2) hue-rotate(15deg) brightness(0.94);
-}
