@@ -1,14 +1,23 @@
-export function formatDate(dateStr: string) {
-    const d = new Date(dateStr);
-    const day = d.toLocaleDateString('en-US', { weekday: 'short' });
-    const month = d.toLocaleDateString('en-US', { month: 'long' });
-    const year = d.getFullYear();
-    const time = d.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true,
-    });
-    return `${month.toUpperCase()} ${d.getDay()}, ${year} ${time}`;
+const MONTHS = [
+    'JANUARY',
+    'FEBRUARY',
+    'MARCH',
+    'APRIL',
+    'MAY',
+    'JUNE',
+    'JULY',
+    'AUGUST',
+    'SEPTEMBER',
+    'OCTOBER',
+    'NOVEMBER',
+    'DECEMBER',
+];
+
+export function formatDate(year: number, month: number | null, day: number | null) {
+    if (month == null) return `${year}`;
+    const monthName = MONTHS[month - 1];
+    if (day == null) return `${monthName} ${year}`;
+    return `${monthName} ${day}, ${year}`;
 }
 
 export function toDMS(value: number, posDir: string, negDir: string) {

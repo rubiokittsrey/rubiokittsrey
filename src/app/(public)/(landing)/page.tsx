@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function LandingPage() {
     return (
         <div className="flex-1 flex items-center justify-center">
-            <div className="max-w-5/5 md:max-w-3/5 xl:max-w-2/5 space-y-15 flex flex-col">
+            <div className="max-w-5/5 md:max-w-3/5 xl:max-w-2/5 space-y-15 flex flex-col -mt-10">
                 <AboutMeBlurb />
                 <Socials />
             </div>

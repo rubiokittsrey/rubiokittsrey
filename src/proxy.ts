@@ -35,8 +35,7 @@ export async function proxy(request: NextRequest) {
 
     const isGallerySubdomain =
         hostname === GALLERY_HOST || hostname.startsWith(`${GALLERY_SUBDOMAIN}.`);
-    const isAdminSubdomain =
-        hostname === ADMIN_HOST || hostname.startsWith(`${ADMIN_SUBDOMAIN}.`);
+    const isAdminSubdomain = hostname === ADMIN_HOST || hostname.startsWith(`${ADMIN_SUBDOMAIN}.`);
     const isRootDomain = hostname === ROOT_DOMAIN || hostname === `www.${ROOT_DOMAIN}`;
 
     if (isRootDomain && pathname.startsWith('/gallery')) {
@@ -53,10 +52,8 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(url, 308);
     }
 
-    // Strip the route-segment prefix from the URL on subdomains; the rewrites
-    // below add it back internally to match the file-system route. Without
-    // this, links/redirects that include the prefix leave it in the address
-    // bar (e.g. gallery.rubiokittsrey.dev/gallery/foo).
+    // strip the route-segment prefix from the URL on subdomains; the rewrites
+    // below add it back internally to match the file-system route
     if (isGallerySubdomain && pathname.startsWith('/gallery')) {
         const url = request.nextUrl.clone();
         url.pathname = pathname.replace(/^\/gallery/, '') || '/';

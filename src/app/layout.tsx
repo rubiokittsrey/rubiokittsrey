@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import { Roboto, Roboto_Mono } from 'next/font/google';
@@ -27,10 +28,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <head>
-                <script dangerouslySetInnerHTML={{ __html: themeSyncScript }} />
-            </head>
+            <head />
             <body className={`${roboto.variable} ${robotoMono.variable} antialiased font-sans`}>
+                <Script id="theme-sync" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeSyncScript }} />
                 <Providers>{children}</Providers>
             </body>
         </html>

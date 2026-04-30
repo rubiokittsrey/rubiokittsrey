@@ -5,7 +5,9 @@ export interface Photo {
     url: string;
     title: string;
     description: string | null;
-    date: string | null;
+    year: number;
+    month: number | null;
+    day: number | null;
     coordinates: Coordinates | null;
 }
 

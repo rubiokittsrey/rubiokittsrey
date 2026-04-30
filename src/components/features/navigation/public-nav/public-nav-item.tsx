@@ -43,14 +43,35 @@ export default function PublicNavItem({ title, path, className, host = null, ...
     const pathname = usePathname();
     const crossOrigin = resolveCrossOriginHref(host, path);
     const localHref = resolveLocalHref(host, path);
-    const isActive = !crossOrigin && pathname === localHref;
+    const isExactActive = !crossOrigin && pathname === localHref;
+    // on a subroute of this item — still linkable so user can navigate back up
+    const isAncestor =
+        !crossOrigin &&
+        !isExactActive &&
+        path !== '/' &&
+        (localHref === '/' ? true : pathname.startsWith(localHref + '/'));
 
     const sharedClassName = cn(
-        'inline-flex items-center cursor-pointer',
-        'select-none text-surface-foreground/50 hover:underline',
-        isActive && 'text-surface-foreground',
+        'inline-flex items-center select-none',
+        isExactActive
+            ? 'cursor-default text-surface-foreground'
+            : isAncestor
+              ? 'cursor-pointer text-surface-foreground hover:underline'
+              : 'cursor-pointer text-surface-foreground/35 hover:underline',
         className
     );
+
+    if (isExactActive) {
+        return (
+            <span
+                {...(rest as ComponentPropsWithoutRef<'span'>)}
+                aria-current="page"
+                className={sharedClassName}
+            >
+                {title}
+            </span>
+        );
+    }
 
     if (crossOrigin) {
         return (
@@ -61,12 +82,7 @@ export default function PublicNavItem({ title, path, className, host = null, ...
     }
 
     return (
-        <Link
-            {...rest}
-            href={localHref}
-            aria-current={isActive ? 'page' : undefined}
-            className={sharedClassName}
-        >
+        <Link {...rest} href={localHref} className={sharedClassName}>
             {title}
         </Link>
     );

@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { listAlbums } from '@/lib/album/queries';
 import { AlbumEntry } from '@/components/features/gallery';
+import { ElegantSpinner } from '@/components/ui/elegant-spinner';
 
 export const metadata: Metadata = {
     title: 'gallery',
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
 
 export default function GalleryPage() {
     return (
-        <Suspense fallback={<GallerySkeleton />}>
+        <Suspense
+            fallback={
+                <div className="flex-1 flex items-center justify-center -mt-10">
+                    <ElegantSpinner />
+                </div>
+            }
+        >
             <GalleryList />
         </Suspense>
     );
@@ -18,25 +25,11 @@ export default function GalleryPage() {
 async function GalleryList() {
     const albums = await listAlbums();
 
-    if (albums.length === 0) {
-        return <p className="font-mono text-xs text-surface-foreground/40">nothing here yet.</p>;
-    }
-
     return (
-        <div className="flex flex-col w-full">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 gap-y-12">
             {albums.map((album, albumIdx) => (
                 <AlbumEntry key={album.id} album={album} albumIdx={albumIdx} />
             ))}
-        </div>
-    );
-}
-
-function GallerySkeleton() {
-    return (
-        <div className="flex-1 flex items-center justify-center">
-            <p className="text-surface-foreground/25 animate-pulse text-sm font-mono">
-                fetching content...
-            </p>
         </div>
     );
 }

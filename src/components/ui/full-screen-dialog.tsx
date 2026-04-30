@@ -61,7 +61,10 @@ function FullScreenDialogContent({
                         data-slot="dialog-close"
                         render={<Button variant="default" className="absolute top-6 right-8" />}
                     >
-                        <XIcon size={22} className="stroke-1" />
+                        <XIcon
+                            size={22}
+                            className="stroke-1 text-surface dark:text-surface-foreground"
+                        />
                         <span className="sr-only">Close</span>
                     </DialogPrimitive.Close>
                 )}

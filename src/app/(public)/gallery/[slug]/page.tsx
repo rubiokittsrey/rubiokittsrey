@@ -26,7 +26,9 @@ export default async function AlbumPage({ params }: { params: Params }) {
         url: r2.resolve(p.url),
         title: p.title,
         description: p.description,
-        date: p.date,
+        year: p.year,
+        month: p.month,
+        day: p.day,
         coordinates: p.coordinates,
     }));
 

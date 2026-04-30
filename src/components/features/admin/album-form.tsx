@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { createAlbum, deleteAlbum, updateAlbum } from '@/lib/album/actions';
-import type { Album, PhotographInput } from '@/lib/album/types';
+import type { Album } from '@/lib/album/types';
 
 interface Props {
     mode: 'create' | 'edit';
@@ -17,7 +17,9 @@ interface PhotographDraft {
     url: string;
     title: string;
     description: string;
-    date: string;
+    year: string;
+    month: string;
+    day: string;
     lat: string;
     lng: string;
 }
@@ -31,23 +33,26 @@ function slugify(input: string): string {
         .replace(/^-+|-+$/g, '');
 }
 
-function toDateInput(iso: string | null): string {
-    if (!iso) return '';
-    return iso.slice(0, 10);
-}
-
 function toDraft(p: Album['photographs'][number]): PhotographDraft {
     return {
         url: p.url,
         title: p.title,
         description: p.description ?? '',
-        date: toDateInput(p.date),
+        year: String(p.year),
+        month: p.month != null ? String(p.month) : '',
+        day: p.day != null ? String(p.day) : '',
         lat: p.coordinates ? String(p.coordinates.lat) : '',
         lng: p.coordinates ? String(p.coordinates.lng) : '',
     };
 }
 
-function fromDraft(d: PhotographDraft, idx: number): PhotographInput {
+function toIntOrNull(raw: string): number | null {
+    if (raw.trim() === '') return null;
+    const n = Number(raw);
+    return Number.isFinite(n) && Number.isInteger(n) ? n : null;
+}
+
+function fromDraft(d: PhotographDraft, idx: number) {
     const lat = d.lat.trim() === '' ? NaN : Number(d.lat);
     const lng = d.lng.trim() === '' ? NaN : Number(d.lng);
     const coordinates =
@@ -57,14 +62,16 @@ function fromDraft(d: PhotographDraft, idx: number): PhotographInput {
         url: d.url.trim(),
         title: d.title.trim(),
         description: d.description.trim() === '' ? null : d.description.trim(),
-        date: d.date.trim() === '' ? null : d.date.trim(),
+        year: toIntOrNull(d.year),
+        month: toIntOrNull(d.month),
+        day: toIntOrNull(d.day),
         coordinates,
         position: idx,
     };
 }
 
 function emptyPhoto(): PhotographDraft {
-    return { url: '', title: '', description: '', date: '', lat: '', lng: '' };
+    return { url: '', title: '', description: '', year: '', month: '', day: '', lat: '', lng: '' };
 }
 
 export function AlbumForm({ mode, initial }: Props) {
@@ -277,14 +284,41 @@ export function AlbumForm({ mode, initial }: Props) {
                             <div className="grid grid-cols-3 gap-3">
                                 <div className="space-y-1">
                                     <Input
-                                        type="date"
-                                        value={p.date}
+                                        value={p.year}
                                         onChange={(e) =>
-                                            updatePhoto(idx, { date: e.target.value })
+                                            updatePhoto(idx, { year: e.target.value })
                                         }
+                                        inputMode="numeric"
+                                        required
+                                        placeholder="2025"
                                     />
-                                    <Label>DATE</Label>
+                                    <Label>YEAR</Label>
                                 </div>
+                                <div className="space-y-1">
+                                    <Input
+                                        value={p.month}
+                                        onChange={(e) =>
+                                            updatePhoto(idx, { month: e.target.value })
+                                        }
+                                        inputMode="numeric"
+                                        placeholder="1-12"
+                                    />
+                                    <Label>MONTH</Label>
+                                </div>
+                                <div className="space-y-1">
+                                    <Input
+                                        value={p.day}
+                                        onChange={(e) =>
+                                            updatePhoto(idx, { day: e.target.value })
+                                        }
+                                        inputMode="numeric"
+                                        placeholder="1-31"
+                                    />
+                                    <Label>DAY</Label>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
                                     <Input
                                         value={p.lat}

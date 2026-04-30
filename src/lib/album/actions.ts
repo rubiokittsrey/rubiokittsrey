@@ -34,6 +34,24 @@ function parseCoordinates(value: unknown): Coordinates | null {
     return { lat, lng };
 }
 
+function parseIntField(
+    value: unknown,
+    idx: number,
+    name: string,
+    min: number,
+    max: number,
+    required: boolean
+): number | null {
+    if (value === null || value === undefined || value === '') {
+        if (required) throw new Error(`photograph ${idx} requires ${name}`);
+        return null;
+    }
+    if (typeof value !== 'number' || !Number.isInteger(value) || value < min || value > max) {
+        throw new Error(`photograph ${idx} has invalid ${name}`);
+    }
+    return value;
+}
+
 function parsePhotographs(raw: FormDataEntryValue | null): PhotographInput[] {
     if (typeof raw !== 'string' || !raw.trim()) return [];
     const parsed = JSON.parse(raw);
@@ -54,14 +72,17 @@ function parsePhotographs(raw: FormDataEntryValue | null): PhotographInput[] {
                 ? obj.description.trim()
                 : null;
 
-        const dateRaw = typeof obj.date === 'string' ? obj.date.trim() : '';
-        const date = dateRaw ? new Date(dateRaw).toISOString() : null;
+        const year = parseIntField(obj.year, idx, 'year', 1, 9999, true) as number;
+        const month = parseIntField(obj.month, idx, 'month', 1, 12, false);
+        const day = parseIntField(obj.day, idx, 'day', 1, 31, false);
 
         return {
             url,
             title,
             description,
-            date,
+            year,
+            month,
+            day,
             coordinates: parseCoordinates(obj.coordinates),
             position: typeof obj.position === 'number' ? obj.position : idx,
         };

@@ -22,7 +22,7 @@
     }
 
     :is(.dark &)::before {
-        opacity: 0.3;
+        opacity: 0.2;
     }
 }
 
@@ -64,4 +64,5 @@
 
     /* role-based typography utility classes */
     --text-body: var(--text-size-sm);
+    --text-title: var(--text-size-lg);
 }

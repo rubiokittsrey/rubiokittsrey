@@ -14,7 +14,7 @@ export default function PhotoInfo({ photo, imgBox }: { photo: Photo; imgBox: Img
         >
             <div className="absolute bottom-6 left-6 font-mono text-xs text-white space-y-1">
                 {photo.description && <p className="text-white/70">{photo.description}</p>}
-                {photo.date && <p className="text-white/50">{formatDate(photo.date)}</p>}
+                <p className="text-white/50">{formatDate(photo.year, photo.month, photo.day)}</p>
                 {photo.coordinates && (
                     <div className="flex space-x-5 text-white/50">
                         <p>{toDMS(photo.coordinates.lat, 'N', 'S')}</p>
