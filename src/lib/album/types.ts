@@ -26,6 +26,7 @@ export interface Album {
     cover_image: string;
     photographs: Photograph[];
     location: string | null;
+    position: number;
     created_at: string;
     updated_at: string;
 }
@@ -35,6 +36,9 @@ export type PhotographInput = Omit<
     'id' | 'album_id' | 'created_at' | 'updated_at'
 >;
 
-export type AlbumInput = Omit<Album, 'id' | 'created_at' | 'updated_at' | 'photographs'> & {
+export type AlbumInput = Omit<
+    Album,
+    'id' | 'position' | 'created_at' | 'updated_at' | 'photographs'
+> & {
     photographs: PhotographInput[];
 };

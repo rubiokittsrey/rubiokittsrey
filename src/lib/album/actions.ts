@@ -109,9 +109,18 @@ export async function createAlbum(formData: FormData) {
     const payload = payloadFromForm(formData);
     const { photographs, ...album } = payload;
 
+    const { data: maxRow, error: maxErr } = await supabase
+        .from('albums')
+        .select('position')
+        .order('position', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+    if (maxErr) throw maxErr;
+    const position = (maxRow?.position ?? -1) + 1;
+
     const { data: inserted, error: insertErr } = await supabase
         .from('albums')
-        .insert(album)
+        .insert({ ...album, position })
         .select('id')
         .single();
     if (insertErr) throw insertErr;
@@ -148,6 +157,49 @@ export async function updateAlbum(id: string, formData: FormData) {
     revalidatePath(`/admin/albums/${id}`);
     revalidatePath('/gallery');
     revalidatePath(`/gallery/${album.slug}`);
+}
+
+export async function moveAlbum(id: string, direction: 'up' | 'down') {
+    const supabase = await requireUser();
+
+    const { data: current, error: currentErr } = await supabase
+        .from('albums')
+        .select('id, position')
+        .eq('id', id)
+        .maybeSingle();
+    if (currentErr) throw currentErr;
+    if (!current) throw new Error('Album not found');
+
+    const base = supabase.from('albums').select('id, position');
+    const { data: neighbor, error: neighborErr } =
+        direction === 'up'
+            ? await base
+                  .lt('position', current.position)
+                  .order('position', { ascending: false })
+                  .limit(1)
+                  .maybeSingle()
+            : await base
+                  .gt('position', current.position)
+                  .order('position', { ascending: true })
+                  .limit(1)
+                  .maybeSingle();
+    if (neighborErr) throw neighborErr;
+    if (!neighbor) return;
+
+    const { error: e1 } = await supabase
+        .from('albums')
+        .update({ position: neighbor.position })
+        .eq('id', current.id);
+    if (e1) throw e1;
+
+    const { error: e2 } = await supabase
+        .from('albums')
+        .update({ position: current.position })
+        .eq('id', neighbor.id);
+    if (e2) throw e2;
+
+    revalidatePath('/admin/albums');
+    revalidatePath('/gallery');
 }
 
 export async function deleteAlbum(id: string) {

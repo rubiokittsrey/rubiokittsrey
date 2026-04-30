@@ -23,6 +23,7 @@ function hydrate(row: AlbumRow): Album {
         description: row.description,
         cover_image: row.cover_image,
         location: row.location,
+        position: row.position,
         created_at: row.created_at,
         updated_at: row.updated_at,
         photographs,
@@ -34,6 +35,7 @@ export async function listAlbums(): Promise<Album[]> {
     const { data, error } = await supabase
         .from('albums')
         .select(ALBUM_SELECT)
+        .order('position', { ascending: true })
         .order('updated_at', { ascending: false });
 
     if (error) throw error;

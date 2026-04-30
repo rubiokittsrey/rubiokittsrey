@@ -2,8 +2,12 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { listAlbums } from '@/lib/album/queries';
 import { Label } from '@/components/ui/label';
+import { AlbumRowActions } from '@/components/features/admin/album-row-actions';
 
 export const metadata: Metadata = { title: 'albums' };
+
+const COLUMNS =
+    'grid-cols-[2.5rem_1fr_8rem_5rem_14rem_5rem]';
 
 export default async function AdminAlbumsPage() {
     const albums = await listAlbums();
@@ -24,19 +28,30 @@ export default async function AdminAlbumsPage() {
                 <Label>NO ALBUMS</Label>
             ) : (
                 <div className="border border-surface-foreground/15">
-                    <div className="grid bg-surface-item grid-cols-[1fr_8rem_6rem_15rem] gap-10 px-4 py-2 border-b border-surface-foreground/15 font-mono text-xs text-surface-foreground/50 uppercase">
+                    <div
+                        className={`grid ${COLUMNS} bg-surface-item gap-10 px-4 py-2 border-b border-surface-foreground/15 font-mono text-xs text-surface-foreground/50 uppercase`}
+                    >
+                        <div>#</div>
                         <div>title</div>
                         <div>slug</div>
                         <div>photos</div>
                         <div>updated</div>
+                        <div className="text-right">order</div>
                     </div>
-                    {albums.map((album) => (
-                        <Link
+                    {albums.map((album, idx) => (
+                        <div
                             key={album.id}
-                            href={`/admin/albums/${album.id}`}
-                            className="font-mono text-sm grid grid-cols-[1fr_8rem_6rem_15rem] gap-10 px-4 py-3 border-b border-surface-foreground/10 last:border-b-0 hover:bg-surface-foreground/5"
+                            className={`grid ${COLUMNS} gap-10 px-4 py-3 border-b border-surface-foreground/10 last:border-b-0 hover:bg-surface-foreground/5 items-center font-mono text-sm`}
                         >
-                            <div className="truncate">{album.title}</div>
+                            <div className="text-surface-foreground/40">
+                                {idx + 1}
+                            </div>
+                            <Link
+                                href={`/admin/albums/${album.id}`}
+                                className="truncate hover:underline"
+                            >
+                                {album.title}
+                            </Link>
                             <div className="truncate text-surface-foreground/60">
                                 {album.slug}
                             </div>
@@ -46,7 +61,14 @@ export default async function AdminAlbumsPage() {
                             <div className="text-surface-foreground/40">
                                 {new Date(album.updated_at).toLocaleString()}
                             </div>
-                        </Link>
+                            <div className="flex justify-end">
+                                <AlbumRowActions
+                                    id={album.id}
+                                    canUp={idx > 0}
+                                    canDown={idx < albums.length - 1}
+                                />
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}
