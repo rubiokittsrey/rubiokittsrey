@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Photo } from './types';
 import PhotoStage from './photo-stage';
 import ThumbnailStrip from './thumbnail-strip';
@@ -12,6 +12,21 @@ export default function AlbumViewer({ photographs }: { photographs: Photo[] }) {
     const [expandOpen, setExpandOpen] = useState(false);
 
     const photo = photographs[selected];
+
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+            const target = e.target as HTMLElement | null;
+            if (target?.closest('input, textarea, select, [contenteditable="true"]')) return;
+            const last = photographs.length - 1;
+            setSelected((idx) => {
+                if (e.key === 'ArrowLeft') return Math.max(0, idx - 1);
+                return Math.min(last, idx + 1);
+            });
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => window.removeEventListener('keydown', onKeyDown);
+    }, [photographs.length]);
 
     return (
         <>

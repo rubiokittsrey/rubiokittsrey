@@ -1,8 +1,10 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getAlbumBySlug } from '@/lib/album/queries';
 import { r2 } from '@/lib/r2';
 import { AlbumViewer } from '@/components/features/gallery';
+import { ElegantSpinner } from '@/components/ui/elegant-spinner';
 
 type Params = Promise<{ slug: string }>;
 
@@ -18,6 +20,21 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function AlbumPage({ params }: { params: Params }) {
     const { slug } = await params;
+
+    return (
+        <Suspense
+            fallback={
+                <div className="flex-1 flex items-center justify-center -mt-10">
+                    <ElegantSpinner />
+                </div>
+            }
+        >
+            <Album slug={slug} />
+        </Suspense>
+    );
+}
+
+async function Album({ slug }: { slug: string }) {
     const album = await getAlbumBySlug(slug);
     if (!album) notFound();
 
