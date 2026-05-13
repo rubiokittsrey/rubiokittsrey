@@ -13,7 +13,7 @@ export default function AboutMeBlurb() {
             </p>
             <p>
                 Photography, cooking, video games, or just being outdoors are things I usually do
-                when I’m not in front of a computer.
+                when I’m not busy with code.
             </p>
         </div>
     );
