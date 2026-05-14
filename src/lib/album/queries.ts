@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import type { Album, Photograph } from './types';
+import type { Album, AlbumSummary, Photograph } from './types';
 
 type PhotographRow = Omit<Photograph, 'coordinates'> & {
     coordinates: Photograph['coordinates'] | null;
@@ -28,6 +28,45 @@ function hydrate(row: AlbumRow): Album {
         updated_at: row.updated_at,
         photographs,
     };
+}
+
+type AlbumSummaryRow = {
+    id: string;
+    slug: string;
+    title: string;
+    cover_image: string;
+    location: string | null;
+    position: number;
+    updated_at: string;
+    photographs: { year: number }[] | null;
+};
+
+export async function listAlbumSummaries(): Promise<AlbumSummary[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from('albums')
+        .select(
+            'id, slug, title, cover_image, location, position, updated_at, photographs(year)'
+        )
+        .order('position', { ascending: true })
+        .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+    return (data ?? []).map((raw) => {
+        const row = raw as AlbumSummaryRow;
+        const years = (row.photographs ?? []).map((p) => p.year);
+        return {
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            cover_image: row.cover_image,
+            location: row.location,
+            updated_at: row.updated_at,
+            photoCount: years.length,
+            yearMin: years.length ? Math.min(...years) : null,
+            yearMax: years.length ? Math.max(...years) : null,
+        };
+    });
 }
 
 export async function listAlbums(): Promise<Album[]> {

@@ -1,12 +1,14 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { listAlbums } from '@/lib/album/queries';
+import { listAlbumSummaries } from '@/lib/album/queries';
 import { AlbumEntry } from '@/components/features/gallery';
 import { ElegantSpinner } from '@/components/ui/elegant-spinner';
 
 export const metadata: Metadata = {
     title: 'gallery',
 };
+
+export const revalidate = 60;
 
 export default function GalleryPage() {
     return (
@@ -23,7 +25,7 @@ export default function GalleryPage() {
 }
 
 async function GalleryList() {
-    const albums = await listAlbums();
+    const albums = await listAlbumSummaries();
 
     return (
         <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 gap-y-12">

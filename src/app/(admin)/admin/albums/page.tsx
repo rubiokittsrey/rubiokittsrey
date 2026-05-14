@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { listAlbums } from '@/lib/album/queries';
+import { listAlbumSummaries } from '@/lib/album/queries';
 import { Label } from '@/components/ui/label';
 import { AlbumRowActions } from '@/components/features/admin/album-row-actions';
 
@@ -10,7 +10,7 @@ const COLUMNS =
     'grid-cols-[2.5rem_1fr_8rem_5rem_14rem_5rem]';
 
 export default async function AdminAlbumsPage() {
-    const albums = await listAlbums();
+    const albums = await listAlbumSummaries();
 
     return (
         <div className="space-y-6 text-sm">
@@ -56,7 +56,7 @@ export default async function AdminAlbumsPage() {
                                 {album.slug}
                             </div>
                             <div className="text-surface-foreground/60">
-                                {album.photographs.length}
+                                {album.photoCount}
                             </div>
                             <div className="text-surface-foreground/40">
                                 {new Date(album.updated_at).toLocaleString()}

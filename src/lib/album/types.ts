@@ -31,6 +31,18 @@ export interface Album {
     updated_at: string;
 }
 
+export interface AlbumSummary {
+    id: string;
+    slug: string;
+    title: string;
+    cover_image: string;
+    location: string | null;
+    updated_at: string;
+    photoCount: number;
+    yearMin: number | null;
+    yearMax: number | null;
+}
+
 export type PhotographInput = Omit<
     Photograph,
     'id' | 'album_id' | 'created_at' | 'updated_at'
