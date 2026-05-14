@@ -40,10 +40,12 @@ export default function AlbumEntry({
                 />
                 <div className="relative flex-1 m-6 overflow-hidden">
                     <Image
-                        src={r2.resolve(album.cover_image)}
+                        src={r2.resolve(album.cover_thumb ?? album.cover_image)}
                         alt={album.title}
                         fill
                         priority={albumIdx < 3}
+                        placeholder={album.cover_blur ? 'blur' : 'empty'}
+                        blurDataURL={album.cover_blur ?? undefined}
                         className="object-contain z-30"
                         sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
                     />

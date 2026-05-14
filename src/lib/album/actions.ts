@@ -3,7 +3,20 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { generateCoverDerivatives } from '@/lib/images';
 import type { AlbumInput, Coordinates, PhotographInput } from './types';
+
+async function deriveCover(
+    coverImage: string
+): Promise<{ cover_thumb: string | null; cover_blur: string | null }> {
+    try {
+        const { thumbPath, blurDataUrl } = await generateCoverDerivatives(coverImage);
+        return { cover_thumb: thumbPath, cover_blur: blurDataUrl };
+    } catch (err) {
+        console.error('[album] cover derivative generation failed:', err);
+        return { cover_thumb: null, cover_blur: null };
+    }
+}
 
 async function requireUser() {
     const supabase = await createClient();
@@ -118,9 +131,11 @@ export async function createAlbum(formData: FormData) {
     if (maxErr) throw maxErr;
     const position = (maxRow?.position ?? -1) + 1;
 
+    const derivatives = await deriveCover(album.cover_image);
+
     const { data: inserted, error: insertErr } = await supabase
         .from('albums')
-        .insert({ ...album, position })
+        .insert({ ...album, ...derivatives, position })
         .select('id')
         .single();
     if (insertErr) throw insertErr;
@@ -141,7 +156,25 @@ export async function updateAlbum(id: string, formData: FormData) {
     const payload = payloadFromForm(formData);
     const { photographs, ...album } = payload;
 
-    const { error: updateErr } = await supabase.from('albums').update(album).eq('id', id);
+    const { data: existing, error: existingErr } = await supabase
+        .from('albums')
+        .select('cover_image, cover_thumb, cover_blur')
+        .eq('id', id)
+        .maybeSingle();
+    if (existingErr) throw existingErr;
+
+    const coverChanged = !existing || existing.cover_image !== album.cover_image;
+    const derivatives = coverChanged
+        ? await deriveCover(album.cover_image)
+        : {
+              cover_thumb: existing.cover_thumb as string | null,
+              cover_blur: existing.cover_blur as string | null,
+          };
+
+    const { error: updateErr } = await supabase
+        .from('albums')
+        .update({ ...album, ...derivatives })
+        .eq('id', id);
     if (updateErr) throw updateErr;
 
     const { error: deleteErr } = await supabase.from('photographs').delete().eq('album_id', id);

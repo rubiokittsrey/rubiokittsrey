@@ -11,3 +11,19 @@ export const env = {
     ),
     R2_BASE_URL: required('NEXT_PUBLIC_R2_BASE_URL', process.env.NEXT_PUBLIC_R2_BASE_URL),
 };
+
+export const serverEnv = {
+    R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
+    R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
+    R2_SECRET_ACCESS_KEY: process.env.R2_SECRET_ACCESS_KEY,
+    R2_BUCKET: process.env.R2_BUCKET,
+};
+
+export function requireR2WriteEnv() {
+    return {
+        accountId: required('R2_ACCOUNT_ID', serverEnv.R2_ACCOUNT_ID),
+        accessKeyId: required('R2_ACCESS_KEY_ID', serverEnv.R2_ACCESS_KEY_ID),
+        secretAccessKey: required('R2_SECRET_ACCESS_KEY', serverEnv.R2_SECRET_ACCESS_KEY),
+        bucket: required('R2_BUCKET', serverEnv.R2_BUCKET),
+    };
+}

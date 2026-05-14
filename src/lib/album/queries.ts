@@ -22,6 +22,8 @@ function hydrate(row: AlbumRow): Album {
         title: row.title,
         description: row.description,
         cover_image: row.cover_image,
+        cover_thumb: row.cover_thumb,
+        cover_blur: row.cover_blur,
         location: row.location,
         position: row.position,
         created_at: row.created_at,
@@ -35,6 +37,8 @@ type AlbumSummaryRow = {
     slug: string;
     title: string;
     cover_image: string;
+    cover_thumb: string | null;
+    cover_blur: string | null;
     location: string | null;
     position: number;
     updated_at: string;
@@ -46,7 +50,7 @@ export async function listAlbumSummaries(): Promise<AlbumSummary[]> {
     const { data, error } = await supabase
         .from('albums')
         .select(
-            'id, slug, title, cover_image, location, position, updated_at, photographs(year)'
+            'id, slug, title, cover_image, cover_thumb, cover_blur, location, position, updated_at, photographs(year)'
         )
         .order('position', { ascending: true })
         .order('updated_at', { ascending: false });
@@ -60,6 +64,8 @@ export async function listAlbumSummaries(): Promise<AlbumSummary[]> {
             slug: row.slug,
             title: row.title,
             cover_image: row.cover_image,
+            cover_thumb: row.cover_thumb,
+            cover_blur: row.cover_blur,
             location: row.location,
             updated_at: row.updated_at,
             photoCount: years.length,
