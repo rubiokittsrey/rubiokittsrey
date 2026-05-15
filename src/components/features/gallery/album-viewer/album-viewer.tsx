@@ -33,6 +33,8 @@ export default function AlbumViewer({ photographs }: { photographs: Photo[] }) {
             <div className="flex flex-col w-full h-[calc(100dvh-4rem-1.75rem)] overflow-hidden">
                 <PhotoStage
                     photo={photo}
+                    photographs={photographs}
+                    selected={selected}
                     infoOpen={infoOpen}
                     onToggleInfo={() => setInfoOpen((v) => !v)}
                     onExpand={() => setExpandOpen(true)}

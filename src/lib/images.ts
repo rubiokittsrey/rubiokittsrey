@@ -8,29 +8,29 @@ const THUMB_WIDTH = 800;
 const THUMB_QUALITY = 78;
 const BLUR_WIDTH = 12;
 
-export interface CoverDerivatives {
+export interface ImageDerivatives {
     thumbPath: string;
     blurDataUrl: string;
 }
 
-function thumbKeyFor(coverImage: string): string {
-    const hash = createHash('sha1').update(coverImage).digest('hex').slice(0, 16);
+function thumbKeyFor(sourcePath: string): string {
+    const hash = createHash('sha1').update(sourcePath).digest('hex').slice(0, 16);
     return `derivatives/${hash}.webp`;
 }
 
-async function fetchOriginal(coverImage: string): Promise<Buffer> {
-    const url = r2.resolve(coverImage);
+async function fetchOriginal(sourcePath: string): Promise<Buffer> {
+    const url = r2.resolve(sourcePath);
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) {
-        throw new Error(`Failed to fetch cover (${res.status}): ${url}`);
+        throw new Error(`Failed to fetch image (${res.status}): ${url}`);
     }
     return Buffer.from(await res.arrayBuffer());
 }
 
-export async function generateCoverDerivatives(
-    coverImage: string
-): Promise<CoverDerivatives> {
-    const original = await fetchOriginal(coverImage);
+export async function generateImageDerivatives(
+    sourcePath: string
+): Promise<ImageDerivatives> {
+    const original = await fetchOriginal(sourcePath);
 
     const pipeline = sharp(original).rotate();
 
@@ -46,7 +46,7 @@ export async function generateCoverDerivatives(
         .webp({ quality: 50 })
         .toBuffer();
 
-    const thumbPath = thumbKeyFor(coverImage);
+    const thumbPath = thumbKeyFor(sourcePath);
     await putR2Object(thumbPath, thumb, 'image/webp');
 
     const blurDataUrl = `data:image/webp;base64,${blur.toString('base64')}`;

@@ -3,6 +3,8 @@ import { Coordinates } from '@/lib/album/types';
 export interface Photo {
     id: string;
     url: string;
+    thumbUrl: string | null;
+    blur: string | null;
     title: string;
     description: string | null;
     year: number;

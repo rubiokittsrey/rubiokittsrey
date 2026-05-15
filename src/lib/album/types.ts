@@ -7,6 +7,8 @@ export interface Photograph {
     id: string;
     album_id: string;
     url: string;
+    thumb_path: string | null;
+    blur: string | null;
     title: string;
     description: string | null;
     year: number;
@@ -49,7 +51,7 @@ export interface AlbumSummary {
 
 export type PhotographInput = Omit<
     Photograph,
-    'id' | 'album_id' | 'created_at' | 'updated_at'
+    'id' | 'album_id' | 'created_at' | 'updated_at' | 'thumb_path' | 'blur'
 >;
 
 export type AlbumInput = Omit<

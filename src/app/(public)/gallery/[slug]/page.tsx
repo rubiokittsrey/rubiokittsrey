@@ -41,6 +41,8 @@ async function Album({ slug }: { slug: string }) {
     const photographs = album.photographs.map((p) => ({
         id: p.id,
         url: r2.resolve(p.url),
+        thumbUrl: p.thumb_path ? r2.resolve(p.thumb_path) : null,
+        blur: p.blur,
         title: p.title,
         description: p.description,
         year: p.year,

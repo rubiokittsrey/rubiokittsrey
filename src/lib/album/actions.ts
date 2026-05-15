@@ -3,19 +3,48 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { generateCoverDerivatives } from '@/lib/images';
+import { generateImageDerivatives } from '@/lib/images';
 import type { AlbumInput, Coordinates, PhotographInput } from './types';
 
 async function deriveCover(
     coverImage: string
 ): Promise<{ cover_thumb: string | null; cover_blur: string | null }> {
     try {
-        const { thumbPath, blurDataUrl } = await generateCoverDerivatives(coverImage);
+        const { thumbPath, blurDataUrl } = await generateImageDerivatives(coverImage);
         return { cover_thumb: thumbPath, cover_blur: blurDataUrl };
     } catch (err) {
         console.error('[album] cover derivative generation failed:', err);
         return { cover_thumb: null, cover_blur: null };
     }
+}
+
+type PhotographDerivatives = { thumb_path: string | null; blur: string | null };
+
+async function derivePhotograph(url: string): Promise<PhotographDerivatives> {
+    try {
+        const { thumbPath, blurDataUrl } = await generateImageDerivatives(url);
+        return { thumb_path: thumbPath, blur: blurDataUrl };
+    } catch (err) {
+        console.error(`[album] photograph derivative generation failed for ${url}:`, err);
+        return { thumb_path: null, blur: null };
+    }
+}
+
+async function buildPhotographRows(
+    photographs: PhotographInput[],
+    albumId: string,
+    existingByUrl: Map<string, PhotographDerivatives>
+) {
+    return Promise.all(
+        photographs.map(async (p) => {
+            const existing = existingByUrl.get(p.url);
+            const derivatives =
+                existing && existing.thumb_path && existing.blur
+                    ? existing
+                    : await derivePhotograph(p.url);
+            return { ...p, ...derivatives, album_id: albumId };
+        })
+    );
 }
 
 async function requireUser() {
@@ -141,7 +170,7 @@ export async function createAlbum(formData: FormData) {
     if (insertErr) throw insertErr;
 
     if (photographs.length > 0) {
-        const rows = photographs.map((p) => ({ ...p, album_id: inserted.id }));
+        const rows = await buildPhotographRows(photographs, inserted.id, new Map());
         const { error: photoErr } = await supabase.from('photographs').insert(rows);
         if (photoErr) throw photoErr;
     }
@@ -163,8 +192,12 @@ export async function updateAlbum(id: string, formData: FormData) {
         .maybeSingle();
     if (existingErr) throw existingErr;
 
-    const coverChanged = !existing || existing.cover_image !== album.cover_image;
-    const derivatives = coverChanged
+    const needsCoverDerive =
+        !existing ||
+        existing.cover_image !== album.cover_image ||
+        !existing.cover_thumb ||
+        !existing.cover_blur;
+    const derivatives = needsCoverDerive
         ? await deriveCover(album.cover_image)
         : {
               cover_thumb: existing.cover_thumb as string | null,
@@ -177,11 +210,27 @@ export async function updateAlbum(id: string, formData: FormData) {
         .eq('id', id);
     if (updateErr) throw updateErr;
 
+    const { data: existingPhotos, error: existingPhotosErr } = await supabase
+        .from('photographs')
+        .select('url, thumb_path, blur')
+        .eq('album_id', id);
+    if (existingPhotosErr) throw existingPhotosErr;
+
+    const existingByUrl = new Map<string, PhotographDerivatives>(
+        (existingPhotos ?? []).map((r) => [
+            r.url as string,
+            {
+                thumb_path: (r.thumb_path as string | null) ?? null,
+                blur: (r.blur as string | null) ?? null,
+            },
+        ])
+    );
+
     const { error: deleteErr } = await supabase.from('photographs').delete().eq('album_id', id);
     if (deleteErr) throw deleteErr;
 
     if (photographs.length > 0) {
-        const rows = photographs.map((p) => ({ ...p, album_id: id }));
+        const rows = await buildPhotographRows(photographs, id, existingByUrl);
         const { error: photoErr } = await supabase.from('photographs').insert(rows);
         if (photoErr) throw photoErr;
     }

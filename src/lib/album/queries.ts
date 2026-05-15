@@ -12,9 +12,25 @@ type AlbumRow = Omit<Album, 'photographs'> & {
 const ALBUM_SELECT = '*, photographs(*)';
 
 function hydrate(row: AlbumRow): Album {
-    const photographs = (row.photographs ?? [])
+    const photographs: Photograph[] = (row.photographs ?? [])
         .slice()
-        .sort((a, b) => a.position - b.position || a.updated_at.localeCompare(b.updated_at));
+        .sort((a, b) => a.position - b.position || a.updated_at.localeCompare(b.updated_at))
+        .map((p) => ({
+            id: p.id,
+            album_id: p.album_id,
+            url: p.url,
+            thumb_path: p.thumb_path ?? null,
+            blur: p.blur ?? null,
+            title: p.title,
+            description: p.description,
+            year: p.year,
+            month: p.month,
+            day: p.day,
+            coordinates: p.coordinates,
+            position: p.position,
+            created_at: p.created_at,
+            updated_at: p.updated_at,
+        }));
 
     return {
         id: row.id,

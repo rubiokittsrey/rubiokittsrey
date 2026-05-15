@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Photo } from './types';
 
@@ -18,17 +17,16 @@ export default function ThumbnailStrip({
                     key={p.id}
                     onClick={() => onSelect(idx)}
                     className={cn(
-                        'transition-opacity cursor-pointer shrink-0',
+                        'transition-opacity cursor-pointer shrink-0 min-w-15 sm:min-w-22',
                         idx === selected ? 'opacity-100' : 'opacity-50'
                     )}
                 >
-                    <Image
+                    <img
                         className="max-h-10 sm:max-h-15 w-auto shrink-0"
-                        src={p.url}
+                        src={p.thumbUrl ?? p.url}
                         alt={p.title}
-                        width={0}
-                        height={0}
-                        sizes="100vw"
+                        loading="lazy"
+                        decoding="async"
                     />
                 </button>
             ))}
