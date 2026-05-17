@@ -1,4 +1,4 @@
-import { Socials } from '@/components/features/navigation';
+import { PublicNavSection, Socials } from '@/components/features/navigation';
 import { AboutMeBlurb } from '@/components/features/landing';
 import type { Metadata } from 'next';
 
