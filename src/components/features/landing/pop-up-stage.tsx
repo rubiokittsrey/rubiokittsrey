@@ -4,7 +4,6 @@ import {
     createContext,
     useCallback,
     useContext,
-    useEffect,
     useMemo,
     useState,
     type CSSProperties,
@@ -20,7 +19,7 @@ type PopUpEntry = {
 };
 
 type PopUpStageContextValue = {
-    pinnedId: string | null;
+    isPinned: (id: string) => boolean;
     togglePinned: (id: string) => void;
     registerPopUp: (id: string, entry: PopUpEntry) => () => void;
 };
@@ -34,7 +33,7 @@ export function usePopUpStage() {
 }
 
 export function PopUpStage({ children }: { children: ReactNode }) {
-    const [pinnedId, setPinnedId] = useState<string | null>(null);
+    const [pinnedIds, setPinnedIds] = useState<Set<string>>(new Set());
     const [popups, setPopUps] = useState<Map<string, PopUpEntry>>(new Map());
 
     const registerPopUp = useCallback((id: string, entry: PopUpEntry) => {
@@ -53,51 +52,43 @@ export function PopUpStage({ children }: { children: ReactNode }) {
     }, []);
 
     const togglePinned = useCallback((id: string) => {
-        setPinnedId((prev) => (prev === id ? null : id));
+        setPinnedIds((prev) => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id);
+            else next.add(id);
+            return next;
+        });
     }, []);
+
+    const isPinned = useCallback((id: string) => pinnedIds.has(id), [pinnedIds]);
 
     const value = useMemo<PopUpStageContextValue>(
-        () => ({ pinnedId, togglePinned, registerPopUp }),
-        [pinnedId, togglePinned, registerPopUp],
+        () => ({ isPinned, togglePinned, registerPopUp }),
+        [isPinned, togglePinned, registerPopUp],
     );
 
-    const active = pinnedId ? popups.get(pinnedId) : null;
-
-    useEffect(() => {
-        function onDocClick(e: MouseEvent) {
-            const target = e.target as HTMLElement | null;
-            if (target?.closest('[data-popup-trigger]')) return;
-            setPinnedId(null);
-        }
-        function onKey(e: KeyboardEvent) {
-            if (e.key === 'Escape') setPinnedId(null);
-        }
-        document.addEventListener('click', onDocClick);
-        document.addEventListener('keydown', onKey);
-        return () => {
-            document.removeEventListener('click', onDocClick);
-            document.removeEventListener('keydown', onKey);
-        };
-    }, []);
+    const active = Array.from(pinnedIds)
+        .map((id) => ({ id, entry: popups.get(id) }))
+        .filter((item): item is { id: string; entry: PopUpEntry } => Boolean(item.entry));
 
     return (
         <PopUpStageContext.Provider value={value}>
             <div className="relative flex-1 flex items-center justify-center">
                 <div className="pointer-events-none absolute inset-0 hidden md:block">
                     <AnimatePresence>
-                        {active && (
+                        {active.map(({ id, entry }) => (
                             <motion.div
-                                key={pinnedId}
+                                key={id}
                                 initial={{ opacity: 0, y: 6, scale: 0.98 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 6, scale: 0.98 }}
                                 transition={{ duration: 0.2, ease: 'easeOut' }}
                                 className="absolute"
-                                style={active.position}
+                                style={entry.position}
                             >
-                                {active.node}
+                                {entry.node}
                             </motion.div>
-                        )}
+                        ))}
                     </AnimatePresence>
                 </div>
                 {children}

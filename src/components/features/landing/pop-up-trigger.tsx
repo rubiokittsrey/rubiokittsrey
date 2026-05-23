@@ -13,13 +13,14 @@ export function PopUpTrigger({
     children: ReactNode;
     className?: string;
 }) {
-    const { pinnedId, togglePinned } = usePopUpStage();
+    const { isPinned, togglePinned } = usePopUpStage();
+    const isActive = isPinned(id);
     return (
         <span
             data-popup-trigger={id}
             role="button"
             tabIndex={0}
-            aria-pressed={pinnedId === id}
+            aria-pressed={isActive}
             onClick={() => togglePinned(id)}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -30,6 +31,7 @@ export function PopUpTrigger({
             className={cn(
                 'md:underline md:decoration-dotted md:decoration-current md:underline-offset-4 md:cursor-pointer',
                 'transition-colors focus-visible:outline-none',
+                isActive && 'text-foreground/50',
                 className,
             )}
         >
