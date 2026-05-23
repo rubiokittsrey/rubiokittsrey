@@ -4,6 +4,7 @@ import {
     createContext,
     useCallback,
     useContext,
+    useEffect,
     useMemo,
     useState,
     type CSSProperties,
@@ -61,6 +62,14 @@ export function PopUpStage({ children }: { children: ReactNode }) {
     }, []);
 
     const isPinned = useCallback((id: string) => pinnedIds.has(id), [pinnedIds]);
+
+    useEffect(() => {
+        function onKey(e: KeyboardEvent) {
+            if (e.key === 'Escape') setPinnedIds(new Set());
+        }
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, []);
 
     const value = useMemo<PopUpStageContextValue>(
         () => ({ isPinned, togglePinned, registerPopUp }),

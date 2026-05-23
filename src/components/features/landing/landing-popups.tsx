@@ -26,8 +26,8 @@ export function LandingPopUps() {
             <PopUp id="cooking" position={{ top: '46%', right: '5%' }}>
                 <Placeholder label="cooking.jpg" />
             </PopUp>
-            <PopUp id="outdoors" position={{ top: '54%', left: '5%' }}>
-                <Placeholder label="outdoors.jpg" />
+            <PopUp id="video-games" position={{ top: '54%', left: '5%' }}>
+                <Placeholder label="videogames.jpg" />
             </PopUp>
         </>
     );
