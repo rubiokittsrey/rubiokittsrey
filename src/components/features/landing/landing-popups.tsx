@@ -2,7 +2,7 @@ import { PopUp } from './pop-up';
 
 function Placeholder({ label }: { label: string }) {
     return (
-        <div className="w-52 aspect-[4/3] rounded-sm border border-current/10 bg-current/[0.03] flex items-center justify-center text-xxs font-mono text-current/40 select-none">
+        <div className="w-52 aspect-4/3 rounded-sm border border-current/10 bg-current/3 flex items-center justify-center text-xxs font-mono text-current/40 select-none">
             {label}
         </div>
     );
