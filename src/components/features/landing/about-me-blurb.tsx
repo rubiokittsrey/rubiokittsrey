@@ -1,9 +1,18 @@
+import { ExpandableText } from './expandable-text';
+
 export default function AboutMeBlurb() {
     return (
         <div className="flex flex-col space-y-5 items-start text-body select-none">
             <p>Hey, I’m Kitts.</p>
             <p>
-                I'm from the Philippines. I write code for a living and spend most of my time
+                I'm{' '}
+                <ExpandableText summary="from the Philippines">
+                    from Surigao del Norte, Philippines, on the island of{' '}
+                    <ExpandableText summary="Mindanao">
+                        Mindanao, the southernmost of the country's three major island groups
+                    </ExpandableText>
+                </ExpandableText>
+                . I write code for a living and spend most of my time
                 figuring out how things work.
             </p>
             <p>
