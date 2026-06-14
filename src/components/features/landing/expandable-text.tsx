@@ -19,6 +19,9 @@ export function ExpandableText({
     const interacted = useRef(false);
 
     function toggle(e: MouseEvent | KeyboardEvent) {
+        const interactive = (e.target as HTMLElement).closest('a, button, [role="button"]');
+        if (interactive && interactive !== e.currentTarget) return;
+
         e.stopPropagation();
         interacted.current = true;
 
