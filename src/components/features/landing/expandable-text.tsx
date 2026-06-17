@@ -62,8 +62,11 @@ export function ExpandableText({
                 }
             }}
             className={cn(
-                'cursor-pointer rounded-sm px-1 -mx-0.5 transition-colors',
-                'bg-sky-500/10 hover:bg-sky-500/20',
+                'cursor-pointer rounded-sm transition-colors',
+                'underline decoration-dotted decoration-1 underline-offset-4',
+                expanded
+                    ? 'decoration-foreground/20'
+                    : 'decoration-foreground/70',
                 'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-sky-500/40',
             )}
         >

@@ -5,8 +5,8 @@ import PublicNavItem from '../navigation/public-nav/public-nav-item';
 function OriginExpandable() {
     return (
         <ExpandableText summary="from the Philippines">
-            from Surigao del Norte, Philippines, on the island of{' '}
-            <ExpandableText summary="Mindanao">
+            from the Philippines, in <span>Surigao del Norte</span>, on the island of {' '}
+            <ExpandableText summary="Mindanao">{' '}
                 Mindanao, the southernmost of the country's three major island groups
             </ExpandableText>
         </ExpandableText>
@@ -16,9 +16,9 @@ function OriginExpandable() {
 function WorkExpandable() {
     return (
         <ExpandableText summary="write code for a living">
-            am a fullstack developer{' '}
+            write code for a living, I am a fullstack developer{' '}
             <ExpandableText summary="building web and mobile apps">
-                building web and mobile apps across a handful of stacks. I build projects as a way
+                building web and mobile apps across a handful of stacks. I <span>build projects</span> as a way
                 to understand how things work{' '}
                 <a href="#" className="inline-flex underline underline-offset-2 hover:text-sky-600">
                     {/* TODO: download resume link */}
@@ -33,12 +33,12 @@ function InterestsExpandable() {
     return (
         <>
             <ExpandableText summary="field applications of software for mapping out the physical world">
-                field applications of software systems for research, surveying, mapping, and
-                auditing physical environments with sensors, telemetry, and geolocation
-                technologies, and{' '}
+                field applications of software for mapping out the physical world.
+                I am focused in research, surveying, mapping, and auditing <span>physical environments</span> with <span>sensors,
+                telemetry, and geolocation technologies, </span>and{' '}
                 <ExpandableText summary="how AI can take it further">
                     {' '}
-                    how AI can help improve visibility and insight into the environmental data
+                    how AI can take it further by improving visibility and insight into the environmental data
                     collected from these systems
                 </ExpandableText>
             </ExpandableText>
