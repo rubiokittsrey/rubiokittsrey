@@ -61,7 +61,7 @@ export default function AboutMeBlurb() {
                 <PublicNavItem
                     title="Photography"
                     path="/gallery"
-                    className="text-surface-foreground hover:text-blue-600 underline decoration-1 underline-offset-4"
+                    className="text-surface-foreground hover:text-blue-600 underline decoration-1 underline-offset-2"
                 />, cooking, video games, or just being outdoors are things I usually do
                 when I’m not busy with code.
             </p>
