@@ -37,12 +37,21 @@ function resolveLocalHref(host: string | null, path: string): string {
 type Props = Meta &
     Omit<ComponentPropsWithoutRef<'a'>, 'href' | 'title'> & {
         host?: string | null;
+        openInNewTab?: boolean;
     };
 
-export default function PublicNavItem({ title, path, className, host = null, ...rest }: Props) {
+export default function PublicNavItem({
+    title,
+    path,
+    className,
+    host = null,
+    openInNewTab = false,
+    ...rest
+}: Props) {
     const pathname = usePathname();
     const crossOrigin = resolveCrossOriginHref(host, path);
     const localHref = resolveLocalHref(host, path);
+    const newTabProps = openInNewTab ? { target: '_blank', rel: 'noopener noreferrer' } : undefined;
     const isExactActive = !crossOrigin && pathname === localHref;
     // on a subroute of this item — still linkable so user can navigate back up
     const isAncestor =
@@ -75,14 +84,14 @@ export default function PublicNavItem({ title, path, className, host = null, ...
 
     if (crossOrigin) {
         return (
-            <a {...rest} href={crossOrigin} className={sharedClassName}>
+            <a {...rest} {...newTabProps} href={crossOrigin} className={sharedClassName}>
                 {title}
             </a>
         );
     }
 
     return (
-        <Link {...rest} href={localHref} className={sharedClassName}>
+        <Link {...rest} {...newTabProps} href={localHref} className={sharedClassName}>
             {title}
         </Link>
     );

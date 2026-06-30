@@ -6,8 +6,18 @@
     --surface: oklch(0.961 0 0);
     --surface-item: oklch(0.985 0 0);
     --surface-foreground: oklch(0.129 0 0);
+    --foreground-muted: oklch(50.676% 0.00006 271.152);
 
-    /* accent (interactive: links + controls) */
-    --accent: oklch(0.546 0.245 262.9);
+    /* accent (interactive: links + controls) — wikipedia link blue */
+    --accent: #3366cc;
+
+    /* expanded/visited accent — wikipedia visited link purple */
+    --accent-visited: #795cb2;
+}
+
+/* warm sepia tint to match the ambient overlay (cf. .dark.ambience cool tint) */
+.ambience {
+    --surface: oklch(0.945 0.015 80);
+    --surface-item: oklch(0.97 0.01 80);
 }
 

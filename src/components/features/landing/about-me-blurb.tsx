@@ -1,3 +1,4 @@
+import { ExpandableText } from './expandable-text';
 import PublicNavItem from '../navigation/public-nav/public-nav-item';
 
 function Greeting() {
@@ -7,9 +8,19 @@ function Greeting() {
 function Background() {
     return (
         <p>
-            I’m from the Philippines — Surigao del Norte, on Mindanao, the southernmost of our three
-            major island groups. I write code for a living as a fullstack developer, working across
-            a handful of stacks, and I build things mostly to understand how they work.
+            I’m from the{' '}
+            <ExpandableText summary="Philippines">
+                Philippines<span>, an archipelago of over 7,000 islands in Southeast Asia</span>{' '}
+                <span>— Surigao del Norte, on Mindanao,</span>{' '}
+                <span>the southernmost of our three major island groups</span>
+            </ExpandableText>.
+            I write code for a living as a fullstack developer with experience working across a handful of{' '}
+            <ExpandableText summary="stacks">
+                stacks<span>: Next.js, React, Vue, and Vite on the frontend;</span>{' '}
+                <span>Django, FastAPI, Laravel, Firebase, and Supabase on the backend;</span>{' '}
+                <span>and Flutter, Dart, and native Java for mobile</span>
+            </ExpandableText>.
+            I like to build projects to understand how certain technologies work.
         </p>
     );
 }
@@ -30,9 +41,10 @@ function Pastimes() {
         <p>
             When I’m not busy with code, you’ll usually find me into{' '}
             <PublicNavItem
-                title="Photography"
+                title="photography"
                 path="/gallery"
                 className="text-accent hover:underline"
+                openInNewTab
             />
             , cooking, video games, or just being outdoors.
         </p>

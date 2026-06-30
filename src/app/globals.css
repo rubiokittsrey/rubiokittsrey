@@ -51,9 +51,11 @@
     --color-surface: var(--surface);
     --color-surface-item: var(--surface-item);
     --color-surface-foreground: var(--surface-foreground);
+    --color-foreground-muted: var(--foreground-muted);
 
     /* accent */
     --color-accent: var(--accent);
+    --color-accent-visited: var(--accent-visited);
 
     /* fluid typography */
     --text-xxs: var(--text-size-xxs);
