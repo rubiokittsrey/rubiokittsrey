@@ -11,7 +11,7 @@ function Anchor({ href, className, children, ...props }: React.ComponentProps<ty
 
     const sharedClassName = cn(
         'inline-flex items-center cursor-pointer text-body',
-        'select-none text-surface-foreground/50 hover:underline',
+        'select-none text-accent hover:underline',
         isActive && 'text-surface-foreground',
         className
     );
@@ -22,7 +22,7 @@ function Anchor({ href, className, children, ...props }: React.ComponentProps<ty
                 href={href as string}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={cn(sharedClassName, 'text-surface-foreground')}
+                className={sharedClassName}
                 {...(props as React.ComponentProps<'a'>)}
             >
                 {children}

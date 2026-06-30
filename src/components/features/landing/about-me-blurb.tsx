@@ -1,70 +1,51 @@
-import { ArrowDownToLineIcon, ArrowUpRight, LinkIcon } from 'lucide-react';
-import { ExpandableText } from './expandable-text';
 import PublicNavItem from '../navigation/public-nav/public-nav-item';
 
-function OriginExpandable() {
+function Greeting() {
+    return <p>Hey, I’m Kitts.</p>;
+}
+
+function Background() {
     return (
-        <ExpandableText summary="from the Philippines" color="violet">
-            from the Philippines<span>, in Surigao del Norte,</span> <span>on the island of</span>{' '}
-            <ExpandableText summary="Mindanao">{' '}
-                Mindanao<span>, the southernmost of the country's</span> <span>three major island groups</span>
-            </ExpandableText>
-        </ExpandableText>
+        <p>
+            I’m from the Philippines — Surigao del Norte, on Mindanao, the southernmost of our three
+            major island groups. I write code for a living as a fullstack developer, working across
+            a handful of stacks, and I build things mostly to understand how they work.
+        </p>
     );
 }
 
-function WorkExpandable() {
+function Interests() {
     return (
-        <ExpandableText summary="write code for a living" color="red">
-            write code for a living<span>, I am a</span> <span>fullstack developer</span>{' '}
-            <ExpandableText summary="building web and mobile apps">
-                building web and mobile apps <span>across a handful of stacks.</span> <span>I build projects as a way </span>
-                <span>to understand how things work</span>
-                {/* <a href="#" className="inline-flex underline underline-offset-2 hover:text-sky-600">
-                    (here&rsquo;s my full resume) <ArrowDownToLineIcon className="size-3" />
-                </a> */}
-            </ExpandableText>
-        </ExpandableText>
+        <p>
+            These days I’m drawn to the field applications of software — using research, surveying,
+            and sensors to monitor and make sense of the physical environment, with telemetry and
+            geolocation tying it all together. I’m especially curious about how AI can take that
+            further, turning raw environmental data into something clearer and more useful.
+        </p>
     );
 }
 
-function InterestsExpandable() {
+function Pastimes() {
     return (
-        <>
-            <ExpandableText summary="field applications of software for mapping out the physical world" color="emerald">
-                field applications of software for mapping out the physical world<span> through research, surveying, mapping</span>{' '}
-                <span>and auditing physical environments</span>
-                <span>with sensors, telemetry, and geolocation technologies, </span>and{' '}
-                <ExpandableText summary="how AI can take it further">
-                    {' '}
-                    how AI can take it further <span>by improving visibility and insight</span>{' '}
-                    <span>into the environmental data</span>{' '}
-                    <span>collected from these systems</span>
-                </ExpandableText>
-            </ExpandableText>
-        </>
+        <p>
+            When I’m not busy with code, you’ll usually find me into{' '}
+            <PublicNavItem
+                title="Photography"
+                path="/gallery"
+                className="text-accent hover:underline"
+            />
+            , cooking, video games, or just being outdoors.
+        </p>
     );
 }
 
 export default function AboutMeBlurb() {
     return (
         <div className="flex flex-col space-y-5 items-start text-body select-none">
-            <p>Hey, I’m Kitts.</p>
-            <p>
-                I'm <OriginExpandable />. I <WorkExpandable />.
-            </p>
-            <p>
-                I'm interested in <InterestsExpandable />.
-            </p>
-            <p>
-                {/* When I'm not busy with code, I <HobbiesExpandable />. */}
-                <PublicNavItem
-                    title="Photography"
-                    path="/gallery"
-                    className="text-surface-foreground hover:text-blue-600 underline decoration-1 underline-offset-2"
-                />, cooking, video games, or just being outdoors are things I usually do
-                when I’m not busy with code.
-            </p>
+            <Greeting />
+            <Background />
+            <Interests />
+            <Pastimes />
         </div>
     );
 }

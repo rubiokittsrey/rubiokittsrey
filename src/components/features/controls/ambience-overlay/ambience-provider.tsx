@@ -51,7 +51,7 @@ export default function AmbienceProvider({ children }: { children: React.ReactNo
                     isolation: 'isolate',
                     mixBlendMode: 'multiply',
                     opacity: active ? 1 : 0,
-                    transition: 'opacity 700ms ease-out',
+                    transition: 'opacity 400ms ease-out',
                 }}
             >
                 <video

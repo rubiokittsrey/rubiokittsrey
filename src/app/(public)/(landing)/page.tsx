@@ -1,5 +1,5 @@
 import { Socials } from '@/components/features/navigation';
-import { AboutMeBlurb } from '@/components/features/landing';
+import { AboutMeBlurb, ThemeControls } from '@/components/features/landing';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -9,9 +9,10 @@ export const metadata: Metadata = {
 export default function LandingPage() {
     return (
         <div className="relative flex-1 flex items-center justify-center">
-            <div className="max-w-5/5 md:max-w-3/5 xl:max-w-2/5 space-y-15 flex flex-col -mt-10">
+            <div className="w-full max-w-xl space-y-10 flex flex-col -mt-10 items-start">
                 <AboutMeBlurb />
                 <Socials />
+                <ThemeControls />
             </div>
         </div>
     );

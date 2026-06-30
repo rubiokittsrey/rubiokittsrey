@@ -5,7 +5,7 @@ import CopyButton from './copy-button';
 type Social = { title?: string; url: string; enableCopy?: boolean };
 
 const socials: Social[] = [
-    { title: 'x.com', url: 'x.com/0x6b7272' },
+    // { title: 'x.com', url: 'x.com/0x6b7272' },
     { title: 'instagram.com', url: 'instagram.com/rubiokittsrey' },
     { title: 'github.com', url: 'github.com/rubiokittsrey' },
     {
