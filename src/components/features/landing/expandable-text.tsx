@@ -10,7 +10,6 @@ import {
 } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { playExpand, playKey, playMinimize } from '@/lib/sound';
 import { isWhitespace, keyOf, markNew, tokenize } from './expandable-text.utils';
 
 const STAGGER = 0.055;
@@ -31,21 +30,6 @@ export function ExpandableText({
 
         e.stopPropagation();
         interacted.current = true;
-
-        if (expanded) {
-            playMinimize();
-        } else {
-            playExpand();
-            const target = tokenize(children);
-            const fresh = markNew(tokenize(summary).map(keyOf), target.map(keyOf));
-            let nth = 0;
-            target.forEach((tok, i) => {
-                if (fresh[i] && !isWhitespace(tok)) {
-                    window.setTimeout(playKey, nth * STAGGER * 1000);
-                    nth++;
-                }
-            });
-        }
 
         setExpanded((v) => !v);
     }
