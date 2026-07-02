@@ -44,7 +44,6 @@ function Pastimes() {
                 title="photography"
                 path="/gallery"
                 className="text-accent hover:underline"
-                openInNewTab
             />
             , cooking, video games, or just being outdoors.
         </p>

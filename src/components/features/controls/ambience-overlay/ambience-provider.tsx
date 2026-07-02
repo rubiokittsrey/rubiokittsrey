@@ -15,12 +15,51 @@ const AmbienceContext = createContext<AmbienceContextValue>({
 
 export default function AmbienceProvider({ children }: { children: React.ReactNode }) {
     const [active, setActive] = useState(false);
+    const [videoReady, setVideoReady] = useState(false);
     const { resolvedTheme } = useTheme();
     const videoRef = useRef<HTMLVideoElement | null>(null);
-    const showCoolShadows = active && resolvedTheme === 'light';
+    // gate tint + fade on video having frames
+    // so surface color shift and overlay always enter otgether
+    const visible = active && videoReady;
+    const showCoolShadows = visible && resolvedTheme === 'light';
 
     const toggle = useCallback(() => {
         setActive((prev) => !prev);
+    }, []);
+
+    // buffer the video off the critical path so the first toggle has frames ready
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        const prefetch = () => {
+            // skip if a toggle already kicked off playback/loading; load() would reset it
+            if (!video.paused || video.readyState > HTMLMediaElement.HAVE_NOTHING) return;
+            video.preload = 'auto';
+            video.load();
+        };
+        if (typeof window.requestIdleCallback === 'function') {
+            const id = window.requestIdleCallback(prefetch);
+            return () => window.cancelIdleCallback(id);
+        }
+        const id = window.setTimeout(prefetch, 1000);
+        return () => window.clearTimeout(id);
+    }, []);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
+            setVideoReady(true);
+            return;
+        }
+        const markReady = () => setVideoReady(true);
+        video.addEventListener('canplay', markReady);
+        // if the asset fails, degrade to the tint-only overlay instead of a dead toggle
+        video.addEventListener('error', markReady);
+        return () => {
+            video.removeEventListener('canplay', markReady);
+            video.removeEventListener('error', markReady);
+        };
     }, []);
 
     useEffect(() => {
@@ -34,9 +73,9 @@ export default function AmbienceProvider({ children }: { children: React.ReactNo
     }, [active]);
 
     useEffect(() => {
-        document.documentElement.classList.toggle('ambience', active);
+        document.documentElement.classList.toggle('ambience', visible);
         return () => document.documentElement.classList.remove('ambience');
-    }, [active]);
+    }, [visible]);
 
     return (
         <AmbienceContext.Provider value={{ active, toggle }}>
@@ -50,7 +89,7 @@ export default function AmbienceProvider({ children }: { children: React.ReactNo
                     zIndex: 999,
                     isolation: 'isolate',
                     mixBlendMode: 'multiply',
-                    opacity: active ? 1 : 0,
+                    opacity: visible ? 1 : 0,
                     transition: 'opacity 400ms ease-out',
                 }}
             >

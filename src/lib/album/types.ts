@@ -35,13 +35,16 @@ export interface Album {
     updated_at: string;
 }
 
+export interface AlbumLink {
+    id: string;
+    slug: string;
+    title: string;
+}
+
 export interface AlbumSummary {
     id: string;
     slug: string;
     title: string;
-    cover_image: string;
-    cover_thumb: string | null;
-    cover_blur: string | null;
     location: string | null;
     updated_at: string;
     photoCount: number;
