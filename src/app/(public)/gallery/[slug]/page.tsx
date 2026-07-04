@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getAlbumBySlug } from '@/lib/album/queries';
+import { site } from '@/lib/site';
 import { r2 } from '@/lib/r2';
 import { ElegantSpinner } from '@/components/ui/elegant-spinner';
 import { ThemeControls } from '@/components/features/landing';
@@ -63,7 +64,7 @@ async function Album({ slug }: { slug: string }) {
                 </div>
                 <div className="w-full flex items-center space-x-12 justify-between lg:justify-start -order-1 lg:order-0">
                     <Link
-                        href="/gallery"
+                        href={site.gallery}
                         className="text-body font-sans text-surface-foreground cursor-pointer select-none active:translate-y-px"
                     >
                         ../

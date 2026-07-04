@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { listAlbumLinks } from '@/lib/album/queries';
+import { site } from '@/lib/site';
 import { AlbumEntry } from '@/components/features/gallery';
 import { ThemeControls } from '@/components/features/landing';
 import { ElegantSpinner } from '@/components/ui/elegant-spinner';
@@ -33,7 +34,7 @@ async function GalleryList() {
         <div className="relative flex-1 flex items-center justify-center">
             <div className="-mt-10 flex flex-col items-start space-y-10">
                 <Link
-                    href="/"
+                    href={site.home}
                     className="text-body font-sans text-surface-foreground cursor-pointer select-none active:translate-y-px"
                 >
                     ../
