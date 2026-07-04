@@ -1,1 +1,1 @@
-[contact@rubiokittsrey.dev](mailto:kittsreyrubio@gmail.com), [Facebook](https://www.facebook.com/rubio.kittsrey), [Discord](https://discord.com/users/rubiokittsrey), [Instagram](https://instagram.com/2pher60mg)
+[contact@rubiokittsrey.dev](mailto:kittsreyrubio@gmail.com), [Facebook](https://www.facebook.com/rubio.kittsrey), [Discord](https://discord.com/users/rubiokittsrey), [Instagram](https://instagram.com/2per60mg)
