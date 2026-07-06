@@ -17,7 +17,6 @@ const MORPH = { layout: { duration: 0.48, ease: [0.3, 0.7, 0.25, 1] } } as const
 
 export default function PhotoList({ photos }: { photos: ListPhoto[] }) {
     const [expanded, setExpanded] = useState<ListPhoto | null>(null);
-    // photo id -> reveal delay, keyed in load-arrival order; presence means "loaded"
     const [revealDelays, setRevealDelays] = useState<Record<string, number>>({});
     const triggerRef = useRef<HTMLButtonElement | null>(null);
 
