@@ -28,10 +28,8 @@ function Background() {
 function Interests() {
     return (
         <p>
-            These days I’m drawn to the field applications of software — using research, surveying,
-            and sensors to monitor and make sense of the physical environment, with telemetry and
-            geolocation tying it all together. I’m especially curious about how AI can take that
-            further, turning raw environmental data into something clearer and more useful.
+            I am mostly interested in field applications of software — using research, surveying,
+            and sensors to monitor and make sense of the physical environment.
         </p>
     );
 }
