@@ -19,7 +19,7 @@ function getCopyValue(url: string) {
     return url.startsWith('mailto:') ? url.slice('mailto:'.length) : url;
 }
 
-export default function Socials({ className }: { className?: String }) {
+export default function Socials({ className }: { className?: string }) {
     return (
         <div className={cn('flex flex-col items-start', className)}>
             {socials.map(({ title, url, enableCopy }, idx) => {

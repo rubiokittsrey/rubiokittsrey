@@ -47,10 +47,17 @@ export default function PhotoStage({
     const imgRef = useRef<HTMLImageElement>(null);
     const [imgBox, setImgBox] = useState<ImgBox | null>(null);
     const [loadedId, setLoadedId] = useState<string | null>(null);
+    const [measuredId, setMeasuredId] = useState(photo.id);
     const loaded = loadedId === photo.id;
 
-    useEffect(() => {
+    // drop the previous photo's box during render so the blur frame and info
+    // panel never position against a stale measurement
+    if (measuredId !== photo.id) {
+        setMeasuredId(photo.id);
         setImgBox(null);
+    }
+
+    useEffect(() => {
         const img = imgRef.current;
         const container = containerRef.current;
         if (!img || !container) return;

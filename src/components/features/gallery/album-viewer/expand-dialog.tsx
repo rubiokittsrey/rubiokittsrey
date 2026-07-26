@@ -24,6 +24,7 @@ export default function ExpandDialog({
                     </DialogPrimitive.Close>
                     <img
                         src={photo.url}
+                        alt={photo.title}
                         className="max-h-full max-w-full w-auto h-auto object-contain"
                     />
                 </DialogPrimitive.Popup>

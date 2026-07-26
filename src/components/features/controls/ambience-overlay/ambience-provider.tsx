@@ -1,7 +1,15 @@
 'use client';
 
 import { useTheme } from '@/components/features/controls';
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+    useSyncExternalStore,
+} from 'react';
 
 type AmbienceContextValue = {
     active: boolean;
@@ -15,9 +23,35 @@ const AmbienceContext = createContext<AmbienceContextValue>({
 
 export default function AmbienceProvider({ children }: { children: React.ReactNode }) {
     const [active, setActive] = useState(false);
-    const [videoReady, setVideoReady] = useState(false);
     const { resolvedTheme } = useTheme();
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    // latched, never cleared: the prefetch below calls load(), which resets
+    // readyState to HAVE_NOTHING, and the overlay must not flicker back out
+    const videoReadyRef = useRef(false);
+
+    const subscribeVideoReady = useCallback((onChange: () => void) => {
+        const video = videoRef.current;
+        if (!video) return () => {};
+        const markReady = () => {
+            if (videoReadyRef.current) return;
+            videoReadyRef.current = true;
+            onChange();
+        };
+        if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) markReady();
+        video.addEventListener('canplay', markReady);
+        // if the asset fails, degrade to the tint-only overlay instead of a dead toggle
+        video.addEventListener('error', markReady);
+        return () => {
+            video.removeEventListener('canplay', markReady);
+            video.removeEventListener('error', markReady);
+        };
+    }, []);
+
+    const videoReady = useSyncExternalStore(
+        subscribeVideoReady,
+        () => videoReadyRef.current,
+        () => false
+    );
     // gate tint + fade on video having frames
     // so surface color shift and overlay always enter otgether
     const visible = active && videoReady;
@@ -43,23 +77,6 @@ export default function AmbienceProvider({ children }: { children: React.ReactNo
         }
         const id = window.setTimeout(prefetch, 1000);
         return () => window.clearTimeout(id);
-    }, []);
-
-    useEffect(() => {
-        const video = videoRef.current;
-        if (!video) return;
-        if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) {
-            setVideoReady(true);
-            return;
-        }
-        const markReady = () => setVideoReady(true);
-        video.addEventListener('canplay', markReady);
-        // if the asset fails, degrade to the tint-only overlay instead of a dead toggle
-        video.addEventListener('error', markReady);
-        return () => {
-            video.removeEventListener('canplay', markReady);
-            video.removeEventListener('error', markReady);
-        };
     }, []);
 
     useEffect(() => {
