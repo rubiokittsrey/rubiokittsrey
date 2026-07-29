@@ -6,7 +6,7 @@ type Social = { title?: string; url: string; enableCopy?: boolean };
 
 const socials: Social[] = [
     // { title: 'x.com', url: 'x.com/0x6b7272' },
-    { title: 'instagram.com', url: 'instagram.com/rubiokittsrey' },
+    { title: 'instagram.com', url: 'instagram.com/2per60mg' },
     { title: 'github.com', url: 'github.com/rubiokittsrey' },
     {
         title: 'contact@rubiokittsrey.dev',
