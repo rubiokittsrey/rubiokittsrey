@@ -40,12 +40,7 @@ function CrossSubdomainThemeSync() {
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
     return (
-        <NextThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-        >
+        <NextThemeProvider attribute="class" defaultTheme="dark" enableSystem>
             <CrossSubdomainThemeSync />
             {children}
         </NextThemeProvider>

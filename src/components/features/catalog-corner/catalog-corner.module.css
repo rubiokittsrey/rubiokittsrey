@@ -1,0 +1,571 @@
+/* catalog corner — ported 1:1 from the approved reference (variant D "folio").
+ * colours come from src/tokens/catalog-corner.css; nothing is hard-coded here. */
+
+/* ---------- shell: fixed viewport, no scroll ---------- */
+.shell {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 72px minmax(0, 1fr) 140px;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-ac-mono);
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+}
+
+.meta {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* ---------- top strip ---------- */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--line);
+}
+
+.site {
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.mode {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px; /* hit target */
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.12s;
+}
+
+.mode:hover,
+.mode:focus-visible {
+    color: var(--hi);
+}
+
+.mode:focus-visible {
+    outline: 1px dashed currentColor;
+    outline-offset: 4px;
+}
+
+/* both states are rendered; css picks one so the label is right before hydration */
+.whenDark,
+.whenLight {
+    display: contents;
+}
+
+.whenLight,
+:global(.light) .whenDark {
+    display: none;
+}
+
+:global(.light) .whenLight {
+    display: contents;
+}
+
+.modeIcon {
+    display: block;
+}
+
+/* ---------- stage: plate + content ---------- */
+.stage {
+    display: flex;
+    min-height: 0;
+}
+
+.plateWrap {
+    position: relative;
+    flex: none;
+    margin: 0;
+    border-right: 1px solid var(--line);
+}
+
+.plate {
+    height: calc(100vh - 212px); /* 100vh − topbar 72 − links 140 */
+    height: calc(100dvh - 212px);
+    aspect-ratio: 1000 / 1361;
+    background: var(--plate);
+    -webkit-mask: var(--plate-mask) center / 100% 100% no-repeat;
+    mask: var(--plate-mask) center / 100% 100% no-repeat;
+}
+
+/* the frame owns the hover so the stamp (which overlaps the edge) doesn't trigger it */
+.plateFrame {
+    position: relative;
+    display: block;
+}
+
+.plateFrame:focus-visible {
+    outline: 1px dashed var(--hi);
+    outline-offset: -6px;
+}
+
+/* undithered painting, stacked exactly over the plate (same aspect ratio) */
+.plateOriginal {
+    position: absolute;
+    inset: 0;
+    background: url('/assets/plate-original.webp') center / 100% 100% no-repeat;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* hover-capable pointers only, so a tap on touch screens doesn't leave it stuck on */
+.plateFrame:focus-visible .plateOriginal {
+    opacity: 1;
+}
+
+@media (hover: hover) {
+    .plateFrame:hover .plateOriginal {
+        opacity: 1;
+    }
+}
+
+/* rotating stamp straddling the plate's right edge */
+.stamp {
+    /* 168px at 900px tall, shrinking on shorter viewports so it clears the ruler + caption */
+    --stamp-size: min(168px, 18.67vh);
+    --stamp-size: min(168px, 18.67dvh);
+    position: absolute;
+    z-index: 3;
+    right: calc(var(--stamp-size) / -2);
+    top: 56%;
+    width: var(--stamp-size);
+    height: var(--stamp-size);
+}
+
+/* only the ring text turns; the globe spins on its own axis (stamp-globe.tsx) */
+.stampRing {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: spin 32s linear infinite;
+}
+
+.stampDisc {
+    fill: var(--bg);
+    transition: fill 0.3s;
+}
+
+.stamp text {
+    fill: var(--accent);
+    font-family: var(--font-ac-mono);
+    /* size + letter-spacing are set in stamp.tsx so the text exactly spans the ring */
+}
+
+.stampCore {
+    fill: none;
+    stroke: var(--fg);
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.stampPole {
+    fill: var(--fg);
+    stroke: none;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stampRing {
+        animation: none;
+    }
+    .plateOriginal {
+        transition: none;
+    }
+}
+
+/* ---------- right column ---------- */
+.content {
+    container-type: inline-size;
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 36px 40px 32px;
+}
+
+.contentTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.headlineBlock {
+    position: relative;
+    align-self: center;
+}
+
+.headline {
+    margin: 0;
+    font-family: var(--font-ac-display);
+    font-weight: 400;
+    font-size: min(11vw, 20vh, 21cqi);
+    line-height: 0.9;
+}
+
+.headline span {
+    display: block;
+}
+
+.headline .l2 {
+    padding-left: 0.6em;
+    color: var(--head-2);
+}
+
+.cross {
+    position: absolute;
+    width: 21px;
+    height: 21px;
+    color: var(--fg);
+}
+
+.crossTl {
+    left: -40px;
+    top: -18px;
+}
+
+.crossBr {
+    right: -40px;
+    bottom: -14px;
+}
+
+.starLg {
+    position: absolute;
+    right: -88px;
+    top: 4px;
+    width: 64px;
+    height: 64px;
+    color: var(--accent);
+}
+
+.contentFoot {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ruler {
+    height: 14px;
+    border-bottom: 1px solid var(--line); /* muted: kept subtle under the headline */
+    background:
+        repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 64px) left
+            bottom / 100% 14px no-repeat,
+        repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 8px) left bottom / 100%
+            6px no-repeat;
+}
+
+.captionRow {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.caption {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+}
+
+.captionStrong {
+    color: var(--fg);
+}
+
+/* both labels share one clipped grid cell so the line doesn't reflow when they swap.
+ * same motion as the old theme toggle: the incoming label slides in (0.35s, circ-out)
+ * and the outgoing one drops out instantly. a transition only runs *into* a state that
+ * declares one, so the shown states animate and the hidden states don't. */
+.captionSwap {
+    display: grid;
+    overflow: hidden;
+    --swap-in: transform 0.35s cubic-bezier(0, 0.55, 0.45, 1);
+}
+
+.captionDither,
+.captionOriginal {
+    grid-area: 1 / 1;
+}
+
+.captionDither {
+    transition: var(--swap-in);
+}
+
+/* parked below, so hovering rolls it up into place */
+.captionOriginal {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+/* follow the plate: original painting showing → caption names the medium.
+ * the dither label parks above, so leaving the plate brings it back down. */
+.shell:has(.plateFrame:focus-visible) .captionDither {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+.shell:has(.plateFrame:focus-visible) .captionOriginal {
+    opacity: 1;
+    transform: none;
+    transition: var(--swap-in);
+}
+
+@media (hover: hover) {
+    .shell:has(.plateFrame:hover) .captionDither {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    .shell:has(.plateFrame:hover) .captionOriginal {
+        opacity: 1;
+        transform: none;
+        transition: var(--swap-in);
+    }
+}
+
+/* kept after the rules above: an earlier block of equal specificity would lose */
+@media (prefers-reduced-motion: reduce) {
+    .captionSwap {
+        --swap-in: none;
+    }
+}
+
+.barcode {
+    /* code 128; width is set inline at 1 css px per module so it stays scannable */
+    flex: none;
+    display: block;
+    height: 28px;
+    color: var(--fg);
+    transition: color 0.12s;
+}
+
+.barcode svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.barcode:hover,
+.barcode:focus-visible {
+    color: var(--hi);
+}
+
+.barcode:focus-visible {
+    outline: 1px dashed currentColor;
+    outline-offset: 4px;
+}
+
+/* ---------- bottom link strip ---------- */
+.links {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding: 0 40px;
+    border-top: 1px solid var(--line);
+}
+
+.link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 0 20px;
+    border-left: 1px solid var(--line);
+    color: var(--fg);
+    text-decoration: none;
+    transition:
+        background-color 0.12s,
+        color 0.12s;
+}
+
+.link:first-child {
+    border-left: 0;
+}
+
+.link:hover,
+.link:focus-visible,
+.link:focus-within {
+    background: var(--hi);
+    color: var(--on-hi);
+    outline: none;
+}
+
+.linkTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 20px;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+}
+
+.linkTitle {
+    font-family: var(--font-ac-sans);
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+}
+
+/* muted: secondary to the title, dimmed in both the resting and highlighted states */
+.linkUrl {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    opacity: 0.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.link:hover .linkTop,
+.link:hover .linkUrl,
+.link:focus-visible .linkTop,
+.link:focus-visible .linkUrl,
+.link:focus-within .linkTop,
+.link:focus-within .linkUrl {
+    color: var(--on-hi);
+}
+
+/* whole email cell is clickable without nesting the copy button in the <a> */
+.linkMail .linkTitle::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
+.copy {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    min-width: 44px;
+    height: 44px;
+    margin: -12px -12px -12px 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.copy:focus-visible {
+    outline: 1px dashed currentColor;
+    outline-offset: -6px;
+}
+
+/* ---------- PROVISIONAL fallback below the desktop canvas ----------
+ * proposed in the spec (§8), not part of the approved comp. replace when the
+ * mobile / short-viewport layout is designed properly. */
+@media (max-width: 960px), (max-height: 620px) {
+    .shell {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        grid-template-rows: 64px auto auto;
+    }
+    .topbar {
+        padding: 0 20px;
+    }
+    .stage {
+        flex-direction: column;
+    }
+    .plateWrap {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .plate {
+        width: 100%;
+        height: auto;
+    }
+    .stamp {
+        width: 132px;
+        height: 132px;
+        right: 20px;
+        top: auto;
+        bottom: -66px;
+    }
+    .content {
+        padding: 96px 20px 32px;
+        gap: 48px;
+    }
+    .headline {
+        font-size: min(19vw, 120px);
+    }
+    .starLg {
+        width: 36px;
+        height: 36px;
+        right: 0;
+        top: -52px;
+    }
+    .crossTl {
+        left: -14px;
+        top: -22px;
+    }
+    .crossBr {
+        right: 0;
+        bottom: -28px;
+    }
+    .captionRow {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0;
+    }
+    .link {
+        min-height: 136px;
+        padding: 20px;
+        border-left: 0;
+        border-bottom: 1px solid var(--line);
+    }
+    .link:nth-child(odd) {
+        border-right: 1px solid var(--line);
+    }
+}
+
+@media (max-width: 520px) {
+    .links {
+        grid-template-columns: 1fr;
+    }
+    .link:nth-child(odd) {
+        border-right: 0;
+    }
+    .linkTitle {
+        font-size: 30px;
+    }
+}

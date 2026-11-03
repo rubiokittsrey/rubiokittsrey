@@ -5,6 +5,7 @@
 @import '../tokens/shared.css';
 @import '../tokens/light.css';
 @import '../tokens/dark.css';
+@import '../tokens/catalog-corner.css';
 
 @custom-variant dark (&:is(.dark *));
 
