@@ -1,0 +1,58 @@
+/* catalog corner (landing, variant D "folio") — fonts + design tokens.
+ * tokens are scoped to .catalog-corner; dark is the default, .light on <html>
+ * (set by next-themes) swaps them. components never hard-code colours. */
+
+@font-face {
+    font-family: 'Dirtyline';
+    src:
+        url('/fonts/Dirtyline.woff2') format('woff2'),
+        url('/fonts/Dirtyline.otf') format('opentype');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Geist';
+    src: url('/fonts/Geist-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+.catalog-corner {
+    --bg: #0b0b0a;
+    --fg: #edeadf;
+    --muted: #9a978c;
+    --plate: #c8ff2e; /* dither dot colour */
+    --plate-mask: url('/assets/plate-dither-lit.png');
+    --accent: #ff5b3a; /* stars, stamp ring text */
+    --head-2: #c8ff2e; /* second headline line */
+    --line: rgba(237, 234, 223, 0.12); /* hairlines */
+    --line-strong: rgba(237, 234, 223, 0.32);
+    --hi: #c8ff2e; /* hover / focus fill */
+    --on-hi: #0b0b0a;
+
+    --font-ac-display: 'Dirtyline', 'Didot', 'Bodoni 72', Georgia, serif;
+    --font-ac-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    --font-ac-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+}
+
+.light .catalog-corner {
+    --bg: #e9e4d6;
+    --fg: #121210;
+    --muted: #5b584f;
+    --plate: #121210;
+    --plate-mask: url('/assets/plate-dither-ink.png');
+    --accent: #b8341a;
+    --head-2: #b8341a;
+    --line: rgba(18, 18, 16, 0.14);
+    --line-strong: rgba(18, 18, 16, 0.36);
+    --hi: #b8341a; /* matches --head-2; lime is unreadable on the cream bg */
+    --on-hi: #e9e4d6; /* cream on vermilion 4.7:1 (black would be 3.3:1) */
+}
