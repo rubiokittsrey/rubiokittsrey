@@ -2,7 +2,6 @@
 
 import {
     Fragment,
-    useRef,
     useState,
     type KeyboardEvent,
     type MouseEvent,
@@ -22,14 +21,14 @@ export function ExpandableText({
     children: ReactNode;
 }) {
     const [expanded, setExpanded] = useState(false);
-    const interacted = useRef(false);
+    const [interacted, setInteracted] = useState(false);
 
     function toggle(e: MouseEvent | KeyboardEvent) {
         const interactive = (e.target as HTMLElement).closest('a, button, [role="button"]');
         if (interactive && interactive !== e.currentTarget) return;
 
         e.stopPropagation();
-        interacted.current = true;
+        setInteracted(true);
 
         setExpanded((v) => !v);
     }
@@ -60,7 +59,7 @@ export function ExpandableText({
             <span key={expanded ? 'expanded' : 'summary'}>
                 {current.map((tok, i) => {
                     if (isWhitespace(tok)) return <Fragment key={i}>{tok}</Fragment>;
-                    const fresh = interacted.current && isNew[i];
+                    const fresh = interacted && isNew[i];
                     const trigger = !isNew[i];
                     const delay = fresh ? order++ * STAGGER : 0;
                     return (
