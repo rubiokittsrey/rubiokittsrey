@@ -4,6 +4,7 @@ export { default as AlbumView } from './album-view';
 export type { AlbumPhoto } from './album-view';
 export { default as AlbumNav } from './album-nav';
 export { default as GalleryTopBar } from './top-bar';
+export type { Crumb } from './top-bar';
 export { default as GalleryLoader } from './loader';
 export { default as gallery } from './gallery.module.css';
 export { default as AlbumViewer } from './album-viewer';

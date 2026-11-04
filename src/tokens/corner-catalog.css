@@ -1,6 +1,6 @@
 /* corner catalog (landing, variant D "folio") — fonts + design tokens.
- * tokens are scoped to .corner-catalog (landing) and .gallery (gallery, which shares
- * the same system); dark is the default, .light on <html>
+ * tokens are scoped to .corner-catalog (landing), .gallery (gallery) and .admin (cms),
+ * which all share the same system; dark is the default, .light on <html>
  * (set by next-themes) swaps them. components never hard-code colours. */
 
 @font-face {
@@ -27,7 +27,8 @@
 }
 
 .corner-catalog,
-.gallery {
+.gallery,
+.admin {
     --bg: #0b0b0a;
     --fg: #edeadf;
     --muted: #9a978c;
@@ -46,7 +47,8 @@
 }
 
 .light .corner-catalog,
-.light .gallery {
+.light .gallery,
+.light .admin {
     --bg: #e9e4d6;
     --fg: #121210;
     --muted: #5b584f;

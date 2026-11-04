@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Input } from '@/components/ui/input';
-
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import g from '@/components/features/gallery/gallery.module.css';
+import styles from './admin.module.css';
+import { Arrow } from './icons';
 
 export function LoginForm() {
     const router = useRouter();
@@ -33,29 +34,47 @@ export function LoginForm() {
     }
 
     return (
-        <form onSubmit={onSubmit} className="space-y-6 text-sm">
-            <div className="flex flex-col space-y-2">
-                <Input
-                    placeholder="email"
+        <form
+            onSubmit={onSubmit}
+            className={cn(styles.loginForm, g.enter)}
+            style={{ '--i': 1 } as React.CSSProperties}
+        >
+            <label className={styles.field}>
+                <span className={cn(styles.fieldLabel, styles.meta)}>email</span>
+                <input
+                    className={styles.input}
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     autoComplete="email"
+                    autoFocus
                 />
-                <Input
-                    placeholder="password"
+            </label>
+            <label className={styles.field}>
+                <span className={cn(styles.fieldLabel, styles.meta)}>password</span>
+                <input
+                    className={styles.input}
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     autoComplete="current-password"
-                />{' '}
-            </div>
-            {error && <p className="text-sm font-mono text-destructive">{error}</p>}
-            <Button type="submit" disabled={pending} className="text-sm font-mono">
-                {pending ? 'logging in...' : 'login'}
-            </Button>
+                />
+            </label>
+            {error && (
+                <p className={styles.error} role="alert">
+                    {error}
+                </p>
+            )}
+            <button
+                type="submit"
+                disabled={pending}
+                className={cn(styles.btn, styles.btnPrimary, styles.btnWide)}
+            >
+                <span>{pending ? 'signing in…' : 'sign in'}</span>
+                <Arrow />
+            </button>
         </form>
     );
 }

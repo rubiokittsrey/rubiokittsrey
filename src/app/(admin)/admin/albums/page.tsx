@@ -1,74 +1,119 @@
+import { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { listAlbumSummaries } from '@/lib/album/queries';
-import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+import { GalleryLoader, gallery as g } from '@/components/features/gallery';
+import { formatYears, pad2 } from '@/components/features/gallery/format';
+import { Crosshair, Star } from '@/components/features/gallery/icons';
+import AdminTopBar from '@/components/features/admin/admin-top-bar';
 import { AlbumRowActions } from '@/components/features/admin/album-row-actions';
 import { BackfillButton } from '@/components/features/admin/backfill-button';
+import { Plus } from '@/components/features/admin/icons';
+import styles from '@/components/features/admin/admin.module.css';
 
 export const metadata: Metadata = { title: 'albums' };
 
-const COLUMNS = 'grid-cols-[2.5rem_1fr_8rem_5rem_14rem_5rem]';
+export default function AdminAlbumsPage() {
+    return (
+        <>
+            <AdminTopBar crumbs={[{ label: 'albums' }]} />
+            <Suspense fallback={<GalleryLoader label="loading records" />}>
+                <AlbumsIndex />
+            </Suspense>
+        </>
+    );
+}
 
-export default async function AdminAlbumsPage() {
+async function AlbumsIndex() {
     const albums = await listAlbumSummaries();
+    const frames = albums.reduce((n, a) => n + a.photoCount, 0);
 
     return (
-        <div className="space-y-6 text-sm">
-            <div className="flex items-center justify-between">
-                <h1 className="font-mono text-sm">admin/albums</h1>
-                <div className="flex items-center gap-6">
+        <main className={styles.page}>
+            <div className={cn(g.metaRow, g.meta, g.enter)}>
+                <span>Admin / 01</span>
+                <span>
+                    {pad2(albums.length)} albums · {pad2(frames)} frames
+                </span>
+            </div>
+
+            <div
+                className={cn(g.headlineBlock, g.enter)}
+                style={{ '--i': 1 } as React.CSSProperties}
+            >
+                <Crosshair />
+                {/* mixed case is intentional: dirtyline's UPPERCASE glyphs are the swash forms */}
+                <h1 className={g.headline} aria-label="Albums">
+                    <span aria-hidden="true">
+                        album<span className={g.accentChar}>S</span>
+                    </span>
+                </h1>
+                <Star />
+            </div>
+
+            <div
+                className={cn(g.ruler, g.enter)}
+                style={{ '--i': 2 } as React.CSSProperties}
+                aria-hidden="true"
+            />
+
+            <div
+                className={cn(styles.toolbar, g.enter)}
+                style={{ '--i': 3 } as React.CSSProperties}
+            >
+                <span className={styles.meta}>ordered as shown in the gallery</span>
+                <div className={styles.toolbarActions}>
                     <BackfillButton />
-                    <Link
-                        href="/admin/albums/new"
-                        className="font-mono text-sm hover:bg-surface-foreground/5"
-                    >
-                        create
+                    <Link href="/admin/albums/new" className={cn(styles.btn, styles.btnPrimary)}>
+                        <Plus /> new album
                     </Link>
                 </div>
             </div>
 
             {albums.length === 0 ? (
-                <Label>NO ALBUMS</Label>
+                <p className={cn(styles.meta, styles.empty)}>nothing catalogued yet</p>
             ) : (
-                <div className="border border-surface-foreground/15">
-                    <div
-                        className={`grid ${COLUMNS} bg-surface-item gap-10 px-4 py-2 border-b border-surface-foreground/15 font-mono text-xs text-surface-foreground/50 uppercase`}
-                    >
-                        <div>#</div>
-                        <div>title</div>
-                        <div>slug</div>
-                        <div>photos</div>
-                        <div>updated</div>
-                        <div className="text-right">order</div>
+                <div className={g.enter} style={{ '--i': 4 } as React.CSSProperties}>
+                    <div className={cn(styles.cols, styles.head, styles.meta)} aria-hidden="true">
+                        <span>no.</span>
+                        <span>title</span>
+                        <span className={styles.colSlug}>slug</span>
+                        <span className={styles.colFrames}>frames</span>
+                        <span className={styles.colYears}>years</span>
+                        <span className={styles.colUpdated}>updated</span>
+                        <span className={styles.right}>order</span>
                     </div>
-                    {albums.map((album, idx) => (
-                        <div
-                            key={album.id}
-                            className={`grid ${COLUMNS} gap-10 px-4 py-3 border-b border-surface-foreground/10 last:border-b-0 hover:bg-surface-foreground/5 items-center font-mono text-sm`}
-                        >
-                            <div className="text-surface-foreground/40">{idx + 1}</div>
-                            <Link
-                                href={`/admin/albums/${album.id}`}
-                                className="truncate hover:underline"
-                            >
-                                {album.title}
-                            </Link>
-                            <div className="truncate text-surface-foreground/60">{album.slug}</div>
-                            <div className="text-surface-foreground/60">{album.photoCount}</div>
-                            <div className="text-surface-foreground/40">
-                                {new Date(album.updated_at).toLocaleString()}
-                            </div>
-                            <div className="flex justify-end">
+                    <ol className={styles.table}>
+                        {albums.map((a, i) => (
+                            <li key={a.id} className={cn(styles.cols, styles.row)}>
+                                <span className={styles.meta}>{pad2(i + 1)}</span>
+                                <Link href={`/admin/albums/${a.id}`} className={styles.rowLink}>
+                                    {a.title}
+                                </Link>
+                                <span className={cn(styles.meta, styles.cell, styles.colSlug)}>
+                                    {a.slug}
+                                </span>
+                                <span className={cn(styles.meta, styles.colFrames)}>
+                                    {pad2(a.photoCount)} fr
+                                </span>
+                                <span className={cn(styles.meta, styles.colYears)}>
+                                    {formatYears(a.yearMin, a.yearMax) ?? '—'}
+                                </span>
+                                <span className={cn(styles.meta, styles.colUpdated)}>
+                                    {a.updated_at.slice(0, 10)}
+                                </span>
                                 <AlbumRowActions
-                                    id={album.id}
-                                    canUp={idx > 0}
-                                    canDown={idx < albums.length - 1}
+                                    id={a.id}
+                                    title={a.title}
+                                    canUp={i > 0}
+                                    canDown={i < albums.length - 1}
                                 />
-                            </div>
-                        </div>
-                    ))}
+                            </li>
+                        ))}
+                    </ol>
                 </div>
             )}
-        </div>
+        </main>
     );
 }

@@ -90,9 +90,12 @@
     min-width: 0;
 }
 
-/* the shared theme toggle */
-.topbar > button {
+/* right-hand group: the shared theme toggle, plus whatever the page slots in (admin) */
+.topbarEnd {
+    display: flex;
     flex: none;
+    align-items: center;
+    gap: 32px;
     white-space: nowrap;
 }
 
@@ -1122,6 +1125,14 @@
     .crumbs li:first-child,
     .crumbs li:nth-child(2)::before {
         display: none;
+    }
+    /* deeper trails (admin) keep only the last two crumbs; only the current one shrinks */
+    .crumbs li:not(:nth-last-child(-n + 2)),
+    .crumbs li:nth-last-child(2)::before {
+        display: none;
+    }
+    .crumbs li:not(:last-child) {
+        flex: none;
     }
     .headline {
         font-size: 22vw;

@@ -1,36 +1,41 @@
 'use client';
 
 import { useTransition } from 'react';
-import { Button } from '@/components/ui/button';
 import { moveAlbum } from '@/lib/album/actions';
+import { cn } from '@/lib/utils';
+import styles from './admin.module.css';
+import { Arrow } from './icons';
 
 interface Props {
     id: string;
+    title: string;
     canUp: boolean;
     canDown: boolean;
 }
 
-export function AlbumRowActions({ id, canUp, canDown }: Props) {
+export function AlbumRowActions({ id, title, canUp, canDown }: Props) {
     const [pending, start] = useTransition();
 
     return (
-        <div className="flex items-center gap-2">
-            <Button
+        <div className={styles.order}>
+            <button
                 type="button"
+                className={cn(styles.iconBtn, styles.up)}
+                aria-label={`move ${title} up`}
                 disabled={!canUp || pending}
                 onClick={() => start(() => moveAlbum(id, 'up'))}
-                className="px-2 py-0.5"
             >
-                ↑
-            </Button>
-            <Button
+                <Arrow />
+            </button>
+            <button
                 type="button"
+                className={cn(styles.iconBtn, styles.down)}
+                aria-label={`move ${title} down`}
                 disabled={!canDown || pending}
                 onClick={() => start(() => moveAlbum(id, 'down'))}
-                className="px-2 py-0.5"
             >
-                ↓
-            </Button>
+                <Arrow />
+            </button>
         </div>
     );
 }

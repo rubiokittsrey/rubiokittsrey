@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import styles from './admin.module.css';
 import { backfillDerivatives } from '@/lib/album/actions';
 
 /**
@@ -31,11 +32,15 @@ export function BackfillButton() {
         });
 
     return (
-        <div className="flex items-center gap-3 font-mono text-xs">
-            {status && <span className="text-surface-foreground/50">{status}</span>}
-            <Button type="button" disabled={pending} onClick={run} className="px-2 py-0.5">
+        <div className={styles.backfill}>
+            {status && (
+                <span className={cn(styles.meta)} role="status">
+                    {status}
+                </span>
+            )}
+            <button type="button" disabled={pending} onClick={run} className={styles.btn}>
                 {pending ? 'regenerating…' : 'regenerate images'}
-            </Button>
+            </button>
         </div>
     );
 }

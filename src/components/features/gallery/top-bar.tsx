@@ -9,8 +9,15 @@ export interface Crumb {
     href?: string;
 }
 
-/** breadcrumb trail rooted at the landing; the last crumb is the current page */
-export default function TopBar({ crumbs }: { crumbs: Crumb[] }) {
+/** breadcrumb trail rooted at the landing; the last crumb is the current page.
+ * `children` render beside the theme toggle (the admin puts the session there). */
+export default function TopBar({
+    crumbs,
+    children,
+}: {
+    crumbs: Crumb[];
+    children?: React.ReactNode;
+}) {
     const trail: Crumb[] = [{ label: 'rubiokittsrey.dev', href: site.home }, ...crumbs];
 
     return (
@@ -38,7 +45,10 @@ export default function TopBar({ crumbs }: { crumbs: Crumb[] }) {
                     })}
                 </ol>
             </nav>
-            <ThemeToggle />
+            <div className={styles.topbarEnd}>
+                {children}
+                <ThemeToggle />
+            </div>
         </header>
     );
 }

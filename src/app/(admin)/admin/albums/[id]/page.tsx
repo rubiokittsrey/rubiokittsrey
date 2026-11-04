@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getAlbumById } from '@/lib/album/queries';
+import AdminTopBar from '@/components/features/admin/admin-top-bar';
 import { AlbumForm } from '@/components/features/admin/album-form';
 
 export const metadata: Metadata = { title: 'edit album' };
@@ -13,11 +14,11 @@ export default async function EditAlbumPage({ params }: { params: Params }) {
     if (!album) notFound();
 
     return (
-        <div className="space-y-6">
-            <h1 className="font-mono text-sm">
-                admin/albums/<span className="text-surface-foreground/60">{album.slug}</span>
-            </h1>
+        <>
+            <AdminTopBar
+                crumbs={[{ label: 'albums', href: '/admin/albums' }, { label: album.slug }]}
+            />
             <AlbumForm mode="edit" initial={album} />
-        </div>
+        </>
     );
 }

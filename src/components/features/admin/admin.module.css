@@ -1,0 +1,652 @@
+/* admin — the corner catalog system applied to the cms. the shell, top bar, headline,
+ * ruler, sticky aside and loader come from the gallery module (gallery.module.css); this
+ * file only adds what the gallery has no use for: fields, buttons, the editable index and
+ * the frame editor. tokens are scoped to .admin (src/tokens/corner-catalog.css). */
+
+.meta {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* same move as the landing link strip: out top-right, back in bottom-left */
+@keyframes arrow-through {
+    0% {
+        transform: translate(0, 0);
+    }
+    45% {
+        transform: translate(12px, -12px);
+    }
+    46% {
+        transform: translate(-12px, 12px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+.arrow {
+    display: block;
+    flex: none;
+}
+
+/* ---------- top bar session ---------- */
+.who {
+    overflow: hidden;
+    max-width: 28ch;
+    text-overflow: ellipsis;
+}
+
+.textBtn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    cursor: pointer;
+    transition: color 0.12s;
+}
+
+.textBtn:hover {
+    color: var(--hi);
+}
+
+.textBtnDanger {
+    color: var(--accent);
+}
+
+.textBtnDanger:hover {
+    color: var(--fg);
+}
+
+/* ---------- buttons ---------- */
+.btn {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 18px;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--fg);
+    font-family: var(--font-ac-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        color 0.12s,
+        border-color 0.12s;
+}
+
+/* the fill sweeps in from the left, like the index rows */
+.btn::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--hi);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+.btn:hover:not(:disabled),
+.btn:focus-visible {
+    border-color: var(--hi);
+    color: var(--on-hi);
+}
+
+.btn:hover:not(:disabled)::before,
+.btn:focus-visible::before {
+    transform: scaleX(1);
+}
+
+.btn:hover:not(:disabled) .arrowPath,
+.btn:focus-visible .arrowPath {
+    animation: arrow-through 0.42s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.btnPrimary {
+    border-color: var(--hi);
+    background: var(--hi);
+    color: var(--on-hi);
+}
+
+.btnPrimary::before {
+    background: var(--fg);
+}
+
+.btnPrimary:hover:not(:disabled),
+.btnPrimary:focus-visible {
+    border-color: var(--fg);
+    color: var(--bg);
+}
+
+.btnDanger {
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    color: var(--accent);
+}
+
+.btnDanger::before {
+    background: var(--accent);
+}
+
+.btnDanger:hover:not(:disabled),
+.btnDanger:focus-visible {
+    border-color: var(--accent);
+    color: var(--bg);
+}
+
+.btnWide {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.iconBtn {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: border-color 0.12s;
+}
+
+.iconBtn:hover:not(:disabled) {
+    border-color: currentColor;
+}
+
+.iconBtn:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+
+.up .arrow {
+    transform: rotate(-45deg);
+}
+
+.down .arrow {
+    transform: rotate(135deg);
+}
+
+/* ---------- fields ---------- */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.fieldLabel {
+    display: flex;
+    line-height: 14px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.hint {
+    opacity: 0.55;
+}
+
+.input {
+    width: 100%;
+    min-width: 0;
+    padding: 8px 0 10px;
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: transparent;
+    color: var(--fg);
+    font-family: var(--font-ac-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    outline: none;
+    transition:
+        border-color 0.12s,
+        box-shadow 0.12s;
+}
+
+.input::placeholder {
+    color: var(--muted);
+    opacity: 0.45;
+}
+
+/* thicker hi-coloured rule instead of an outline; box-shadow so nothing shifts */
+.input:focus-visible {
+    border-bottom-color: var(--hi);
+    box-shadow: 0 1px 0 var(--hi);
+}
+
+.inputMono {
+    font-family: var(--font-ac-mono);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+}
+
+.inputLg {
+    font-size: 34px;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+}
+
+textarea.input {
+    min-height: 72px;
+    resize: vertical;
+}
+
+.error {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+}
+
+/* ---------- index (/admin/albums) ---------- */
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    min-width: 0;
+    padding: 36px 40px 72px;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 24px;
+    flex-wrap: wrap;
+}
+
+.toolbarActions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.backfill {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.table {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+}
+
+.cols {
+    display: grid;
+    grid-template-columns:
+        48px minmax(0, 1fr) minmax(0, 12rem) 5rem 8rem 7rem
+        88px;
+    align-items: center;
+    gap: 24px;
+    padding: 0 20px;
+}
+
+.head {
+    min-height: 44px;
+    border-bottom: 1px solid var(--line);
+}
+
+.right {
+    text-align: right;
+}
+
+.row {
+    position: relative;
+    isolation: isolate;
+    min-height: 88px;
+    border-bottom: 1px solid var(--line);
+    color: var(--fg);
+    transition: color 0.12s;
+}
+
+.row::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--hi);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+.row:hover,
+.row:has(.rowLink:focus-visible) {
+    color: var(--on-hi);
+}
+
+.row:hover::before,
+.row:has(.rowLink:focus-visible)::before {
+    transform: scaleX(1);
+}
+
+.row:hover .meta,
+.row:has(.rowLink:focus-visible) .meta {
+    color: var(--on-hi);
+}
+
+.rowLink {
+    overflow: hidden;
+    color: inherit;
+    font-family: var(--font-ac-sans);
+    font-size: 30px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    outline: none;
+}
+
+/* the whole row opens the record; the order buttons sit above the overlay */
+.rowLink::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+}
+
+.cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.order {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+/* ---------- login ---------- */
+.login {
+    display: grid;
+    place-items: center;
+    padding: 40px 20px 72px;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: min(100%, 360px);
+}
+
+.hatch {
+    background: repeating-linear-gradient(-45deg, var(--line) 0 1px, transparent 1px 9px);
+}
+
+/* ---------- editor (/admin/albums/[id], /new) ---------- */
+.untitled {
+    color: var(--muted);
+}
+
+.cover {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background-color: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+.cover img,
+.frameThumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.coverStack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.saved {
+    color: var(--hi);
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actionsRow {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.editorMain {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+    min-width: 0;
+    padding: 36px 40px 96px;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.sectionHead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+}
+
+.sectionTitle {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 0;
+    font-family: var(--font-ac-sans);
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+}
+
+.grid2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 32px;
+}
+
+.grid5 {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 28px 20px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.frames {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.frameCard {
+    display: grid;
+    grid-template-columns: 168px minmax(0, 1fr);
+    gap: 28px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    transition: border-color 0.12s;
+}
+
+.frameCard:focus-within {
+    border-color: var(--line-strong);
+}
+
+.frameThumb {
+    position: relative;
+    display: grid;
+    place-items: center;
+    align-self: start;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+.frameBody {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.frameBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.frameNum {
+    color: var(--fg);
+}
+
+.frameTools {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.frameTools .textBtn {
+    margin-left: 12px;
+}
+
+.empty {
+    padding: 28px 20px;
+    border: 1px dashed var(--line-strong);
+    text-align: center;
+}
+
+.add {
+    align-self: flex-start;
+}
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 1180px) {
+    .cols {
+        grid-template-columns: 48px minmax(0, 1fr) 5rem 7rem 88px;
+    }
+    .colSlug,
+    .colYears {
+        display: none;
+    }
+}
+
+@media (max-width: 960px) {
+    .who {
+        display: none;
+    }
+    .page,
+    .editorMain {
+        padding: 28px 20px 72px;
+    }
+    .cols {
+        grid-template-columns: 32px minmax(0, 1fr) 88px;
+        gap: 12px;
+        padding: 0;
+    }
+    .head,
+    .colUpdated,
+    .colFrames {
+        display: none;
+    }
+    .row::before {
+        inset: 0 -20px;
+    }
+    .rowLink {
+        font-size: 24px;
+    }
+    .grid2 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .grid5 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .frameCard {
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 16px;
+        padding: 16px;
+    }
+    .inputLg {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 520px) {
+    .grid5 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .frameCard {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .frameThumb {
+        aspect-ratio: 16 / 9;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn::before,
+    .row::before {
+        transition: none;
+    }
+    .btn:hover .arrowPath,
+    .btn:focus-visible .arrowPath {
+        animation: none;
+    }
+}

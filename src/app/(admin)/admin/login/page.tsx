@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import AdminTopBar from '@/components/features/admin/admin-top-bar';
 import { LoginForm } from '@/components/features/admin/login-form';
+import styles from '@/components/features/admin/admin.module.css';
 
 export const metadata: Metadata = {
     title: 'login',
@@ -7,10 +9,12 @@ export const metadata: Metadata = {
 
 export default function AdminLoginPage() {
     return (
-        <div className="w-full h-full flex items-center justify-center">
-            <div className="w-1/6 mx-auto">
+        <>
+            <AdminTopBar crumbs={[{ label: 'login' }]} />
+            <main className={styles.login}>
+                <h1 className="sr-only">Admin login</h1>
                 <LoginForm />
-            </div>
-        </div>
+            </main>
+        </>
     );
 }

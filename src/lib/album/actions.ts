@@ -58,6 +58,22 @@ async function buildPhotographRows(
     );
 }
 
+type Supabase = Awaited<ReturnType<typeof createClient>>;
+
+/** returned instead of thrown: production builds redact thrown server-action errors
+ * (React #441), so the form would never see the real message */
+export type ActionResult = { error: string } | undefined;
+
+function failure(action: string, err: unknown): { error: string } {
+    console.error(`[album] ${action} failed:`, err);
+    if (err instanceof Error) return { error: err.message };
+    if (err && typeof err === 'object' && 'message' in err && typeof err.message === 'string') {
+        // PostgrestError is a plain object, not an Error
+        return { error: err.message };
+    }
+    return { error: 'Unknown error' };
+}
+
 async function requireUser() {
     const supabase = await createClient();
     const {
@@ -157,8 +173,21 @@ function payloadFromForm(formData: FormData): AlbumInput {
     };
 }
 
-export async function createAlbum(formData: FormData) {
+export async function createAlbum(formData: FormData): Promise<ActionResult> {
     const supabase = await requireUser();
+    let id: string;
+    try {
+        id = await insertAlbum(supabase, formData);
+    } catch (err) {
+        return failure('create', err);
+    }
+
+    revalidatePath('/admin/albums');
+    revalidatePath('/gallery');
+    redirect(`/admin/albums/${id}`);
+}
+
+async function insertAlbum(supabase: Supabase, formData: FormData): Promise<string> {
     const payload = payloadFromForm(formData);
     const { photographs, ...album } = payload;
 
@@ -186,13 +215,25 @@ export async function createAlbum(formData: FormData) {
         if (photoErr) throw photoErr;
     }
 
-    revalidatePath('/admin/albums');
-    revalidatePath('/gallery');
-    redirect(`/admin/albums/${inserted.id}`);
+    return inserted.id;
 }
 
-export async function updateAlbum(id: string, formData: FormData) {
+export async function updateAlbum(id: string, formData: FormData): Promise<ActionResult> {
     const supabase = await requireUser();
+    let slug: string;
+    try {
+        slug = await saveAlbum(supabase, id, formData);
+    } catch (err) {
+        return failure('update', err);
+    }
+
+    revalidatePath('/admin/albums');
+    revalidatePath(`/admin/albums/${id}`);
+    revalidatePath('/gallery');
+    revalidatePath(`/gallery/${slug}`);
+}
+
+async function saveAlbum(supabase: Supabase, id: string, formData: FormData): Promise<string> {
     const payload = payloadFromForm(formData);
     const { photographs, ...album } = payload;
 
@@ -249,10 +290,7 @@ export async function updateAlbum(id: string, formData: FormData) {
         if (photoErr) throw photoErr;
     }
 
-    revalidatePath('/admin/albums');
-    revalidatePath(`/admin/albums/${id}`);
-    revalidatePath('/gallery');
-    revalidatePath(`/gallery/${album.slug}`);
+    return album.slug;
 }
 
 export async function moveAlbum(id: string, direction: 'up' | 'down') {
@@ -298,12 +336,12 @@ export async function moveAlbum(id: string, direction: 'up' | 'down') {
     revalidatePath('/gallery');
 }
 
-export async function deleteAlbum(id: string) {
+export async function deleteAlbum(id: string): Promise<ActionResult> {
     const supabase = await requireUser();
     const { data: existing } = await supabase.from('albums').select('slug').eq('id', id).single();
 
     const { error } = await supabase.from('albums').delete().eq('id', id);
-    if (error) throw error;
+    if (error) return failure('delete', error);
 
     if (existing) revalidatePath(`/gallery/${existing.slug}`);
     revalidatePath('/admin/albums');

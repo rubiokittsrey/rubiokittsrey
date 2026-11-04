@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
-import { AdminHeader } from '@/components/features/admin/admin-header';
+import { preload } from 'react-dom';
+import { cn } from '@/lib/utils';
+import { gallery as g } from '@/components/features/gallery';
 
 export const metadata: Metadata = {
     title: {
@@ -8,11 +10,10 @@ export const metadata: Metadata = {
     },
 };
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="min-h-screen w-screen bg-surface-noised text-surface-foreground flex flex-col">
-            <AdminHeader />
-            <main className="p-12 sm:p-16 w-full flex-1">{children}</main>
-        </div>
-    );
+// the cms wears the corner catalog system too: the gallery's shell, with tokens scoped to
+// .admin. each page renders its own top bar so the breadcrumb can name the record.
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+    preload('/fonts/Dirtyline.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' });
+
+    return <div className={cn('admin', g.shell)}>{children}</div>;
 }
