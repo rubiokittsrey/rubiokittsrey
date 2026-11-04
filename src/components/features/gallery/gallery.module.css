@@ -10,7 +10,10 @@
     display: grid;
     grid-template-rows: 72px minmax(0, 1fr) auto;
     grid-template-columns: minmax(0, 1fr);
-    overflow-x: clip;
+    /* clip, not hidden: no scroll container, so sticky children still work. stops the
+     * entrance rise (translateY) from briefly overflowing the viewport and flashing a
+     * scrollbar on pages that exactly fit */
+    overflow: clip;
     background: var(--bg);
     color: var(--fg);
     font-family: var(--font-ac-mono);
