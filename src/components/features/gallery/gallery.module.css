@@ -130,6 +130,35 @@
     animation: spin 24s linear infinite;
 }
 
+/* marks that take the star's spot but don't use its css spin (the wire solid turns in 3d) */
+.star.still {
+    animation: none;
+}
+
+/* the index's wire camera: a size up from the star at each breakpoint, pushed out to keep
+ * the same gap from the headline */
+.headlineBlock .star.camera {
+    right: -96px;
+    width: 72px;
+    height: 72px;
+}
+
+@media (max-width: 960px) {
+    .headlineBlock .star.camera {
+        right: -60px;
+        width: 48px;
+        height: 48px;
+    }
+}
+
+@media (max-width: 520px) {
+    .headlineBlock .star.camera {
+        right: -40px;
+        width: 38px;
+        height: 38px;
+    }
+}
+
 .arrow {
     display: block;
     flex: none;
@@ -479,6 +508,27 @@
     gap: 28px;
     padding: 36px 40px 48px;
     border-bottom: 1px solid var(--line);
+}
+
+/* a large faint wireframe solid turning behind the album title. the header clips it, so it's
+ * cut off by the top strip above and the header's own bottom border below */
+.albumHeadWire {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+}
+
+.headWire {
+    --size: 640px;
+    position: absolute;
+    z-index: -1;
+    top: calc(50% - var(--size) / 2);
+    right: 6%;
+    width: var(--size);
+    height: var(--size);
+    color: var(--head-2); /* lime on dark, red on light */
+    opacity: 0.16;
+    pointer-events: none;
 }
 
 .albumTitleBlock {
@@ -1041,6 +1091,10 @@
     }
     .albumHead {
         padding: 28px 20px 36px;
+    }
+    .headWire {
+        --size: 420px;
+        right: -18%;
     }
     .albumTitleBlock {
         max-width: calc(100% - 40px);

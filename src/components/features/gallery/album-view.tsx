@@ -7,9 +7,10 @@ import type { Coordinates } from '@/lib/album/types';
 import { cn } from '@/lib/utils';
 import styles from './gallery.module.css';
 import { formatYears, pad2 } from './format';
-import { ArrowIcon, Crosshair, Star } from './icons';
+import { ArrowIcon, Crosshair } from './icons';
 import Lightbox from './lightbox';
 import PhotoFrame from './photo-frame';
+import WireSolid from './wire-solid';
 
 export interface AlbumPhoto {
     id: string;
@@ -95,7 +96,12 @@ export default function AlbumView({
 
     return (
         <main>
-            <header className={styles.albumHead}>
+            <header className={cn(styles.albumHead, styles.albumHeadWire)}>
+                <WireSolid
+                    className={cn(styles.headWire, styles.enter)}
+                    shape="random"
+                    turn={60000}
+                />
                 <div className={cn(styles.metaRow, styles.meta, styles.enter)}>
                     <span>
                         Album {pad2(number)} / {pad2(total)}
@@ -110,7 +116,6 @@ export default function AlbumView({
                 >
                     <Crosshair />
                     <h1 className={styles.albumTitle}>{title}</h1>
-                    <Star />
                 </div>
             </header>
 

@@ -6,7 +6,8 @@ import { preload } from 'react-dom';
 import { cn } from '@/lib/utils';
 import styles from './gallery.module.css';
 import { formatCoords, formatYears, pad2 } from './format';
-import { ArrowIcon, Crosshair, Star } from './icons';
+import { ArrowIcon, Crosshair } from './icons';
+import WireSolid from './wire-solid';
 import PixelImage from './pixel-image';
 
 /** the preview column is ~42% of the viewport on desktop (hidden below 960px) */
@@ -61,10 +62,14 @@ export default function AlbumIndex({ albums }: { albums: IndexAlbum[] }) {
                     {/* mixed case is intentional: dirtyline's UPPERCASE glyphs are the swash forms */}
                     <h1 className={styles.headline} aria-label="Gallery">
                         <span aria-hidden="true">
-                            gAller<span className={styles.accentChar}>Y</span>
+                            g<span className={styles.accentChar}>A</span>llery
                         </span>
                     </h1>
-                    <Star />
+                    {/* .star places and sizes it; .still drops the star's css spin (this one turns in 3d) */}
+                    <WireSolid
+                        className={cn(styles.star, styles.still, styles.camera)}
+                        shape="camera"
+                    />
                 </div>
 
                 {albums.length === 0 ? (
