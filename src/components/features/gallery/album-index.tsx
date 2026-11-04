@@ -67,12 +67,6 @@ export default function AlbumIndex({ albums }: { albums: IndexAlbum[] }) {
                     <Star />
                 </div>
 
-                <div
-                    className={cn(styles.ruler, styles.enter)}
-                    style={{ '--i': 2 } as React.CSSProperties}
-                    aria-hidden="true"
-                />
-
                 {albums.length === 0 ? (
                     <p className={cn(styles.meta, styles.empty)}>nothing catalogued yet</p>
                 ) : (
