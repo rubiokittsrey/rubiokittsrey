@@ -8,6 +8,8 @@ export interface Photograph {
     album_id: string;
     url: string;
     thumb_path: string | null;
+    /** 2048px webp; null until derived (or backfilled) */
+    display_path: string | null;
     blur: string | null;
     title: string;
     description: string | null;
@@ -27,6 +29,7 @@ export interface Album {
     description: string | null;
     cover_image: string;
     cover_thumb: string | null;
+    cover_display: string | null;
     cover_blur: string | null;
     photographs: Photograph[];
     location: string | null;
@@ -39,6 +42,22 @@ export interface AlbumLink {
     id: string;
     slug: string;
     title: string;
+}
+
+export interface GalleryAlbum {
+    id: string;
+    slug: string;
+    title: string;
+    location: string | null;
+    cover_image: string;
+    cover_thumb: string | null;
+    cover_display: string | null;
+    cover_blur: string | null;
+    photoCount: number;
+    yearMin: number | null;
+    yearMax: number | null;
+    /** first geotagged photograph in the album, if any */
+    coordinates: Coordinates | null;
 }
 
 export interface AlbumSummary {
@@ -54,7 +73,7 @@ export interface AlbumSummary {
 
 export type PhotographInput = Omit<
     Photograph,
-    'id' | 'album_id' | 'created_at' | 'updated_at' | 'thumb_path' | 'blur'
+    'id' | 'album_id' | 'created_at' | 'updated_at' | 'thumb_path' | 'display_path' | 'blur'
 >;
 
 export type AlbumInput = Omit<
@@ -65,6 +84,7 @@ export type AlbumInput = Omit<
     | 'updated_at'
     | 'photographs'
     | 'cover_thumb'
+    | 'cover_display'
     | 'cover_blur'
 > & {
     photographs: PhotographInput[];

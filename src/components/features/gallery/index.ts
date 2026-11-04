@@ -1,5 +1,10 @@
-export { default as AlbumEntry } from './album-entry';
-export { default as PhotoList } from './photo-list';
-export type { ListPhoto } from './photo-list';
+export { default as AlbumIndex } from './album-index';
+export type { IndexAlbum } from './album-index';
+export { default as AlbumView } from './album-view';
+export type { AlbumPhoto } from './album-view';
+export { default as AlbumNav } from './album-nav';
+export { default as GalleryTopBar } from './top-bar';
+export { default as GalleryLoader } from './loader';
+export { default as gallery } from './gallery.module.css';
 export { default as AlbumViewer } from './album-viewer';
 export type { Photo } from './album-viewer';

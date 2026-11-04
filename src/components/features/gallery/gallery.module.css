@@ -1,0 +1,1163 @@
+/* gallery — shares the corner catalog system (tokens in src/tokens/corner-catalog.css,
+ * scoped to .gallery) and layers an acid / HUD vocabulary on top: pixelated placeholders,
+ * crosshairs, a live preview viewport.
+ * colours come from the tokens; nothing is hard-coded here. */
+
+/* ---------- shell ---------- */
+.shell {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: grid;
+    grid-template-rows: 72px minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
+    overflow-x: clip;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-ac-mono);
+    line-height: normal;
+    -webkit-font-smoothing: antialiased;
+    transition:
+        background-color 0.3s,
+        color 0.3s;
+}
+
+.meta {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.focusRing:focus-visible,
+.shell a:focus-visible,
+.shell button:focus-visible {
+    outline: 1px dashed var(--hi);
+    outline-offset: 4px;
+}
+
+/* ---------- top strip ---------- */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    transition: background-color 0.3s;
+}
+
+.crumbs {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.crumbs li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.crumbs li + li::before {
+    content: '/';
+    color: var(--line-strong);
+}
+
+.crumb {
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.12s;
+}
+
+.crumb:hover {
+    color: var(--hi);
+}
+
+.crumbsNav {
+    min-width: 0;
+}
+
+/* the shared theme toggle */
+.topbar > button {
+    flex: none;
+    white-space: nowrap;
+}
+
+.crumbCurrent {
+    overflow: hidden;
+    color: var(--fg);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ---------- shared bits ---------- */
+.ruler {
+    height: 14px;
+    border-bottom: 1px solid var(--line);
+    background:
+        repeating-linear-gradient(90deg, var(--line-strong) 0 1px, transparent 1px 64px) left
+            bottom / 100% 14px no-repeat,
+        repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 8px) left bottom / 100%
+            6px no-repeat;
+}
+
+.cross {
+    position: absolute;
+    width: 21px;
+    height: 21px;
+    color: var(--fg);
+}
+
+.star {
+    position: absolute;
+    color: var(--accent);
+    animation: spin 24s linear infinite;
+}
+
+.arrow {
+    display: block;
+    flex: none;
+}
+
+/* hovering a row or nav link plays arrow-through on .arrowPath: it flies out top-right
+ * and re-enters bottom-left (same move as the landing's link strip) */
+@keyframes arrow-through {
+    0% {
+        transform: translate(0, 0);
+    }
+    45% {
+        transform: translate(12px, -12px);
+    }
+    46% {
+        transform: translate(-12px, 12px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* page entrance: a short staggered rise, driven by --i on each element */
+.enter {
+    animation: enter 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 60ms);
+}
+
+@keyframes enter {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+}
+
+/* ---------- pixel placeholder (pixel-image.tsx) ----------
+ * the 12px blur derivative scaled up nearest-neighbour stands in until the photo loads,
+ * then the photo fades + rises in over it with the same motion as the page entrance,
+ * while a dithered copy of the grid on top dissolves away */
+.pixel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated;
+}
+
+.px {
+    position: relative;
+    display: block;
+}
+
+.pxEmpty:not(.pxLoaded) {
+    min-height: 50vh;
+}
+
+/* in flow until the photo arrives, so the box already has the photo's shape */
+.pxSizer {
+    display: block;
+    width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.pxPhoto {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+/* once loaded the photo takes the layout and rises in; the placeholder drops behind it
+ * (.px.pxLoaded outranks the per-context sizer rules) until the animation ends */
+.pxLoaded .pxPhoto {
+    position: relative;
+    height: auto;
+    opacity: 1;
+    animation: enter 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.px.pxLoaded .pxSizer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* dithered pixel grid over the photo; cells + dither are painted per frame in
+ * pixel-image.tsx and dissolve in random order once the photo is in */
+.pxGrid {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* ================================================================
+ * index (/gallery)
+ * ================================================================ */
+.index {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    min-height: 0;
+}
+
+.indexMain {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    min-width: 0;
+    padding: 36px 40px 56px;
+}
+
+.metaRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.headlineBlock {
+    position: relative;
+    align-self: flex-start;
+    margin: 24px 0 0 40px;
+}
+
+.headline {
+    margin: 0;
+    font-family: var(--font-ac-display);
+    font-weight: 400;
+    font-size: clamp(88px, 11vw, 196px);
+    line-height: 0.9;
+}
+
+.headline .accentChar {
+    color: var(--head-2);
+}
+
+.headlineBlock .cross {
+    left: -40px;
+    top: -18px;
+}
+
+.headlineBlock .star {
+    right: -72px;
+    top: 0;
+    width: 48px;
+    height: 48px;
+}
+
+/* album rows */
+.rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+}
+
+.row {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto auto 16px;
+    align-items: center;
+    gap: 24px;
+    min-height: 88px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--line);
+    color: var(--fg);
+    text-decoration: none;
+    outline: none;
+    transition: color 0.12s;
+}
+
+/* the fill sweeps in from the left instead of snapping on */
+.row::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--hi);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+.row:hover,
+.row:focus-visible {
+    color: var(--on-hi);
+}
+
+.row:hover::before,
+.row:focus-visible::before {
+    transform: scaleX(1);
+}
+
+.row:hover .arrowPath,
+.row:focus-visible .arrowPath {
+    animation: arrow-through 0.42s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.row:hover .meta,
+.row:focus-visible .meta {
+    color: var(--on-hi);
+}
+
+.rowTitle {
+    overflow: hidden;
+    font-family: var(--font-ac-sans);
+    font-size: 34px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rowThumb {
+    display: none;
+}
+
+/* sticky preview viewport */
+.preview {
+    position: sticky;
+    top: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: calc(100vh - 72px);
+    height: calc(100dvh - 72px);
+    padding: 36px 40px 40px;
+    border-left: 1px solid var(--line);
+}
+
+.viewport {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+.viewportClip {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+/* the preview fills the viewport and crops, unlike the frames */
+.slideMedia {
+    position: absolute;
+    inset: 0;
+}
+
+.slideMedia .pxSizer,
+.slideMedia .pxPhoto,
+.slideMedia.pxLoaded .pxPhoto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hudRow {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    min-height: 14px;
+}
+
+.hudRow > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hudStrong {
+    color: var(--fg);
+}
+
+/* blinking record dot on the live label */
+.live::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    vertical-align: 1px;
+    animation: blink 1.6s steps(1) infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.empty {
+    padding: 40px 20px;
+}
+
+/* ================================================================
+ * album (/gallery/[slug])
+ * ================================================================ */
+.album {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.8fr) minmax(0, 2fr);
+    min-height: 0;
+}
+
+.aside {
+    position: sticky;
+    top: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-self: start;
+    height: calc(100vh - 72px);
+    height: calc(100dvh - 72px);
+    padding: 36px 40px 40px;
+    border-right: 1px solid var(--line);
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+
+.aside::-webkit-scrollbar {
+    display: none;
+}
+
+.albumHead {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 36px 40px 48px;
+    border-bottom: 1px solid var(--line);
+}
+
+.albumTitleBlock {
+    position: relative;
+    align-self: flex-start;
+    max-width: calc(100% - 120px);
+    margin: 12px 0 0 40px;
+}
+
+.albumTitleBlock .cross {
+    left: -40px;
+    top: -18px;
+}
+
+.albumTitleBlock .star {
+    right: -72px;
+    top: 0;
+    width: 48px;
+    height: 48px;
+}
+
+/* dirtyline: lowercase are the plain capitals, so lowercasing keeps the swashes out */
+.albumTitle {
+    margin: 0;
+    font-family: var(--font-ac-display);
+    font-weight: 400;
+    font-size: clamp(56px, 9vw, 152px);
+    line-height: 0.92;
+    text-transform: lowercase;
+}
+
+.desc {
+    margin: 0;
+    font-family: var(--font-ac-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--fg) 78%, transparent);
+    white-space: pre-line;
+}
+
+.specs {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px 24px;
+    margin: 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+}
+
+.specs dt {
+    color: var(--muted);
+}
+
+.specs dd {
+    margin: 0;
+    color: var(--fg);
+}
+
+/* frame tracker: one tick per photograph, current one lit */
+.frameIndex {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+}
+
+.frameLink {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) 18px;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 36px;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: color 0.12s;
+}
+
+.frameLink > span:nth-child(2) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.frameLink:hover {
+    color: var(--fg);
+}
+
+.frameTick {
+    justify-self: end;
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    opacity: 0.35;
+    transition:
+        width 0.25s cubic-bezier(0.6, 0, 0.2, 1),
+        opacity 0.25s;
+}
+
+.frameLink[aria-current='true'] {
+    color: var(--hi);
+}
+
+.frameLink[aria-current='true'] .frameTick {
+    width: 18px;
+    opacity: 1;
+}
+
+.asideFoot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: auto;
+}
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    color: var(--fg);
+    text-decoration: none;
+    transition: color 0.12s;
+}
+
+.back svg {
+    transform: rotate(-135deg);
+    transition: transform 0.2s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+.back:hover {
+    color: var(--hi);
+}
+
+.back:hover svg {
+    transform: rotate(-135deg) translate(3px, -3px);
+}
+
+/* photographs column */
+.frames {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+    min-width: 0;
+    padding: 36px 40px 96px;
+}
+
+.frame {
+    margin: 0;
+    scroll-margin-top: 108px;
+}
+
+.frameButton {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: color-mix(in srgb, var(--fg) 4%, transparent);
+    cursor: zoom-in;
+}
+
+.frameButton:focus-visible {
+    outline: none;
+}
+
+.caption {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 24px;
+    padding-top: 14px;
+}
+
+.captionTitle {
+    overflow: hidden;
+    font-family: var(--font-ac-sans);
+    font-size: 15px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--fg);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.captionMeta {
+    display: flex;
+    gap: 20px;
+    text-align: right;
+}
+
+/* prev / next album strip */
+.albumNav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+}
+
+.navLink {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    min-height: 140px;
+    padding: 0 40px;
+    color: var(--fg);
+    text-decoration: none;
+    outline: none;
+}
+
+.navLink + .navLink {
+    border-left: 1px solid var(--line);
+}
+
+.navLink::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: var(--hi);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s cubic-bezier(0.6, 0, 0.2, 1);
+}
+
+.navNext {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.navNext::before {
+    transform-origin: right;
+}
+
+.navLink:hover,
+.navLink:focus-visible {
+    color: var(--on-hi);
+}
+
+.navLink:hover::before,
+.navLink:focus-visible::before {
+    transform: scaleX(1);
+}
+
+.navLink:hover .meta,
+.navLink:focus-visible .meta {
+    color: var(--on-hi);
+}
+
+.navTop {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navPrev .arrow {
+    transform: rotate(-135deg);
+}
+
+.navNext .arrow {
+    transform: rotate(45deg);
+}
+
+.navLink:hover .arrowPath,
+.navLink:focus-visible .arrowPath {
+    animation: arrow-through 0.42s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.navTitle {
+    font-family: var(--font-ac-sans);
+    font-size: 34px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+}
+
+/* ---------- lightbox ---------- */
+.lightbox {
+    position: fixed;
+    z-index: 50;
+    inset: 0;
+    display: grid;
+    grid-template-rows: 72px minmax(0, 1fr) 72px;
+    background: color-mix(in srgb, var(--bg) 96%, transparent);
+    color: var(--fg);
+    font-family: var(--font-ac-mono);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+}
+
+.lbBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 0 40px;
+}
+
+.lbBar > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.lbStage {
+    position: relative;
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) 72px;
+    align-items: center;
+    min-height: 0;
+}
+
+.lbFrame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 100%;
+    min-height: 0;
+    cursor: zoom-out;
+}
+
+.lbFigure {
+    position: relative;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.lbFigure .pxSizer {
+    width: auto;
+    max-width: 100%;
+    height: calc(100vh - 144px);
+    height: calc(100dvh - 144px);
+}
+
+.lbFigure.pxLoaded .pxPhoto {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100vh - 144px);
+    max-height: calc(100dvh - 144px);
+}
+
+.lbCaption {
+    display: flex;
+    gap: 20px;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.lbBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--fg);
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.12s;
+}
+
+.lbBtn:hover {
+    color: var(--hi);
+}
+
+.lbBtn:disabled {
+    opacity: 0.25;
+    cursor: default;
+}
+
+.lbBtn:disabled:hover {
+    color: var(--fg);
+}
+
+.lbStep {
+    justify-self: center;
+}
+
+.lbStep .arrow {
+    width: 20px;
+    height: 20px;
+}
+
+.lbStepPrev .arrow {
+    transform: rotate(-135deg);
+}
+
+.lbStepNext .arrow {
+    transform: rotate(45deg);
+}
+
+.kbd {
+    display: inline-block;
+    min-width: 22px;
+    padding: 3px 6px;
+    text-align: center;
+    line-height: 1;
+    border: 1px solid var(--line-strong);
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+}
+
+.lbActions {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 28px;
+}
+
+.lbOriginal {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    color: var(--fg);
+    text-decoration: none;
+    transition: color 0.12s;
+}
+
+.lbOriginal:hover {
+    color: var(--hi);
+}
+
+.lbOriginal:hover .arrowPath {
+    animation: arrow-through 0.42s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+.lbHint {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ---------- loader ---------- */
+.loader {
+    display: grid;
+    place-content: center;
+    gap: 14px;
+    min-height: 50vh;
+}
+
+.loaderBar {
+    position: relative;
+    width: 160px;
+    height: 2px;
+    overflow: hidden;
+    background: var(--line);
+}
+
+.loaderBar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: var(--hi);
+    animation: load 1.1s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+}
+
+@keyframes load {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(250%);
+    }
+}
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 960px) {
+    .shell {
+        grid-template-rows: 64px minmax(0, 1fr) auto;
+    }
+    .topbar,
+    .lbBar {
+        padding: 0 20px;
+    }
+    .index,
+    .album {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .indexMain {
+        padding: 28px 20px 48px;
+    }
+    .headlineBlock {
+        margin: 24px 0 0 14px;
+    }
+    .headline {
+        font-size: min(26vw, 160px);
+    }
+    .headlineBlock .cross {
+        left: -14px;
+        top: -22px;
+    }
+    .headlineBlock .star {
+        right: -44px;
+        top: -12px;
+        width: 32px;
+        height: 32px;
+    }
+    .preview {
+        display: none;
+    }
+    .row {
+        grid-template-columns: 64px minmax(0, 1fr) 16px;
+        gap: 16px;
+        min-height: 96px;
+        padding: 12px 0;
+    }
+    .row::before {
+        inset: 0 -20px;
+    }
+    .rowNum,
+    .rowYears,
+    .rowCount {
+        display: none;
+    }
+    .rowThumb {
+        position: relative;
+        display: block;
+        width: 64px;
+        height: 72px;
+        overflow: hidden;
+        background: color-mix(in srgb, var(--fg) 6%, transparent);
+    }
+    .rowThumb img:not(.pixel) {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .rowBody {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+    }
+    .rowTitle {
+        font-size: 26px;
+    }
+    .albumHead {
+        padding: 28px 20px 36px;
+    }
+    .albumTitleBlock {
+        max-width: calc(100% - 40px);
+        margin: 16px 0 0 14px;
+    }
+    .albumTitle {
+        font-size: min(13vw, 96px);
+    }
+    .albumTitleBlock .cross {
+        left: -14px;
+        top: -22px;
+    }
+    .albumTitleBlock .star {
+        right: -36px;
+        top: -20px;
+        width: 28px;
+        height: 28px;
+    }
+    .aside {
+        position: static;
+        height: auto;
+        padding: 28px 20px 8px;
+        border-right: 0;
+        overflow: visible;
+    }
+    .frameIndex,
+    .asideFoot {
+        display: none;
+    }
+    .frames {
+        gap: 48px;
+        padding: 28px 20px 72px;
+    }
+    .frame {
+        scroll-margin-top: 84px;
+    }
+    .caption {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 6px 16px;
+    }
+    .captionMeta {
+        grid-column: 2;
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        text-align: left;
+    }
+    .navLink {
+        min-height: 112px;
+        padding: 0 20px;
+    }
+    .navTitle {
+        font-size: 24px;
+    }
+    .lightbox {
+        grid-template-rows: 64px minmax(0, 1fr) auto;
+    }
+    .lbStage {
+        grid-template-columns: 44px minmax(0, 1fr) 44px;
+    }
+    .lbBottom {
+        padding: 16px 20px 24px;
+    }
+    .lbCaption {
+        flex-wrap: wrap;
+        gap: 4px 16px;
+        white-space: normal;
+    }
+    .lbFigure .pxSizer {
+        height: calc(100dvh - 180px);
+    }
+    .lbFigure.pxLoaded .pxPhoto {
+        max-height: calc(100dvh - 180px);
+    }
+    .lbHint,
+    .lbBar .kbd {
+        display: none;
+    }
+}
+
+@media (max-width: 520px) {
+    /* room for the album crumb and the theme toggle */
+    .crumbs li:first-child,
+    .crumbs li:nth-child(2)::before {
+        display: none;
+    }
+    .headline {
+        font-size: 22vw;
+    }
+    .headlineBlock .star {
+        right: -28px;
+        top: -24px;
+        width: 26px;
+        height: 26px;
+    }
+}
+
+/* the row body only exists to stack title + meta on mobile */
+@media (min-width: 961px) {
+    .rowBody {
+        display: contents;
+    }
+    .rowBody .rowCountMobile {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .enter,
+    .pxLoaded .pxPhoto,
+    .star,
+    .live::before,
+    .loaderBar::after,
+    .row:hover .arrowPath,
+    .row:focus-visible .arrowPath,
+    .navLink:hover .arrowPath,
+    .navLink:focus-visible .arrowPath,
+    .lbOriginal:hover .arrowPath {
+        animation: none;
+    }
+    .row::before,
+    .navLink::before,
+    .frameTick,
+    .back svg {
+        transition: none;
+    }
+}

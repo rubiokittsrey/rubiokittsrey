@@ -1,11 +1,10 @@
 import { Suspense } from 'react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { listAlbumLinks } from '@/lib/album/queries';
+import type { Metadata } from 'next';
+import { listGalleryAlbums } from '@/lib/album/queries';
+import { r2 } from '@/lib/r2';
+import { responsiveImage } from '@/lib/image-sizes';
 import { site } from '@/lib/site';
-import { AlbumEntry } from '@/components/features/gallery';
-import { ThemeControls } from '@/components/features/landing';
-import { ElegantSpinner } from '@/components/ui/elegant-spinner';
+import { AlbumIndex, GalleryLoader, GalleryTopBar } from '@/components/features/gallery';
 
 export const metadata: Metadata = {
     title: 'gallery',
@@ -15,37 +14,41 @@ export const revalidate = 60;
 
 export default function GalleryPage() {
     return (
-        <Suspense
-            fallback={
-                <div className="flex-1 flex items-center justify-center -mt-10">
-                    <ElegantSpinner />
-                </div>
-            }
-        >
-            <GalleryList />
-        </Suspense>
+        <>
+            <GalleryTopBar crumbs={[{ label: 'gallery' }]} />
+            <Suspense fallback={<GalleryLoader label="loading index" />}>
+                <GalleryIndex />
+            </Suspense>
+        </>
     );
 }
 
-async function GalleryList() {
-    const albums = await listAlbumLinks();
+async function GalleryIndex() {
+    const albums = await listGalleryAlbums();
 
     return (
-        <div className="relative flex-1 flex items-center justify-center">
-            <div className="-mt-10 flex flex-col items-start space-y-10">
-                <Link
-                    href={site.home}
-                    className="text-body font-sans text-surface-foreground cursor-pointer select-none active:translate-y-px"
-                >
-                    ../
-                </Link>
-                <div className="flex flex-col items-start space-y-1">
-                    {albums.map((album, albumIdx) => (
-                        <AlbumEntry key={album.id} album={album} albumIdx={albumIdx} />
-                    ))}
-                </div>
-                <ThemeControls />
-            </div>
-        </div>
+        <AlbumIndex
+            albums={albums.map((a) => {
+                const cover = responsiveImage(
+                    a.cover_image,
+                    a.cover_thumb,
+                    a.cover_display,
+                    'thumb'
+                );
+                return {
+                    id: a.id,
+                    href: `${site.gallery}/${a.slug}`,
+                    title: a.title,
+                    coverSrc: cover.src,
+                    coverSrcSet: cover.srcSet,
+                    coverThumb: cover.thumb ?? r2.resolve(a.cover_image),
+                    coverPixel: a.cover_blur,
+                    photoCount: a.photoCount,
+                    yearMin: a.yearMin,
+                    yearMax: a.yearMax,
+                    coordinates: a.coordinates,
+                };
+            })}
+        />
     );
 }

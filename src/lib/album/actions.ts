@@ -6,29 +6,40 @@ import { createClient } from '@/lib/supabase/server';
 import { generateImageDerivatives } from '@/lib/images';
 import type { AlbumInput, Coordinates, PhotographInput } from './types';
 
-async function deriveCover(
-    coverImage: string
-): Promise<{ cover_thumb: string | null; cover_blur: string | null }> {
+type CoverDerivatives = {
+    cover_thumb: string | null;
+    cover_display: string | null;
+    cover_blur: string | null;
+};
+
+async function deriveCover(coverImage: string): Promise<CoverDerivatives> {
     try {
-        const { thumbPath, blurDataUrl } = await generateImageDerivatives(coverImage);
-        return { cover_thumb: thumbPath, cover_blur: blurDataUrl };
+        const { thumbPath, displayPath, blurDataUrl } = await generateImageDerivatives(coverImage);
+        return { cover_thumb: thumbPath, cover_display: displayPath, cover_blur: blurDataUrl };
     } catch (err) {
         console.error('[album] cover derivative generation failed:', err);
-        return { cover_thumb: null, cover_blur: null };
+        return { cover_thumb: null, cover_display: null, cover_blur: null };
     }
 }
 
-type PhotographDerivatives = { thumb_path: string | null; blur: string | null };
+type PhotographDerivatives = {
+    thumb_path: string | null;
+    display_path: string | null;
+    blur: string | null;
+};
 
 async function derivePhotograph(url: string): Promise<PhotographDerivatives> {
     try {
-        const { thumbPath, blurDataUrl } = await generateImageDerivatives(url);
-        return { thumb_path: thumbPath, blur: blurDataUrl };
+        const { thumbPath, displayPath, blurDataUrl } = await generateImageDerivatives(url);
+        return { thumb_path: thumbPath, display_path: displayPath, blur: blurDataUrl };
     } catch (err) {
         console.error(`[album] photograph derivative generation failed for ${url}:`, err);
-        return { thumb_path: null, blur: null };
+        return { thumb_path: null, display_path: null, blur: null };
     }
 }
+
+const hasAllPhotoDerivatives = (d: PhotographDerivatives | undefined) =>
+    !!d && !!d.thumb_path && !!d.display_path && !!d.blur;
 
 async function buildPhotographRows(
     photographs: PhotographInput[],
@@ -39,7 +50,7 @@ async function buildPhotographRows(
         photographs.map(async (p) => {
             const existing = existingByUrl.get(p.url);
             const derivatives =
-                existing && existing.thumb_path && existing.blur
+                existing && hasAllPhotoDerivatives(existing)
                     ? existing
                     : await derivePhotograph(p.url);
             return { ...p, ...derivatives, album_id: albumId };
@@ -187,7 +198,7 @@ export async function updateAlbum(id: string, formData: FormData) {
 
     const { data: existing, error: existingErr } = await supabase
         .from('albums')
-        .select('cover_image, cover_thumb, cover_blur')
+        .select('cover_image, cover_thumb, cover_display, cover_blur')
         .eq('id', id)
         .maybeSingle();
     if (existingErr) throw existingErr;
@@ -196,11 +207,13 @@ export async function updateAlbum(id: string, formData: FormData) {
         !existing ||
         existing.cover_image !== album.cover_image ||
         !existing.cover_thumb ||
+        !existing.cover_display ||
         !existing.cover_blur;
-    const derivatives = needsCoverDerive
+    const derivatives: CoverDerivatives = needsCoverDerive
         ? await deriveCover(album.cover_image)
         : {
               cover_thumb: existing.cover_thumb as string | null,
+              cover_display: existing.cover_display as string | null,
               cover_blur: existing.cover_blur as string | null,
           };
 
@@ -212,7 +225,7 @@ export async function updateAlbum(id: string, formData: FormData) {
 
     const { data: existingPhotos, error: existingPhotosErr } = await supabase
         .from('photographs')
-        .select('url, thumb_path, blur')
+        .select('url, thumb_path, display_path, blur')
         .eq('album_id', id);
     if (existingPhotosErr) throw existingPhotosErr;
 
@@ -221,6 +234,7 @@ export async function updateAlbum(id: string, formData: FormData) {
             r.url as string,
             {
                 thumb_path: (r.thumb_path as string | null) ?? null,
+                display_path: (r.display_path as string | null) ?? null,
                 blur: (r.blur as string | null) ?? null,
             },
         ])
@@ -286,11 +300,7 @@ export async function moveAlbum(id: string, direction: 'up' | 'down') {
 
 export async function deleteAlbum(id: string) {
     const supabase = await requireUser();
-    const { data: existing } = await supabase
-        .from('albums')
-        .select('slug')
-        .eq('id', id)
-        .single();
+    const { data: existing } = await supabase.from('albums').select('slug').eq('id', id).single();
 
     const { error } = await supabase.from('albums').delete().eq('id', id);
     if (error) throw error;
@@ -299,4 +309,82 @@ export async function deleteAlbum(id: string) {
     revalidatePath('/admin/albums');
     revalidatePath('/gallery');
     redirect('/admin/albums');
+}
+
+/** images handled per call: each one fetches an original (up to ~20 MB) and encodes three
+ * derivatives, so batches stay well inside serverless time limits */
+const BACKFILL_BATCH = 3;
+
+export interface BackfillResult {
+    done: number;
+    failed: number;
+    remaining: number;
+}
+
+/**
+ * derives whatever is missing (thumb, 2048 display, blur) for covers and photographs,
+ * a few images per call. the admin button calls it until nothing remains, passing the
+ * running failure count as `skip` so an image that keeps failing can't block the queue.
+ */
+export async function backfillDerivatives(skip = 0): Promise<BackfillResult> {
+    const supabase = await requireUser();
+
+    const [covers, photos] = await Promise.all([
+        supabase
+            .from('albums')
+            .select('id, slug, cover_image')
+            .or('cover_thumb.is.null,cover_display.is.null,cover_blur.is.null'),
+        supabase
+            .from('photographs')
+            .select('id, url')
+            .or('thumb_path.is.null,display_path.is.null,blur.is.null'),
+    ]);
+    if (covers.error) throw covers.error;
+    if (photos.error) throw photos.error;
+
+    type Job = { kind: 'cover' | 'photo'; id: string; source: string };
+    const jobs: Job[] = [
+        ...(covers.data ?? []).map((a) => ({
+            kind: 'cover' as const,
+            id: a.id as string,
+            source: a.cover_image as string,
+        })),
+        ...(photos.data ?? []).map((p) => ({
+            kind: 'photo' as const,
+            id: p.id as string,
+            source: p.url as string,
+        })),
+    ];
+
+    // stable order, so `skip` always points past the same failed items
+    jobs.sort((a, b) => a.kind.localeCompare(b.kind) || a.id.localeCompare(b.id));
+    const batch = jobs.slice(skip, skip + BACKFILL_BATCH);
+    let done = 0;
+    let failed = 0;
+    for (const job of batch) {
+        if (job.kind === 'cover') {
+            const d = await deriveCover(job.source);
+            if (!d.cover_display) {
+                failed++;
+                continue;
+            }
+            const { error } = await supabase.from('albums').update(d).eq('id', job.id);
+            if (error) throw error;
+        } else {
+            const d = await derivePhotograph(job.source);
+            if (!d.display_path) {
+                failed++;
+                continue;
+            }
+            const { error } = await supabase.from('photographs').update(d).eq('id', job.id);
+            if (error) throw error;
+        }
+        done++;
+    }
+
+    if (done > 0) {
+        revalidatePath('/gallery', 'layout');
+        revalidatePath('/admin/albums');
+    }
+    return { done, failed, remaining: Math.max(0, jobs.length - skip - done - failed) };
 }

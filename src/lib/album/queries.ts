@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server';
-import type { Album, AlbumLink, AlbumSummary, Photograph } from './types';
+import type { Album, AlbumLink, AlbumSummary, GalleryAlbum, Photograph } from './types';
 
 type PhotographRow = Omit<Photograph, 'coordinates'> & {
     coordinates: Photograph['coordinates'] | null;
@@ -20,6 +20,7 @@ function hydrate(row: AlbumRow): Album {
             album_id: p.album_id,
             url: p.url,
             thumb_path: p.thumb_path ?? null,
+            display_path: p.display_path ?? null,
             blur: p.blur ?? null,
             title: p.title,
             description: p.description,
@@ -39,6 +40,7 @@ function hydrate(row: AlbumRow): Album {
         description: row.description,
         cover_image: row.cover_image,
         cover_thumb: row.cover_thumb,
+        cover_display: row.cover_display ?? null,
         cover_blur: row.cover_blur,
         location: row.location,
         position: row.position,
@@ -68,6 +70,42 @@ export async function listAlbumLinks(): Promise<AlbumLink[]> {
 
     if (error) throw error;
     return (data ?? []) as AlbumLink[];
+}
+
+type GalleryAlbumRow = Omit<GalleryAlbum, 'photoCount' | 'yearMin' | 'yearMax' | 'coordinates'> & {
+    photographs: Pick<Photograph, 'year' | 'coordinates' | 'position'>[] | null;
+};
+
+export async function listGalleryAlbums(): Promise<GalleryAlbum[]> {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+        .from('albums')
+        // albums.* rather than a column list: reads keep working if the migration that adds
+        // cover_display hasn't been applied yet (it just comes back undefined)
+        .select('*, photographs(year, coordinates, position)')
+        .order('position', { ascending: true })
+        .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+    return (data ?? []).map((raw) => {
+        const row = raw as GalleryAlbumRow;
+        const photos = (row.photographs ?? []).slice().sort((a, b) => a.position - b.position);
+        const years = photos.map((p) => p.year);
+        return {
+            id: row.id,
+            slug: row.slug,
+            title: row.title,
+            location: row.location,
+            cover_image: row.cover_image,
+            cover_thumb: row.cover_thumb,
+            cover_display: row.cover_display ?? null,
+            cover_blur: row.cover_blur,
+            photoCount: photos.length,
+            yearMin: years.length ? Math.min(...years) : null,
+            yearMax: years.length ? Math.max(...years) : null,
+            coordinates: photos.find((p) => p.coordinates)?.coordinates ?? null,
+        };
+    });
 }
 
 export async function listAlbumSummaries(): Promise<AlbumSummary[]> {
