@@ -1,0 +1,410 @@
+/* playlist — a contact sheet in the corner catalog system. the shell, top bar, headline
+ * and meta styles come from the gallery (gallery.module.css); this file adds the sheet,
+ * its plates and the dithered covers. colours come from the corner catalog tokens. */
+
+/* ---------- sheet ---------- */
+.sheet {
+    --sheet-gap: 40px;
+    --sheet-pad-x: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--sheet-gap);
+    min-width: 0;
+    padding: 36px var(--sheet-pad-x) 72px;
+}
+
+.head {
+    /* how much of the record peeks out of the bottom-right corner; the caption keeps clear of it */
+    --dial-size: 240px;
+    --dial-peek: 150px;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+        'headline caption'
+        'open caption';
+    align-items: end;
+    gap: 24px 40px;
+    /* the head reaches out to the viewport's right edge and down to the divider above the
+     * plates, so the record is clipped on those two lines; padding puts the content back */
+    margin: 0 calc(-1 * var(--sheet-pad-x)) calc(-1 * var(--sheet-gap)) 0;
+    padding: 0 calc(var(--dial-peek) + 32px) var(--sheet-gap) 0;
+    overflow: clip;
+}
+
+/* inset and decorated like the gallery's headline block (.headlineBlock places the crosshair
+ * and star), so the crosshair sits inside the sheet's margin */
+.headline {
+    grid-area: headline;
+    justify-self: start;
+}
+
+/* the smiley sits where the gallery's star does, tilted, and doesn't spin (2 classes beats .star) */
+.headline .smiley {
+    animation: none;
+    /* nudged down a quarter of its size, so it scales with the breakpoints */
+    transform: translateY(25%) rotate(14deg);
+}
+
+/* a size up from the star's spot at each of its breakpoints, pushed out to keep the same gap
+ * (the svg type selector outranks the gallery's .headlineBlock .star) */
+.headline svg.smiley {
+    right: -96px;
+    width: 64px;
+    height: 64px;
+}
+
+@media (max-width: 960px) {
+    .headline svg.smiley {
+        right: -60px;
+        width: 44px;
+        height: 44px;
+    }
+}
+
+@media (max-width: 520px) {
+    .headline svg.smiley {
+        right: -40px;
+        width: 34px;
+        height: 34px;
+    }
+}
+
+/* acid graphics: a turning record in the bottom-right corner, cut by the viewport edge and
+ * the divider */
+.headDial {
+    position: absolute;
+    right: calc(var(--dial-peek) - var(--dial-size));
+    bottom: calc(var(--dial-peek) - var(--dial-size));
+    width: var(--dial-size);
+    aspect-ratio: 1;
+    pointer-events: none;
+}
+
+.dial {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    fill: none;
+    stroke: var(--fg);
+    stroke-width: 1;
+}
+
+.dial * {
+    vector-effect: non-scaling-stroke;
+}
+
+.dialSpin {
+    transform-origin: 100px 100px;
+    animation: dial-spin 40s linear infinite;
+}
+
+.dialText {
+    fill: var(--muted);
+    stroke: none;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.dialLabel {
+    fill: var(--accent);
+    stroke: none;
+}
+
+.dialHole {
+    fill: var(--bg);
+}
+
+@keyframes dial-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.headBarcode {
+    display: block;
+    height: 32px;
+    color: var(--fg);
+}
+
+.headBarcode svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}
+
+.headCaption {
+    grid-area: caption;
+    justify-self: end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+}
+
+.byline {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+}
+
+.open {
+    grid-area: open;
+    justify-self: start;
+    align-self: start;
+    /* under the headline, lined up with it (the gallery's .headlineBlock inset) */
+    margin-left: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--fg);
+    text-decoration: none;
+    transition: color 0.12s;
+}
+
+.open:hover {
+    color: var(--hi);
+}
+
+.empty {
+    border-top: 1px solid var(--line);
+}
+
+/* ---------- plates ---------- */
+.plates {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 48px 24px;
+    margin: 0;
+    padding: 40px 0 0;
+    border-top: 1px solid var(--line);
+    list-style: none;
+}
+
+.plate {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.plateCover {
+    position: relative;
+    display: block;
+    aspect-ratio: 1;
+}
+
+/* caption under the plate, flush with the cover's edges; on hover the text turns --hi */
+.plateCaption {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+    padding-top: 10px;
+}
+
+.plateCaption > * {
+    transition: color 0.12s;
+}
+
+.plate:hover .plateCaption > *,
+.plate:focus-visible .plateCaption > * {
+    color: var(--hi);
+}
+
+.plateTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.plateTime {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-variant-numeric: tabular-nums;
+}
+
+.plateTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    font-family: var(--font-ac-sans);
+    font-size: 24px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* marquee-title.tsx: ellipsised at rest; a title that overflows scrolls while its plate is
+ * hovered, looping onto its repeat. the track is a block so it can be transformed, and only
+ * goes max-content wide (dropping the ellipsis) while it moves */
+.marquee {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.marqueeTrack {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.marqueeRepeat {
+    margin-left: var(--gap);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .plate:hover .marqueeOn .marqueeTrack,
+    .plate:focus-visible .marqueeOn .marqueeTrack {
+        width: max-content;
+        overflow: visible;
+        text-overflow: clip;
+        animation: marquee var(--duration) linear infinite;
+    }
+}
+
+/* holds at the start for the first 15% (HOLD in marquee-title.tsx), then one seamless pass */
+@keyframes marquee {
+    0%,
+    15% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-1 * var(--distance)));
+    }
+}
+
+/* the parental-advisory "E", as a small stamped box beside the title */
+.explicit {
+    flex: none;
+    padding: 0 4px;
+    border: 1px solid currentColor;
+    font-family: var(--font-ac-mono);
+    font-size: 10px;
+    line-height: 14px;
+    letter-spacing: 0;
+    text-decoration: none;
+    opacity: 0.6;
+}
+
+/* ---------- dithered cover (dither-cover.tsx) ---------- */
+.cover {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--fg) 4%, transparent);
+}
+
+/* the dither: a mask on a box of plate colour, lit dots in dark mode, ink in light */
+.coverDots {
+    --mask: var(--lit);
+    position: absolute;
+    inset: 0;
+    background: var(--plate);
+    -webkit-mask: var(--mask) center / 100% 100% no-repeat;
+    mask: var(--mask) center / 100% 100% no-repeat;
+    animation: print-in 0.36s steps(4, end);
+}
+
+:global(.light) .coverDots {
+    --mask: var(--ink);
+}
+
+/* lands in four flickers, like a print coming up */
+@keyframes print-in {
+    from {
+        opacity: 0;
+    }
+}
+
+.coverOriginal {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* hover-capable pointers only, so a tap on touch screens doesn't leave it stuck on */
+.plate:focus-visible .coverOriginal {
+    opacity: 1;
+}
+
+@media (hover: hover) {
+    .plate:hover .coverOriginal {
+        opacity: 1;
+    }
+}
+
+/* ---------- smaller screens ---------- */
+@media (max-width: 960px) {
+    .head {
+        --dial-size: 160px;
+        --dial-peek: 96px;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+            'headline'
+            'open'
+            'caption';
+        padding-right: calc(var(--dial-peek) + 16px);
+    }
+    .open {
+        margin-left: 14px;
+    }
+    .sheet {
+        --sheet-gap: 32px;
+        --sheet-pad-x: 20px;
+        padding-top: 28px;
+        padding-bottom: 56px;
+    }
+    .headCaption {
+        justify-self: start;
+    }
+    .plates {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 32px 16px;
+        padding-top: 28px;
+    }
+    .plateTitle {
+        font-size: 18px;
+    }
+}
+
+/* between the stacked and wide layouts the caption needs the corner the record would take */
+@media (min-width: 961px) and (max-width: 1200px) {
+    .head {
+        padding-right: var(--sheet-pad-x);
+    }
+    .headDial {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dialSpin,
+    .coverDots {
+        animation: none;
+    }
+    .coverOriginal,
+    .plateCaption > * {
+        transition: none;
+    }
+}

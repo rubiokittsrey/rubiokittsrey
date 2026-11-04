@@ -1,33 +1,45 @@
+'use client';
+
+import Link from 'next/link';
+import { useSyncExternalStore } from 'react';
+import { site } from '@/lib/site';
 import styles from './corner-catalog.module.css';
-import { encodeCode128B, toBarRuns } from './code128';
+import Barcode, { barcodeWidth } from './barcode';
 
-// a real, scannable code 128 barcode (1 css px per module); links to the track on spotify.
-const TEXT = 'Flawed Mangoes - Surreal';
-const TRACK_URL = 'https://open.spotify.com/track/4bzbaBvahwx1R0jyh5TO8U';
+// one pick per page load. the server renders no barcode (a pick there would be baked into
+// the static page, and would mismatch on hydration); the client fills it in.
+const SEED = Math.random();
+const subscribe = () => () => {};
+const useSeed = () =>
+    useSyncExternalStore(
+        subscribe,
+        () => SEED,
+        () => null
+    );
 
-const MODULES = encodeCode128B(TEXT);
-const RUNS = toBarRuns(MODULES);
+type Props = {
+    // one shown at random: `code` is the barcode-ready text (see barcode-text.ts), `title`
+    // the song's full title, shown as the hover hint
+    songs: Array<{ title: string; code: string }>;
+};
 
-export default function CatalogBarcode() {
+// a real, scannable code 128 barcode (1 css px per module) of a random song title from the
+// playlist; links to the playlist page.
+export default function CatalogBarcode({ songs }: Props) {
+    const seed = useSeed();
+    if (seed === null || songs.length === 0) return null;
+
+    const { title, code } = songs[Math.floor(seed * songs.length)];
+
     return (
-        <a
+        <Link
             className={styles.barcode}
-            style={{ width: MODULES.length }}
-            href={TRACK_URL}
-            target="_blank"
-            rel="noopener"
-            aria-label="Surreal by Flawed Mangoes, on Spotify"
+            style={{ width: barcodeWidth(code) }}
+            href={site.playlist}
+            title={title}
+            aria-label={`${title}, from my playlist`}
         >
-            <svg
-                viewBox={`0 0 ${MODULES.length} 1`}
-                preserveAspectRatio="none"
-                shapeRendering="crispEdges"
-                aria-hidden="true"
-            >
-                {RUNS.map(([x, w]) => (
-                    <rect key={x} x={x} y="0" width={w} height="1" />
-                ))}
-            </svg>
-        </a>
+            <Barcode code={code} />
+        </Link>
     );
 }

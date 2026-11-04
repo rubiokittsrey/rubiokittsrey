@@ -2,10 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/lib/supabase/middleware';
 
 const ROOT_DOMAIN = 'rubiokittsrey.dev';
-const GALLERY_SUBDOMAIN = 'gallery';
-const ADMIN_SUBDOMAIN = 'admin';
-const GALLERY_HOST = `${GALLERY_SUBDOMAIN}.${ROOT_DOMAIN}`;
-const ADMIN_HOST = `${ADMIN_SUBDOMAIN}.${ROOT_DOMAIN}`;
+
+// each subdomain serves the route segment of the same name: <sub>.rubiokittsrey.dev/x is
+// rewritten to /<sub>/x internally. in dev (no subdomain) the segments are reached by path.
+const SUBDOMAINS = ['gallery', 'admin', 'playlist'] as const;
+
+// "/gallery", "/gallery/x" → "/x"; anything else (incl. "/gallery-x") → null
+function stripSegment(pathname: string, sub: string): string | null {
+    if (pathname !== `/${sub}` && !pathname.startsWith(`/${sub}/`)) return null;
+    return pathname.slice(sub.length + 1) || '/';
+}
 
 async function gateAdmin(
     request: NextRequest,
@@ -33,55 +39,42 @@ export async function proxy(request: NextRequest) {
     const hostname = host.split(':')[0];
     const pathname = request.nextUrl.pathname;
 
-    const isGallerySubdomain =
-        hostname === GALLERY_HOST || hostname.startsWith(`${GALLERY_SUBDOMAIN}.`);
-    const isAdminSubdomain = hostname === ADMIN_HOST || hostname.startsWith(`${ADMIN_SUBDOMAIN}.`);
     const isRootDomain = hostname === ROOT_DOMAIN || hostname === `www.${ROOT_DOMAIN}`;
+    // startsWith also matches <sub>.localhost in dev
+    const subdomain = SUBDOMAINS.find(
+        (sub) => hostname === `${sub}.${ROOT_DOMAIN}` || hostname.startsWith(`${sub}.`)
+    );
 
-    if (isRootDomain && pathname.startsWith('/gallery')) {
-        const url = request.nextUrl.clone();
-        url.hostname = GALLERY_HOST;
-        url.pathname = pathname.replace(/^\/gallery/, '') || '/';
-        return NextResponse.redirect(url, 308);
+    // root domain: /<sub>/x → https://<sub>.rubiokittsrey.dev/x
+    if (isRootDomain) {
+        for (const sub of SUBDOMAINS) {
+            const rest = stripSegment(pathname, sub);
+            if (rest === null) continue;
+            const url = request.nextUrl.clone();
+            url.hostname = `${sub}.${ROOT_DOMAIN}`;
+            url.pathname = rest;
+            return NextResponse.redirect(url, 308);
+        }
     }
 
-    if (isRootDomain && pathname.startsWith('/admin')) {
-        const url = request.nextUrl.clone();
-        url.hostname = ADMIN_HOST;
-        url.pathname = pathname.replace(/^\/admin/, '') || '/';
-        return NextResponse.redirect(url, 308);
-    }
+    if (subdomain) {
+        // strip the route-segment prefix from the URL on its own subdomain; the rewrite
+        // below adds it back internally to match the file-system route
+        const rest = stripSegment(pathname, subdomain);
+        if (rest !== null) {
+            const url = request.nextUrl.clone();
+            url.pathname = rest;
+            return NextResponse.redirect(url, 308);
+        }
 
-    // strip the route-segment prefix from the URL on subdomains; the rewrites
-    // below add it back internally to match the file-system route
-    if (isGallerySubdomain && pathname.startsWith('/gallery')) {
         const url = request.nextUrl.clone();
-        url.pathname = pathname.replace(/^\/gallery/, '') || '/';
-        return NextResponse.redirect(url, 308);
-    }
-
-    if (isAdminSubdomain && pathname.startsWith('/admin')) {
-        const url = request.nextUrl.clone();
-        url.pathname = pathname.replace(/^\/admin/, '') || '/';
-        return NextResponse.redirect(url, 308);
-    }
-
-    if (isGallerySubdomain) {
-        const url = request.nextUrl.clone();
-        url.pathname = `/gallery${url.pathname === '/' ? '' : url.pathname}`;
-        return NextResponse.rewrite(url);
-    }
-
-    if (isAdminSubdomain) {
-        const url = request.nextUrl.clone();
-        url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
+        url.pathname = `/${subdomain}${pathname === '/' ? '' : pathname}`;
         const response = NextResponse.rewrite(url);
-        return gateAdmin(request, response, url.pathname);
+        return subdomain === 'admin' ? gateAdmin(request, response, url.pathname) : response;
     }
 
-    if (pathname.startsWith('/admin')) {
-        const response = NextResponse.next();
-        return gateAdmin(request, response, pathname);
+    if (stripSegment(pathname, 'admin') !== null) {
+        return gateAdmin(request, NextResponse.next(), pathname);
     }
 
     return NextResponse.next();

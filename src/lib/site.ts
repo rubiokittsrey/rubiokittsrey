@@ -7,4 +7,5 @@ const rootDomain = process.env.NEXT_PUBLIC_ROOT_DOMAIN;
 export const site = {
     home: rootDomain ? `https://${rootDomain}` : '/',
     gallery: rootDomain ? `https://gallery.${rootDomain}` : '/gallery',
+    playlist: rootDomain ? `https://playlist.${rootDomain}` : '/playlist',
 };

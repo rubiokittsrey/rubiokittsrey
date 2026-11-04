@@ -370,6 +370,8 @@
     height: 28px;
     color: var(--fg);
     transition: color 0.12s;
+    /* mounts on the client (random song), so fade it in like the stamp ring */
+    animation: ring-in 0.4s ease-out;
 }
 
 .barcode svg {
@@ -387,6 +389,12 @@
 .barcode:focus-visible {
     outline: 1px dashed currentColor;
     outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .barcode {
+        animation: none;
+    }
 }
 
 /* ---------- bottom link strip ---------- */
