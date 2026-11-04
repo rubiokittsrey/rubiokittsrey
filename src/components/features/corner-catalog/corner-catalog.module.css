@@ -156,7 +156,10 @@
 .stampRing {
     transform-box: view-box;
     transform-origin: 50% 50%;
-    animation: spin 32s linear infinite;
+    /* the ring text mounts on the client (random message), so fade it in */
+    animation:
+        spin 32s linear infinite,
+        ring-in 0.4s ease-out;
 }
 
 .stampDisc {
@@ -186,6 +189,12 @@
 @keyframes spin {
     to {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes ring-in {
+    from {
+        opacity: 0;
     }
 }
 
