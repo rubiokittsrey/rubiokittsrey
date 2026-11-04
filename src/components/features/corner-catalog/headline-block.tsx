@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 
 function Crosshair({ className }: { className: string }) {
     return (
@@ -14,10 +14,10 @@ export default function HeadlineBlock() {
         <div className={styles.headlineBlock}>
             <Crosshair className={styles.crossTl} />
             {/* mixed case is intentional: dirtyline's UPPERCASE glyphs are the swash forms */}
-            <h1 className={styles.headline} aria-label="Catalog Corner">
-                <span aria-hidden="true">cAtaloG</span>
+            <h1 className={styles.headline} aria-label="Corner Catalog">
+                <span aria-hidden="true">cOrner</span>
                 <span className={styles.l2} aria-hidden="true">
-                    cOrner
+                    cAtaloG
                 </span>
             </h1>
             <svg className={styles.starLg} viewBox="0 0 24 24" aria-hidden="true">

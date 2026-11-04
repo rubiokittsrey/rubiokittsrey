@@ -1,4 +1,4 @@
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 import { encodeCode128B, toBarRuns } from './code128';
 
 // a real, scannable code 128 barcode (1 css px per module); links to the track on spotify.

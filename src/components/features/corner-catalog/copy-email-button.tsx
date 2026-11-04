@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 
 const COPIED_MS = 1600;
 
@@ -55,6 +55,7 @@ export default function CopyEmailButton({ email }: { email: string }) {
                 ) : (
                     <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
                         <rect
+                            className={styles.copyFront}
                             x="5.5"
                             y="5.5"
                             width="8"
@@ -64,6 +65,7 @@ export default function CopyEmailButton({ email }: { email: string }) {
                             strokeWidth="1.3"
                         />
                         <path
+                            className={styles.copyBack}
                             d="M10.5 3.5V2.5H2.5V10.5H3.5"
                             fill="none"
                             stroke="currentColor"

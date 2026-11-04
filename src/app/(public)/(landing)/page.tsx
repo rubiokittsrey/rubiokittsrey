@@ -1,4 +1,4 @@
-import { CatalogCorner } from '@/components/features/catalog-corner';
+import { CornerCatalog } from '@/components/features/corner-catalog';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function LandingPage() {
-    return <CatalogCorner />;
+    return <CornerCatalog />;
 }

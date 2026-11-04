@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 
 // the site's globe favicon (src/app/icon.svg) as a wireframe earth: it spins west→east
 // about an axis tilted 23.44°, with one 24h day compressed into DAY ms.

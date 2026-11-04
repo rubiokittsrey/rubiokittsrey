@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from '@/components/features/controls';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 
 function MoonIcon() {
     return (

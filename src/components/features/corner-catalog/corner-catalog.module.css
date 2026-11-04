@@ -1,5 +1,5 @@
-/* catalog corner — ported 1:1 from the approved reference (variant D "folio").
- * colours come from src/tokens/catalog-corner.css; nothing is hard-coded here. */
+/* corner catalog — ported 1:1 from the approved reference (variant D "folio").
+ * colours come from src/tokens/corner-catalog.css; nothing is hard-coded here. */
 
 /* ---------- shell: fixed viewport, no scroll ---------- */
 .shell {
@@ -485,6 +485,55 @@
 .copy:focus-visible {
     outline: 1px dashed currentColor;
     outline-offset: -6px;
+}
+
+/* hover motion: the arrow flies out top-right and re-enters from bottom-left (the svg
+ * viewport clips the path, so it reads as passing through); the copy sheets spread apart */
+.link:hover .arrow,
+.link:focus-visible .arrow,
+.link:focus-within .arrow {
+    animation: arrow-through 0.42s cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+@keyframes arrow-through {
+    0% {
+        transform: translate(0, 0);
+    }
+    45% {
+        transform: translate(12px, -12px);
+    }
+    46% {
+        transform: translate(-12px, 12px);
+    }
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+.copyFront,
+.copyBack {
+    transition: transform 0.2s cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.link:hover .copyFront,
+.link:focus-within .copyFront {
+    transform: translate(1px, 1px);
+}
+
+.link:hover .copyBack,
+.link:focus-within .copyBack {
+    transform: translate(-1.5px, -1.5px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .link .arrow {
+        animation: none;
+    }
+
+    .copyFront,
+    .copyBack {
+        transition: none;
+    }
 }
 
 /* ---------- PROVISIONAL fallback below the desktop canvas ----------

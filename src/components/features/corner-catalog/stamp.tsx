@@ -1,4 +1,4 @@
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 import StampGlobe from './stamp-globe';
 
 // "HOW ARE YOU?" as ASCII hex, once round the ring (twice won't fit at this size)

@@ -1,6 +1,6 @@
 import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 import ThemeToggle from './theme-toggle';
 
 export default function TopBar() {

@@ -1,7 +1,7 @@
 import { site } from '@/lib/site';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 import CopyEmailButton from './copy-email-button';
 
 const EMAIL = 'contact@rubiokittsrey.dev';
@@ -10,6 +10,7 @@ function ArrowIcon() {
     return (
         <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
             <path
+                className={styles.arrow}
                 d="M4 12L12 4M5.5 4H12V10.5"
                 fill="none"
                 stroke="currentColor"

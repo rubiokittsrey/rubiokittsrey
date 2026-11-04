@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 import CatalogBarcode from './catalog-barcode';
 
 export default function CatalogueFoot() {

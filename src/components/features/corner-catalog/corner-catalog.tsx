@@ -1,17 +1,17 @@
 import { cn } from '@/lib/utils';
 import { preload } from 'react-dom';
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 import CatalogueFoot from './catalogue-foot';
 import HeadlineBlock from './headline-block';
 import LinkStrip from './link-strip';
 import Plate from './plate';
 import TopBar from './top-bar';
 
-export default function CatalogCorner() {
+export default function CornerCatalog() {
     preload('/fonts/Dirtyline.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' });
 
     return (
-        <div className={cn('catalog-corner', styles.shell)}>
+        <div className={cn('corner-catalog', styles.shell)}>
             <TopBar />
             <main className={styles.stage}>
                 <Plate />

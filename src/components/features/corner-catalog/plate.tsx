@@ -1,4 +1,4 @@
-import styles from './catalog-corner.module.css';
+import styles from './corner-catalog.module.css';
 import Stamp from './stamp';
 
 // the painting is a css mask on a coloured box: the png only supplies alpha, the theme
